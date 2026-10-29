@@ -14,7 +14,7 @@ const SPLASH_COPY_DIAGNOSTICS_CHANNEL = 'desktop-splash:copy-diagnostics';
 
 const SPLASH_MOUNT_ID = 'splash-mount';
 const SPLASH_MARK_SIZE = 88;
-const SPLASH_MARK_SOURCE = './symbol.svg';
+const SPLASH_MARK_SOURCE = './chatflux-mark.png';
 const COUNTDOWN_INTERVAL_MS = 1000;
 const SPLASH_BRANDING_WAIT_MS = 400;
 const SPLASH_FONT_FACES = Object.freeze(['400 12px "Fluxer Sans"', '500 16px "Fluxer Sans"']);

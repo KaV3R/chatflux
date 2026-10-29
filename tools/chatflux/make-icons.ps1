@@ -60,5 +60,10 @@ for ($k = 0; $k -lt $icoSizes.Count; $k++) {
 }
 foreach ($img in $images) { $bw.Write($img) }
 $bw.Close()
+# Splash screen mark (shown at 88px, rendered at 2x for HiDPI).
+$splash = New-SquareIcon 176
+$splash.Save((Join-Path $PSScriptRoot '..\..\fluxer_desktop\src\splash\chatflux-mark.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+$splash.Dispose()
+
 $src.Dispose()
 Write-Host "Icons written to $OutDir"
