@@ -2945,7 +2945,7 @@ struct VelopackAssetIndexEntry {
 
 fn windows_package_config(build_channel: &str, arch: &str) -> Result<WindowsPackageConfig> {
     let (pack_id, pack_title, artifact_prefix, icon_dir) = match build_channel {
-        "stable" => ("fluxer_desktop", "Fluxer", "Fluxer", "icons-stable"),
+        "stable" => ("chatflux_desktop", "ChatFlux", "ChatFlux", "icons-stable"),
         "canary" => (
             "fluxer_desktop_canary",
             "Fluxer Canary",

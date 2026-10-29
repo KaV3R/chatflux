@@ -11,8 +11,9 @@ function getDesktopDownloadArch(arch: NodeJS.Architecture): DesktopDownloadArch 
 const DESKTOP_DOWNLOAD_ARCH = getDesktopDownloadArch(process.arch);
 const PACKAGE_ORIGIN_ENV = 'FLUXER_DESKTOP_PACKAGE_ORIGIN';
 const CHANNEL_PACKAGE_ORIGINS: Record<BuildChannel, string> = {
-	stable: 'https://pkgs.fluxer.com',
-	canary: 'https://pkgs.fluxer.com',
+	// ChatFlux: never fetch official Fluxer packages (updates are disabled, see LaunchOptions.ts).
+	stable: 'https://chat.catflux.hu',
+	canary: 'https://chat.catflux.hu',
 	development: 'http://localhost:48780',
 };
 

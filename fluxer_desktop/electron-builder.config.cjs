@@ -9,10 +9,10 @@ const {promisify} = require('node:util');
 const execFileAsync = promisify(execFile);
 const CHANNELS = {
 	stable: {
-		productName: 'Fluxer',
-		linuxOptDirName: 'Fluxer',
-		artifactProductName: 'Fluxer',
-		appId: 'app.fluxer',
+		productName: 'ChatFlux',
+		linuxOptDirName: 'ChatFlux',
+		artifactProductName: 'ChatFlux',
+		appId: 'hu.catflux.chatflux',
 		iconDirectory: 'icons-stable',
 		packageName: 'fluxer_desktop',
 		linuxPackageName: 'fluxer',

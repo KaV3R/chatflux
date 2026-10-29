@@ -14,8 +14,11 @@ const CHANNEL_APP_PROTOCOLS: Record<BuildChannel, string> = {
 	development: 'fluxer-development',
 };
 export const APP_PROTOCOL = CHANNEL_APP_PROTOCOLS[BUILD_CHANNEL];
-export const STABLE_APP_URL = 'https://web.fluxer.app';
-const CANARY_APP_URL = 'https://web.canary.fluxer.app';
+// ChatFlux: our own instance and download page.
+export const CHATFLUX_ORIGIN = 'https://chat.catflux.hu';
+export const CHATFLUX_DOWNLOAD_URL = 'https://github.com/__GITHUB_USER__/chatflux/releases/latest';
+export const STABLE_APP_URL = CHATFLUX_ORIGIN;
+const CANARY_APP_URL = CHATFLUX_ORIGIN;
 const DEVELOPMENT_APP_URL = 'http://localhost:8088';
 export const CHANNEL_APP_URLS: Record<BuildChannel, string> = {
 	stable: STABLE_APP_URL,
@@ -24,12 +27,12 @@ export const CHANNEL_APP_URLS: Record<BuildChannel, string> = {
 };
 export const LOCAL_DEVELOPMENT_INSTANCE_URL = BUILD_CHANNEL === 'development' ? DEVELOPMENT_APP_URL : null;
 export const DOWNLOAD_PAGE_URLS: Record<BuildChannel, string> = {
-	stable: 'https://fluxer.app/download',
-	canary: 'https://canary.fluxer.app/download',
+	stable: CHATFLUX_DOWNLOAD_URL,
+	canary: CHATFLUX_DOWNLOAD_URL,
 	development: 'http://localhost:8088/download',
 };
-export const STABLE_MIGRATED_APP_ORIGIN = 'https://fluxer.com';
-export const CANARY_MIGRATED_APP_ORIGIN = 'https://canary.fluxer.com';
+export const STABLE_MIGRATED_APP_ORIGIN = CHATFLUX_ORIGIN;
+export const CANARY_MIGRATED_APP_ORIGIN = CHATFLUX_ORIGIN;
 export const DESKTOP_APP_SCHEME = DESKTOP_LOCAL_APP_SCHEME;
 export const DESKTOP_APP_HOST = DESKTOP_LOCAL_APP_HOST;
 export const DESKTOP_APP_ORIGIN = DESKTOP_LOCAL_APP_ORIGIN;

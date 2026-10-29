@@ -3,7 +3,7 @@
 import {BUILD_CHANNEL, type BuildChannel} from '@electron/common/BuildChannel';
 
 const DESKTOP_APP_NAMES: Record<BuildChannel, string> = {
-	stable: 'Fluxer',
+	stable: 'ChatFlux',
 	canary: 'Fluxer Canary',
 	development: 'Fluxer Development',
 };
@@ -28,17 +28,17 @@ const LINUX_PORTAL_SESSION_TOKENS: Record<BuildChannel, string> = {
 	development: 'fluxer_development_global_shortcuts',
 };
 const WINDOWS_VELOPACK_IDS: Record<BuildChannel, string> = {
-	stable: 'fluxer_desktop',
+	stable: 'chatflux_desktop',
 	canary: 'fluxer_desktop_canary',
 	development: 'fluxer_desktop_development',
 };
 const WINDOWS_APP_USER_MODEL_IDS: Record<BuildChannel, string> = {
-	stable: 'Fluxer.Fluxer',
+	stable: 'CatFlux.ChatFlux',
 	canary: 'Fluxer.Fluxer.Canary',
 	development: 'Fluxer.Fluxer.Development',
 };
 const WINDOWS_TOAST_ACTIVATOR_CLSIDS: Record<BuildChannel, string> = {
-	stable: '{48EEF21B-F3AE-431E-8CF2-386FFB2143F2}',
+	stable: '{73DD6608-05F1-46C8-AC1B-491616149B32}',
 	canary: '{9CEDB5C0-3552-43B0-A279-2232E0CDF74C}',
 	development: '{B277AB5D-371C-4098-A76D-1DAE00AC0863}',
 };
@@ -49,7 +49,7 @@ export const LINUX_DESKTOP_ENTRY_ID = LINUX_DESKTOP_ENTRY_IDS[BUILD_CHANNEL];
 export const LINUX_PORTAL_SESSION_TOKEN = LINUX_PORTAL_SESSION_TOKENS[BUILD_CHANNEL];
 export const LEGACY_LINUX_DESKTOP_ENTRY_ID = LEGACY_LINUX_DESKTOP_ENTRY_IDS[BUILD_CHANNEL];
 export const LINUX_ICON_NAME = LEGACY_LINUX_DESKTOP_ENTRY_IDS[BUILD_CHANNEL];
-export const WINDOWS_SHORTCUT_AUTHOR = 'Fluxer Platform AB';
+export const WINDOWS_SHORTCUT_AUTHOR = 'CatFlux';
 export const WINDOWS_VELOPACK_ID = WINDOWS_VELOPACK_IDS[BUILD_CHANNEL];
 export const WINDOWS_LEGACY_SQUIRREL_ID = 'fluxer_app';
 export const WINDOWS_APP_USER_MODEL_ID = WINDOWS_APP_USER_MODEL_IDS[BUILD_CHANNEL];

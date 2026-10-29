@@ -168,8 +168,16 @@ export function describeLaunchDiagnosticOptions(argv: ReadonlyArray<string> = pr
 	};
 }
 
+// ChatFlux: auto-updates are off. Upstream would pull the official Fluxer build from pkgs.fluxer.com
+// and replace ours. New versions are installed by downloading the installer from GitHub Releases.
+const CHATFLUX_UPDATES_DISABLED = true;
+
 export function shouldDisableModuleUpdatesForLaunch(argv: ReadonlyArray<string> = process.argv): boolean {
-	return hasFlag(argv, DISABLE_MODULE_UPDATES_ARGS) || truthyEnv('FLUXER_DISABLE_MODULE_UPDATES');
+	return (
+		CHATFLUX_UPDATES_DISABLED ||
+		hasFlag(argv, DISABLE_MODULE_UPDATES_ARGS) ||
+		truthyEnv('FLUXER_DISABLE_MODULE_UPDATES')
+	);
 }
 
 export function isDesktopUpdateRequested(argv: ReadonlyArray<string> = process.argv): boolean {
