@@ -16,7 +16,7 @@ const CHANNEL_APP_PROTOCOLS: Record<BuildChannel, string> = {
 export const APP_PROTOCOL = CHANNEL_APP_PROTOCOLS[BUILD_CHANNEL];
 // ChatFlux: our own instance and download page.
 export const CHATFLUX_ORIGIN = 'https://chat.catflux.hu';
-export const CHATFLUX_DOWNLOAD_URL = 'https://github.com/__GITHUB_USER__/chatflux/releases/latest';
+export const CHATFLUX_DOWNLOAD_URL = 'https://github.com/KaV3R/chatflux/releases/latest';
 export const STABLE_APP_URL = CHATFLUX_ORIGIN;
 const CANARY_APP_URL = CHATFLUX_ORIGIN;
 const DEVELOPMENT_APP_URL = 'http://localhost:8088';
