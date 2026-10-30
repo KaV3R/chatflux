@@ -169,7 +169,7 @@ export function describeLaunchDiagnosticOptions(argv: ReadonlyArray<string> = pr
 }
 
 // ChatFlux: auto-updates are off. Upstream would pull the official Fluxer build from pkgs.fluxer.com
-// and replace ours. New versions are installed by downloading the installer from GitHub Releases.
+// and replace ours. ChatFlux updates itself from GitHub Releases instead (see ChatFluxUpdater.ts).
 const CHATFLUX_UPDATES_DISABLED = true;
 
 export function shouldDisableModuleUpdatesForLaunch(argv: ReadonlyArray<string> = process.argv): boolean {

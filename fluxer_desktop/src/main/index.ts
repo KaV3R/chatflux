@@ -20,6 +20,7 @@ import {
 } from '@electron/main/AppStoreNativeBoundary';
 import {registerAutostartHandlers} from '@electron/main/Autostart';
 import {isStartMinimizedLaunch} from '@electron/main/AutostartLaunch';
+import {startChatFluxAutoUpdates} from '@electron/main/ChatFluxUpdater';
 import {
 	appendWindowsGpuDriverWorkaroundSwitches,
 	purgeChromiumRuntimeCachesIfNeeded,
@@ -396,6 +397,11 @@ if (launchConfigurationError) {
 			.then(async () => {
 				stopStartupIfQuitting();
 				log.info('App ready, initializing...');
+				try {
+					startChatFluxAutoUpdates();
+				} catch (error) {
+					log.error('[Init] Failed to start ChatFlux auto-updates:', error);
+				}
 				try {
 					runStartupPhase('host-resolver', () => app.configureHostResolver({enableAdditionalDnsQueryTypes: false}));
 				} catch (error) {

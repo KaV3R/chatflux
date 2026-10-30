@@ -294,6 +294,11 @@ jobs:
           $setup = Get-ChildItem dist-electron/velopack -Filter '*Setup.exe' | Select-Object -First 1
           Copy-Item $setup.FullName "release/ChatFlux-Setup-$($env:BUILD_VERSION)-x64.exe"
           Get-ChildItem dist-electron -Filter '*portable*.zip' | Copy-Item -Destination release/
+          # Auto-update feed: the app reads releases.win.json + the full nupkg from releases/latest/download.
+          Get-ChildItem dist-electron/velopack | Select-Object Name, Length
+          Copy-Item dist-electron/velopack/releases.win.json release/
+          Get-ChildItem dist-electron/velopack -Filter '*-full.nupkg' | Copy-Item -Destination release/
+          if (Test-Path dist-electron/velopack/RELEASES) { Copy-Item dist-electron/velopack/RELEASES release/ }
           Get-ChildItem release
 
       - name: Publish GitHub release
@@ -304,9 +309,21 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $tag = "desktop-v$($env:BUILD_VERSION)"
-          gh release create $tag (Get-ChildItem release).FullName `
+          gh release create $tag `
             --repo $env:GITHUB_REPOSITORY `
             --target $env:GITHUB_SHA `
             --title "ChatFlux $($env:BUILD_VERSION)" `
-            --notes "ChatFlux Windows telepítő. Töltsd le a ChatFlux-Setup fájlt és futtasd. Ha a Windows figyelmeztet: További információ -> Futtatás mindenképp." `
-            --latest
+            --notes "ChatFlux Windows telepítő. Töltsd le a ChatFlux-Setup fájlt és futtasd. Ha a Windows figyelmeztet: További információ -> Futtatás mindenképp. A telepített app a további frissítéseket magától letölti." `
+            --draft
+          if ($LASTEXITCODE -ne 0) { throw 'gh release create failed' }
+          foreach ($f in Get-ChildItem release) {
+            $ok = $false
+            for ($i = 1; $i -le 5 -and -not $ok; $i++) {
+              gh release upload $tag $f.FullName --repo $env:GITHUB_REPOSITORY --clobber
+              if ($LASTEXITCODE -eq 0) { $ok = $true } else { Start-Sleep -Seconds (15 * $i) }
+            }
+            if (-not $ok) { throw "Upload failed: $($f.Name)" }
+          }
+          # Publishing last means the update feed (releases/latest) only switches once every file is up.
+          gh release edit $tag --repo $env:GITHUB_REPOSITORY --draft=false --latest
+          if ($LASTEXITCODE -ne 0) { throw 'gh release edit failed' }
