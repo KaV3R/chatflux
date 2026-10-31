@@ -20,7 +20,7 @@ type VelopackUpdateManager = InstanceType<typeof import('velopack').UpdateManage
 
 let started = false;
 let checking = false;
-let promptedVersion: string | null = null;
+let dismissedVersion: string | null = null;
 
 function createManager(): VelopackUpdateManager | null {
 	try {
@@ -35,28 +35,106 @@ function createManager(): VelopackUpdateManager | null {
 	}
 }
 
-async function askToRestart(manager: VelopackUpdateManager, update: UpdateInfo): Promise<void> {
+function mainWindow(): BrowserWindow | undefined {
+	return BrowserWindow.getAllWindows().find((window) => !window.isDestroyed() && window.isVisible());
+}
+
+async function showBox(options: Electron.MessageBoxOptions): Promise<number> {
+	const parent = mainWindow();
+	const {response} = parent ? await dialog.showMessageBox(parent, options) : await dialog.showMessageBox(options);
+	return response;
+}
+
+const PROGRESS_PAGE = `<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;height:100%;background:#1e1f22;color:#f2f3f5;font-family:'Segoe UI',sans-serif;user-select:none}
+body{display:flex;flex-direction:column;justify-content:center;padding:0 22px;box-sizing:border-box;-webkit-app-region:drag}
+h1{font-size:15px;font-weight:600;margin:0 0 12px}
+.bar{height:8px;border-radius:4px;background:#3a3c42;overflow:hidden}
+.fill{height:100%;width:0;background:#5865f2;transition:width .2s}
+p{font-size:12px;color:#b5bac1;margin:10px 0 0}
+</style></head><body><h1>ChatFlux frissítés letöltése</h1><div class="bar"><div class="fill" id="f"></div></div><p id="t">Letöltés...</p></body></html>`;
+
+function openProgressWindow(): BrowserWindow | null {
+	try {
+		const parent = mainWindow();
+		const win = new BrowserWindow({
+			width: 380,
+			height: 130,
+			parent,
+			modal: false,
+			resizable: false,
+			minimizable: false,
+			maximizable: false,
+			fullscreenable: false,
+			frame: false,
+			show: false,
+			skipTaskbar: true,
+			backgroundColor: '#1e1f22',
+			webPreferences: {sandbox: true, contextIsolation: true, nodeIntegration: false},
+		});
+		win.once('ready-to-show', () => win.show());
+		void win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(PROGRESS_PAGE)}`);
+		return win;
+	} catch (error) {
+		log.warn('[ChatFluxUpdater] Could not open the progress window', error);
+		return null;
+	}
+}
+
+function setProgress(win: BrowserWindow | null, percent: number): void {
+	const value = Math.max(0, Math.min(100, Math.round(percent)));
+	mainWindow()?.setProgressBar(value / 100);
+	if (!win || win.isDestroyed()) return;
+	void win.webContents
+		.executeJavaScript(
+			`document.getElementById('f').style.width='${value}%';document.getElementById('t').textContent='Letöltés... ${value}%';`,
+		)
+		.catch(() => {});
+}
+
+async function offerUpdate(manager: VelopackUpdateManager, update: UpdateInfo): Promise<void> {
 	const version = update.TargetFullRelease.Version;
-	if (promptedVersion === version) return;
-	promptedVersion = version;
-	const parent = BrowserWindow.getAllWindows().find((window) => !window.isDestroyed() && window.isVisible());
-	const options: Electron.MessageBoxOptions = {
+	if (dismissedVersion === version) return;
+	let current = '';
+	try {
+		current = manager.getCurrentVersion();
+	} catch {}
+	const answer = await showBox({
 		type: 'info',
 		title: 'ChatFlux frissítés',
-		message: `Új ChatFlux verzió érhető el (${version}).`,
-		detail: 'A frissítés letöltődött. Újraindítod most? Ha később, a következő indításkor települ.',
-		buttons: ['Újraindítás most', 'Később'],
+		message: `Új verzió érhető el: ${version}${current ? ` (most: ${current})` : ''}.`,
+		detail: 'Letöltöd és telepíted most? A ChatFlux a telepítés után magától újraindul.',
+		buttons: ['Frissítés', 'Később'],
 		defaultId: 0,
 		cancelId: 1,
 		noLink: true,
-	};
-	const {response} = parent ? await dialog.showMessageBox(parent, options) : await dialog.showMessageBox(options);
-	if (response !== 0) return;
+	});
+	if (answer !== 0) {
+		dismissedVersion = version;
+		return;
+	}
+
+	const progressWindow = openProgressWindow();
 	try {
+		log.info('[ChatFluxUpdater] Downloading update', {version});
+		await manager.downloadUpdateAsync(update, (percent: number) => setProgress(progressWindow, percent));
+		setProgress(progressWindow, 100);
+		log.info('[ChatFluxUpdater] Update downloaded, restarting', {version});
 		manager.waitExitThenApplyUpdate(update, false, true);
 		app.quit();
 	} catch (error) {
-		log.error('[ChatFluxUpdater] Failed to apply the update', error);
+		log.error('[ChatFluxUpdater] Update failed', error);
+		await showBox({
+			type: 'error',
+			title: 'ChatFlux frissítés',
+			message: 'Nem sikerült letölteni a frissítést.',
+			detail: 'Próbáld újra később, vagy töltsd le kézzel a GitHubról.',
+			buttons: ['OK'],
+			noLink: true,
+		});
+	} finally {
+		mainWindow()?.setProgressBar(-1);
+		if (progressWindow && !progressWindow.isDestroyed()) progressWindow.destroy();
 	}
 }
 
@@ -69,10 +147,7 @@ async function checkOnce(manager: VelopackUpdateManager): Promise<void> {
 			log.info('[ChatFluxUpdater] Up to date', {version: manager.getCurrentVersion()});
 			return;
 		}
-		log.info('[ChatFluxUpdater] Downloading update', {version: update.TargetFullRelease.Version});
-		await manager.downloadUpdateAsync(update, () => {});
-		log.info('[ChatFluxUpdater] Update downloaded', {version: update.TargetFullRelease.Version});
-		await askToRestart(manager, update);
+		await offerUpdate(manager, update);
 	} catch (error) {
 		log.warn('[ChatFluxUpdater] Update check failed', error);
 	} finally {
