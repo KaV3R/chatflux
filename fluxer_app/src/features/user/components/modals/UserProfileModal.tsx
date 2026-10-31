@@ -4,6 +4,8 @@ import {UserSettingsModal} from '@app/features/app/components/dialogs/LoadableSe
 import * as Modal from '@app/features/app/components/dialogs/Modal';
 import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
 import Authentication from '@app/features/auth/state/Authentication';
+import {ProfileCardCosmetics} from '@app/features/chatflux_shop/components/Cosmetics';
+import ShopStore from '@app/features/chatflux_shop/ShopStore';
 import DeveloperOptions from '@app/features/devtools/state/DeveloperOptions';
 import {
 	COPY_USER_ID_DESCRIPTOR,
@@ -759,7 +761,8 @@ export const UserProfileModal: UserProfileModalComponent = observer(
 			previewOverrides?.previewAccentColor !== undefined
 				? previewOverrides.previewAccentColor
 				: borderProfile?.accent_color;
-		const borderColor = getUserAccentColor(displayUser, borderAccentColor);
+		const worn = ShopStore.getWorn(displayUser.id);
+		const borderColor = worn.frame?.color ?? getUserAccentColor(displayUser, borderAccentColor);
 		return (
 			<Modal.Root
 				size="medium"
@@ -774,9 +777,10 @@ export const UserProfileModal: UserProfileModalComponent = observer(
 				/>
 				<div
 					className={userProfileModalStyles.modalContainer}
-					style={{borderColor}}
+					style={{borderColor, position: 'relative'}}
 					data-flx="user.user-profile-modal.div"
 				>
+					{!showProfileSkeleton && <ProfileCardCosmetics worn={worn} />}
 					{showProfileSkeleton ? (
 						<UserProfileLoadingSkeleton
 							variant="modal"
