@@ -4,6 +4,8 @@ import * as AccessibilityCommands from '@app/features/accessibility/commands/Acc
 import Accessibility from '@app/features/accessibility/state/Accessibility';
 import {resolveMotionPreferencesModel} from '@app/features/accessibility/state/MotionPreferencesMachine';
 import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
+import ChatFluxPrefs from '@app/features/chatflux_shop/ChatFluxPrefs';
+import {tr} from '@app/features/chatflux_shop/ShopApi';
 import {Switch} from '@app/features/ui/components/form/FormSwitch';
 import type {RadioOption} from '@app/features/ui/radio_group/RadioGroup';
 import {RadioGroup} from '@app/features/ui/radio_group/RadioGroup';
@@ -171,6 +173,16 @@ export const AnimationTabContent: React.FC = observer(() => {
 				value={motion.effectiveGifAutoPlay}
 				onChange={(value) => AccessibilityCommands.requestGifAutoPlay(value)}
 				data-flx="user.accessibility-tab.animation-tab.animation-tab-content.switch--2"
+			/>
+			<Switch
+				label={tr('Animált avatarok és bannerek lejátszása', 'Play animated avatars and banners')}
+				description={tr(
+					'A GIF profilképek és bannerek folyamatosan mozognak mindenhol. Kikapcsolva csak akkor, ha rájuk viszed az egeret.',
+					'GIF avatars and banners keep playing everywhere. When off, they only play while you hover them.',
+				)}
+				value={ChatFluxPrefs.animateProfiles}
+				onChange={(value) => ChatFluxPrefs.setAnimateProfiles(value)}
+				data-flx="user.accessibility-tab.animation-tab.animation-tab-content.switch--chatflux-profiles"
 			/>
 			<div
 				className={styles.radioSection}

@@ -65,7 +65,7 @@ export const ProfileCardBanner: React.FC<ProfileCardBannerProps> = observer(
 		} = useAnimatedImageUrl({
 			staticUrl: bannerUrl,
 			animatedUrl: hoverBannerUrl,
-			kind: 'gif',
+			kind: 'banner',
 		});
 		const bannerStyle = useMemo<React.CSSProperties>(
 			() => ({

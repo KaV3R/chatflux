@@ -2,6 +2,7 @@
 
 import Accessibility from '@app/features/accessibility/state/Accessibility';
 import {useSaveData} from '@app/features/app/hooks/useSaveData';
+import ChatFluxPrefs from '@app/features/chatflux_shop/ChatFluxPrefs';
 import UserSettings from '@app/features/user/state/UserSettings';
 import {StickerAnimationOptions} from '@fluxer/constants/src/UserConstants';
 
@@ -43,8 +44,9 @@ function getKindAllowance(kind: ShouldAnimateKind): AnimationAllowanceMode {
 			return 'ON_INTERACTION';
 		}
 		case 'avatar':
-		case 'guild_icon':
 		case 'banner':
+			return ChatFluxPrefs.animateProfiles ? 'ALWAYS' : 'ON_INTERACTION';
+		case 'guild_icon':
 		case 'custom_status_emoji':
 			return 'ON_INTERACTION';
 	}
