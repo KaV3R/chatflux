@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {ProfileCardCosmetics} from '@app/features/chatflux_shop/components/Cosmetics';
+import ShopStore from '@app/features/chatflux_shop/ShopStore';
 import styles from '@app/features/user/components/profile/profile_card/ProfileCardLayout.module.css';
 import {Trans} from '@lingui/react/macro';
 import {clsx} from 'clsx';
@@ -13,12 +15,19 @@ interface ProfileCardLayoutProps {
 	hoverRef?: (instance: HTMLDivElement | null) => void;
 	className?: string;
 	style?: React.CSSProperties;
+	/** Whose ChatFlux Shop profile effect / frame to draw on the card. */
+	cosmeticsUserId?: string | null;
 	children: React.ReactNode;
 }
 
 export const ProfileCardLayout: React.FC<ProfileCardLayoutProps> = observer(
-	({borderColor, showPreviewLabel = false, hoverRef, className, style, children}) => {
-		const cardStyle = useMemo<React.CSSProperties>(() => ({...style, borderColor}), [borderColor, style]);
+	({borderColor, showPreviewLabel = false, hoverRef, className, style, cosmeticsUserId, children}) => {
+		const worn = ShopStore.getWorn(cosmeticsUserId);
+		const frameColor = worn.frame?.color;
+		const cardStyle = useMemo<React.CSSProperties>(
+			() => ({...style, borderColor: frameColor ?? borderColor}),
+			[borderColor, frameColor, style],
+		);
 		return (
 			<div data-flx="user.profile.profile-card.profile-card-layout.div">
 				{showPreviewLabel && (
@@ -33,6 +42,7 @@ export const ProfileCardLayout: React.FC<ProfileCardLayoutProps> = observer(
 					data-flx="user.profile.profile-card.profile-card-layout.profile-card"
 				>
 					{children}
+					<ProfileCardCosmetics worn={worn} />
 				</div>
 			</div>
 		);

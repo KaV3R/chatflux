@@ -4,6 +4,7 @@ import {getStatusTypeLabel} from '@app/features/app/constants/AppConstants';
 import {useHover} from '@app/features/app/hooks/useHover';
 import {useMergeRefs} from '@app/features/app/hooks/useMergeRefs';
 import {useShouldAnimate} from '@app/features/app/hooks/useShouldAnimate';
+import {getAvatarDecorationUrl} from '@app/features/chatflux_shop/components/Cosmetics';
 import GuildMembers from '@app/features/member/state/GuildMembers';
 import * as ImageCacheUtils from '@app/features/messaging/utils/ImageCacheUtils';
 import {BaseAvatar} from '@app/features/ui/components/BaseAvatar';
@@ -168,6 +169,7 @@ const AvatarComponent = React.forwardRef<HTMLDivElement, AvatarProps>(
 		const safeHoverAvatarUrl = isAnimatedNeeded ? hoverAvatarUrl || undefined : undefined;
 		const normalizedStatusAttr = status != null ? normalizeStatus(status) : undefined;
 		const displayName = NicknameUtils.getNickname(user, guildId ?? null);
+		const decorationUrl = getAvatarDecorationUrl(userId, size);
 		const avatarRefs = useMemo(() => [ref, hoverRef], [ref, hoverRef]);
 		const mergedRef = useMergeRefs(avatarRefs);
 		return (
@@ -190,6 +192,7 @@ const AvatarComponent = React.forwardRef<HTMLDivElement, AvatarProps>(
 				statusLabel={statusLabel}
 				disableStatusTooltip={disableStatusTooltip}
 				animateStatusCutout={animateStatusCutout}
+				decorationUrl={decorationUrl}
 				data-flx="ui.avatar.avatar-component.base-avatar"
 				data-flx-user-id={userId}
 				data-flx-user-username={NicknameUtils.formatNameForStreamerMode(user.username)}

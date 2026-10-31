@@ -1,0 +1,108 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+/* Avatar decoration: 120% of the avatar, centred on it. */
+.decoration {
+	position: absolute;
+	left: -10%;
+	top: -10%;
+	width: 120%;
+	height: 120%;
+	max-width: none;
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+/* Nameplate behind a member list / DM row. */
+.nameplate {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	border-radius: inherit;
+	pointer-events: none;
+	z-index: 0;
+}
+
+.nameplate img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: right center;
+	opacity: 0.9;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+.nameplateContent {
+	position: relative;
+	z-index: 1;
+}
+
+/* Profile effect: covers the whole profile card. */
+.effect {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	border-radius: inherit;
+	pointer-events: none;
+	z-index: 5;
+}
+
+.effect img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center top;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+.effectAlignCenter img {
+	object-position: center center;
+}
+
+.effectAlignBottom img {
+	object-position: center bottom;
+}
+
+/* Profile frame: art is 340 wide for a 300 wide card (20 px overhang each side).
+   Top piece: card edge at y=40 of 110. Bottom piece: card edge at y=30 of 70. */
+.frameTop,
+.frameBottom {
+	position: absolute;
+	left: -6.6667%;
+	width: 113.3333%;
+	max-width: none;
+	height: auto;
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-drag: none;
+	z-index: 6;
+}
+
+.frameTop {
+	top: 0;
+	transform: translateY(-36.3636%);
+}
+
+.frameBottom {
+	bottom: 0;
+	transform: translateY(57.1429%);
+}
+
+.frameGlow {
+	position: absolute;
+	inset: calc(-1 * var(--profile-card-border-width, 0.15625rem));
+	border-radius: inherit;
+	pointer-events: none;
+	z-index: 4;
+	box-shadow:
+		0 0 0 1px var(--chatflux-frame-color),
+		0 0 1.25rem -0.25rem var(--chatflux-frame-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.effect {
+		display: none;
+	}
+}

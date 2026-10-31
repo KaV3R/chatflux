@@ -109,6 +109,10 @@ const PlutoniumPageLayout = createNamedLoadableComponent<AppRouteComponentProps>
 	load: async () =>
 		(await import('@app/features/premium/components/plutonium_page/PlutoniumPageLayout')).PlutoniumPageLayout,
 });
+const ShopPage = createNamedLoadableComponent<AppRouteComponentProps>({
+	displayName: 'ShopPage',
+	load: async () => (await import('@app/features/chatflux_shop/components/ShopPage')).ShopPage,
+});
 const OperatorPassRoutePage = createNamedLoadableComponent<AppRouteComponentProps>({
 	displayName: 'OperatorPassRoutePage',
 	load: async () =>
@@ -291,6 +295,17 @@ const plutoniumRoute = createRoute({
 		</DMLayout>
 	),
 });
+const shopRoute = createRoute({
+	getParentRoute: () => guildsLayoutRoute,
+	id: 'chatfluxShop',
+	path: Routes.SHOP,
+	preload: ShopPage.preload,
+	component: () => (
+		<DMLayout data-flx="app.router.app-routes.dm-layout--shop">
+			<ShopPage data-flx="app.router.app-routes.shop-page" />
+		</DMLayout>
+	),
+});
 const legacyPlutoniumRoute = createRoute({
 	getParentRoute: () => guildsLayoutRoute,
 	id: 'legacyPlutonium',
@@ -446,6 +461,7 @@ export const appRouteTree = appLayoutRoute.addChildren([
 		discoverRoute,
 		legacyDiscoverRoute,
 		plutoniumRoute,
+		shopRoute,
 		legacyPlutoniumRoute,
 		operatorPassRoute,
 		favoritesRoute.addChildren([favoritesChannelRoute]),

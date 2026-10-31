@@ -241,6 +241,7 @@ export const ProfilePreview: React.FC<ProfilePreviewProps> = observer(
 					<ProfileCardLayout
 						borderColor={borderColor}
 						showPreviewLabel={showPreviewLabel}
+						cosmeticsUserId={user.id}
 						data-flx="user.profile.profile-preview.profile-card-layout"
 					>
 						<ProfileCardBanner

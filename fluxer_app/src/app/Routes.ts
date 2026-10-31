@@ -47,6 +47,7 @@ export const Routes = {
 	USER_PROFILE: '/users/:userId',
 	PLUTONIUM: '/channels/@premium',
 	LEGACY_PLUTONIUM: '/plutonium',
+	SHOP: '/channels/@shop',
 	OPERATOR_PASS: '/channels/@operator-pass',
 	CHECKOUT: '/channels/@checkout/:product',
 	terms: (): string | null => RuntimeConfig.termsUrl ?? hostedMarketingUrl('terms'),

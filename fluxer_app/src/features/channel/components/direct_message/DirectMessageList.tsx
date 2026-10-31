@@ -22,6 +22,7 @@ import * as MessageCommands from '@app/features/messaging/commands/MessageComman
 import {getSortedDmChannels} from '@app/features/messaging/utils/DmChannelUtils';
 import * as NavigationCommands from '@app/features/navigation/commands/NavigationCommands';
 import SelectedChannel from '@app/features/navigation/state/SelectedChannel';
+import * as RouterUtils from '@app/features/navigation/utils/RouterUtils';
 import {useLocation} from '@app/features/platform/components/router/RouterReact';
 import {Logger} from '@app/features/platform/utils/AppLogger';
 import * as PremiumModalCommands from '@app/features/premium/commands/PremiumModalCommands';
@@ -58,6 +59,7 @@ import {
 	NotePencilIcon,
 	PaperPlaneIcon,
 	PlusIcon,
+	StorefrontIcon,
 	UserPlusIcon,
 	UsersThreeIcon,
 } from '@phosphor-icons/react';
@@ -303,6 +305,12 @@ export const DMList = observer(() => {
 		} else {
 			NavigationCommands.selectChannel(ME, null);
 		}
+		if (MobileLayout.isMobileLayout()) {
+			LayoutCommands.updateMobileLayoutState(false, true);
+		}
+	};
+	const openShop = () => {
+		RouterUtils.transitionTo(Routes.SHOP);
 		if (MobileLayout.isMobileLayout()) {
 			LayoutCommands.updateMobileLayoutState(false, true);
 		}
@@ -631,6 +639,33 @@ export const DMList = observer(() => {
 							</div>
 						</ClickableItem>
 					)}
+					<ClickableItem
+						isSelected={location.pathname === Routes.SHOP}
+						onClick={openShop}
+						data-flx="channel.direct-message.dm-list.clickable-item.open-shop"
+					>
+						<div
+							className={styles.clickableItemContent}
+							data-flx="channel.direct-message.dm-list.clickable-item-content--shop"
+						>
+							<div
+								className={styles.clickableItemIcon}
+								data-flx="channel.direct-message.dm-list.clickable-item-icon--shop"
+							>
+								<StorefrontIcon
+									weight="fill"
+									className={styles.iconSize5}
+									data-flx="channel.direct-message.dm-list.icon-size5--shop"
+								/>
+							</div>
+							<span
+								className={styles.clickableItemText}
+								data-flx="channel.direct-message.dm-list.clickable-item-text--shop"
+							>
+								Shop
+							</span>
+						</div>
+					</ClickableItem>
 					{!directMessagesDisabled && (
 						<>
 							<div

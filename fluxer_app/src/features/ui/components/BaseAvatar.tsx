@@ -2,6 +2,7 @@
 
 import Accessibility from '@app/features/accessibility/state/Accessibility';
 import {getStatusTypeLabel} from '@app/features/app/constants/AppConstants';
+import {AvatarDecorationImage} from '@app/features/chatflux_shop/components/Cosmetics';
 import {useImageRecovery} from '@app/features/messaging/hooks/useImageRecovery';
 import * as ImageCacheUtils from '@app/features/messaging/utils/ImageCacheUtils';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
@@ -108,6 +109,8 @@ interface BaseAvatarProps {
 	customStatusBadgeScale?: number;
 	customStatusBadgeMaxSizeRatio?: number;
 	customStatusBadgeCutoutPaddingScale?: number;
+	/** ChatFlux Shop avatar decoration drawn around the avatar. */
+	decorationUrl?: string | null;
 	title?: never;
 	[themeAttr: `data-flx-${string}`]: string | undefined;
 }
@@ -139,6 +142,7 @@ export const BaseAvatar = React.forwardRef<HTMLDivElement, BaseAvatarProps>(
 			customStatusBadgeScale = DEFAULT_CUSTOM_STATUS_BADGE_SCALE,
 			customStatusBadgeMaxSizeRatio,
 			customStatusBadgeCutoutPaddingScale = DEFAULT_CUSTOM_STATUS_BADGE_CUTOUT_PADDING_SCALE,
+			decorationUrl,
 			...props
 		},
 		ref,
@@ -418,6 +422,7 @@ export const BaseAvatar = React.forwardRef<HTMLDivElement, BaseAvatarProps>(
 						data-flx="ui.base-avatar.hover-overlay"
 					/>
 				</svg>
+				{decorationUrl && <AvatarDecorationImage url={decorationUrl} />}
 				{statusBadge &&
 					(isTyping || disableStatusTooltip ? (
 						statusBadge

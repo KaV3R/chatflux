@@ -5,6 +5,7 @@ import {UserTag} from '@app/features/channel/components/ChannelUserTag';
 import {CompactMemberCustomStatus} from '@app/features/channel/components/CompactMemberCustomStatus';
 import styles from '@app/features/channel/components/MemberListItem.module.css';
 import {PreloadableUserPopout} from '@app/features/channel/components/PreloadableUserPopout';
+import {nameplateContentClassName, UserNameplate} from '@app/features/chatflux_shop/components/Cosmetics';
 import Guilds from '@app/features/guild/state/Guilds';
 import {useMemberListCustomStatus} from '@app/features/member/hooks/useMemberListCustomStatus';
 import {useMemberListMobile} from '@app/features/member/hooks/useMemberListMobile';
@@ -205,7 +206,8 @@ export const MemberListItem: React.FC<MemberListItemProps> = observer((props) =>
 				data-member-list-focus-item="true"
 				data-flx="channel.member-list-item.button.context-menu"
 			>
-				<div className={styles.grid} data-flx="channel.member-list-item.grid">
+				<UserNameplate userId={user.id} />
+				<div className={clsx(styles.grid, nameplateContentClassName)} data-flx="channel.member-list-item.grid">
 					<span className={styles.content} data-flx="channel.member-list-item.content">
 						<div className={styles.avatarContainer} data-flx="channel.member-list-item.avatar-container">
 							<ListStatusAwareAvatar

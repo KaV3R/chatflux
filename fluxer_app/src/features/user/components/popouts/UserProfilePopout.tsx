@@ -408,6 +408,7 @@ export const UserProfilePopout: React.FC<UserProfilePopoutProps> = observer(
 						hoverRef={hoverRef}
 						className={cardClassName}
 						style={PROFILE_POPOUT_GEOMETRY_STYLE}
+						cosmeticsUserId={isWebhook ? null : user.id}
 						data-flx="user.user-profile-popout.profile-card-layout"
 					>
 						{profileBanner}
