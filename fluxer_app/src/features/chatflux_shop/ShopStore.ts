@@ -129,8 +129,27 @@ class ShopStore {
 		}
 	}
 
+	/** Buys `sku` for another user. Returns who received it. */
+	async gift(sku: string, toUserId: string): Promise<{userId: string; name: string | null} | null> {
+		this.pendingSku = `gift:${sku}`;
+		try {
+			const me = await ShopApi.gift(sku, toUserId);
+			runInAction(() => this.applyMe(me));
+			return me.giftedTo ?? null;
+		} finally {
+			runInAction(() => {
+				this.pendingSku = null;
+			});
+		}
+	}
+
+	async markGiftsSeen(): Promise<void> {
+		const me = await ShopApi.giftsSeen();
+		runInAction(() => this.applyMe(me));
+	}
+
 	private applyMe(me: ShopMe): void {
-		this.me = me;
+		this.me = {...me, giftedTo: undefined};
 		this.meState = 'ready';
 		this.worn.set(me.userId, me.wearing ?? {});
 		this.fetchedAt.set(me.userId, Date.now());

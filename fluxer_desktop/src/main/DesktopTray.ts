@@ -83,6 +83,7 @@ const trayState: TrayRuntimeStatePayload = {
 	buildInfo: null,
 	hidePersonalInformation: false,
 	customCssOff: null,
+	speaking: false,
 };
 
 const privacyListeners = new Set<() => void>();
@@ -96,6 +97,12 @@ export function updateTrayRuntimeState(update: Partial<TrayRuntimeStatePayload>,
 	if (webContentsId !== undefined) {
 		trayActionBridgeWebContentsId = webContentsId;
 	}
+	if (typeof update.speaking === 'boolean' && update.speaking !== trayState.speaking) {
+		trayState.speaking = update.speaking;
+		syncTrayIcon(false);
+	}
+	// Speaking-only updates arrive often; they only change the icon, not the menu.
+	if (Object.keys(update).every((key) => key === 'speaking')) return;
 	if (typeof update.buildInfo === 'string' && update.buildInfo !== trayState.buildInfo) {
 		logger.info(`The renderer reported its build: ${update.buildInfo}`);
 	}
@@ -300,13 +307,48 @@ function resolveTrayIcon(): {key: string; image: Electron.NativeImage} | null {
 		darkSystemUI: nativeTheme.shouldUseDarkColorsForSystemIntegratedUI,
 	});
 	const indicator = trayUnreadBadge !== 0;
-	const key = `${appearance}:${indicator}`;
+	const speaking = trayState.speaking === true && process.platform !== 'darwin';
+	const key = `${appearance}:${indicator}:${speaking}`;
 	let image = trayIconCache.get(key);
 	if (!image) {
 		image = renderTrayIcon(trayBaseIcon, appearance, indicator, process.platform);
+		if (speaking) image = tintTrayIconGreen(image);
 		trayIconCache.set(key, image);
 	}
 	return {key, image};
+}
+
+/** ChatFlux: light parts of the icon turn green while the user talks; dark lines stay. */
+function tintTrayIconGreen(source: Electron.NativeImage): Electron.NativeImage {
+	try {
+		const scaleFactors = source.getScaleFactors?.() ?? [1];
+		const result = nativeImage.createEmpty();
+		for (const scaleFactor of scaleFactors.length > 0 ? scaleFactors : [1]) {
+			const size = source.getSize(scaleFactor);
+			const bitmap = Buffer.from(source.toBitmap({scaleFactor}));
+			const green = {b: 0x5a, g: 0xd1, r: 0x23};
+			for (let i = 0; i + 3 < bitmap.length; i += 4) {
+				if (bitmap[i + 3] === 0) continue;
+				const b = bitmap[i];
+				const g = bitmap[i + 1];
+				const r = bitmap[i + 2];
+				const lum = Math.max(r, g, b) / 255;
+				bitmap[i] = Math.round(b * (1 - lum) + green.b * lum);
+				bitmap[i + 1] = Math.round(g * (1 - lum) + green.g * lum);
+				bitmap[i + 2] = Math.round(r * (1 - lum) + green.r * lum);
+			}
+			result.addRepresentation({
+				scaleFactor,
+				width: Math.round(size.width * scaleFactor),
+				height: Math.round(size.height * scaleFactor),
+				buffer: bitmap,
+			});
+		}
+		return result.isEmpty() ? source : result;
+	} catch (error) {
+		logger.warn('Could not tint the tray icon', error);
+		return source;
+	}
 }
 
 function getTrayToolTip(): string {

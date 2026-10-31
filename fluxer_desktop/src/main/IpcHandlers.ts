@@ -117,6 +117,7 @@ interface TrayRuntimeStateUpdate {
 	selfDeaf?: boolean;
 	presenceStatus?: TrayPresenceStatus | null;
 	buildInfo?: string | null;
+	speaking?: boolean;
 }
 
 function normalizeDesktopWindowBehaviorUpdate(value: unknown): Partial<DesktopWindowBehaviorSettings> {

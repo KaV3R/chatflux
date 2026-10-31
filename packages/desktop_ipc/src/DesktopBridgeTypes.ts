@@ -324,6 +324,8 @@ export interface TrayRuntimeStatePayload {
 	buildInfo: string | null;
 	hidePersonalInformation: boolean;
 	customCssOff: boolean | null;
+	/** ChatFlux: the local user is talking in voice (tray icon turns green). */
+	speaking?: boolean;
 }
 
 export type GlobalShortcutsBackend = 'portal' | 'x11' | 'evdev' | 'windows' | 'macos' | 'none';

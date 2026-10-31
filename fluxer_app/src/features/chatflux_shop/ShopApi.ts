@@ -53,12 +53,30 @@ export interface ShopCatalog {
 export type WornCosmetic = ShopRender & {sku: string};
 export type WornCosmetics = Partial<Record<ShopSlot, WornCosmetic>>;
 
+export interface ShopGift {
+	sku: string | null;
+	coins?: number | null;
+	from: string | null;
+	fromName?: string | null;
+	at: string;
+}
+
 export interface ShopMe {
 	userId: string;
 	balance: number;
 	owned: Array<string>;
 	equipped: Partial<Record<ShopSlot, string>>;
 	wearing: WornCosmetics;
+	isAdmin?: boolean;
+	gifts?: Array<ShopGift>;
+	giftedTo?: {userId: string; name: string | null};
+}
+
+export interface ShopAdminUser {
+	userId: string;
+	name: string | null;
+	balance: number;
+	owned: number;
 }
 
 export class ShopApiError extends Error {
@@ -131,6 +149,11 @@ export const ShopApi = {
 	me: () => request<ShopMe>('GET', '/me', undefined, true),
 	purchase: (sku: string) => request<ShopMe>('POST', '/purchase', {sku}, true),
 	equip: (slot: ShopSlot, sku: string | null) => request<ShopMe>('POST', '/equip', {slot, sku}, true),
+	gift: (sku: string, toUserId: string) => request<ShopMe>('POST', '/gift', {sku, toUserId}, true),
+	giftsSeen: () => request<ShopMe>('POST', '/gifts/seen', {}, true),
+	adminUsers: () => request<{users: Array<ShopAdminUser>}>('GET', '/admin/users', undefined, true),
+	adminGrant: (body: {userId: string; coins?: number; sku?: string; name?: string}) =>
+		request<ShopMe>('POST', '/admin/grant', body, true),
 	cosmetics: (ids: Array<string>) =>
 		request<{users: Record<string, WornCosmetics>}>('GET', `/cosmetics?ids=${ids.join(',')}`),
 };

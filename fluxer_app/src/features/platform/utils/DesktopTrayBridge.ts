@@ -15,7 +15,11 @@ import ThemeSettingsState from '@app/features/theme_settings/state/ThemeSettings
 import {getElectronAPI, isDesktop} from '@app/features/ui/utils/NativeUtils';
 import UserSettings from '@app/features/user/state/UserSettings';
 import MediaEngine from '@app/features/voice/engine/MediaEngineFacade';
-import {selectVoiceEngineV2AppConnectionWithFallback} from '@app/features/voice/engine/v2/VoiceEngineV2AppSelectors';
+import {
+	isVoiceEngineV2AppParticipantSpeaking,
+	selectVoiceEngineV2AppConnectionWithFallback,
+	selectVoiceEngineV2AppParticipants,
+} from '@app/features/voice/engine/v2/VoiceEngineV2AppSelectors';
 import LocalVoiceState from '@app/features/voice/state/LocalVoiceState';
 import {type StatusType, StatusTypes} from '@fluxer/constants/src/StatusConstants';
 import {reaction} from 'mobx';
@@ -60,6 +64,15 @@ function resolveVoiceConnectionProjection() {
 	});
 }
 
+/** ChatFlux: is the local user talking right now (drives the green tray icon). */
+function resolveLocalSpeaking(connected: boolean): boolean {
+	if (!connected || LocalVoiceState.getSelfMute() || LocalVoiceState.getSelfDeaf()) return false;
+	const model = MediaEngine.voiceEngineV2Model;
+	if (!model) return false;
+	const local = selectVoiceEngineV2AppParticipants(model).participants.find((participant) => participant.isLocal);
+	return isVoiceEngineV2AppParticipantSpeaking(local);
+}
+
 export function initializeDesktopTrayBridge(): (() => void) | null {
 	if (!isDesktop()) return null;
 	const electronApi = getElectronAPI();
@@ -77,6 +90,13 @@ export function initializeDesktopTrayBridge(): (() => void) | null {
 			customCssOff: ThemeSettingsState.customCssOff,
 		});
 	};
+	// Speaking flips many times a second, so it gets its own small reaction instead of
+	// rebuilding the whole tray state (and menu) every time.
+	const disposeSpeakingReaction = reaction(
+		() => resolveLocalSpeaking(resolveVoiceConnectionProjection().connected),
+		(speaking) => electronApi.setTrayRuntimeState?.({speaking}),
+		{fireImmediately: true, name: 'DesktopTrayBridge-speaking'},
+	);
 	void getClientInfo()
 		.then((info) => {
 			electronApi.setTrayRuntimeState?.({buildInfo: formatClientBuildInfo(info)});
@@ -140,6 +160,7 @@ export function initializeDesktopTrayBridge(): (() => void) | null {
 	});
 	return () => {
 		disposeReaction();
+		disposeSpeakingReaction();
 		disposeTrayAction?.();
 	};
 }

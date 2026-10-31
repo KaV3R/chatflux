@@ -671,3 +671,242 @@
 		width: 8rem;
 	}
 }
+
+/* ---------- gifts ---------- */
+.giftBox {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.giftTitle {
+	font-weight: 700;
+	font-size: 1rem;
+}
+
+.giftDone {
+	display: flex;
+	align-items: center;
+	gap: 0.625rem;
+	padding: 0.75rem;
+	border-radius: 0.5rem;
+	background-color: rgb(74 222 128 / 0.12);
+	color: #86efac;
+	font-weight: 600;
+}
+
+.input {
+	height: 2.25rem;
+	padding: 0 0.625rem;
+	border-radius: 0.375rem;
+	border: 1px solid #3a3c42;
+	background-color: #121316;
+	color: #f2f3f5;
+	font-size: 0.875rem;
+	outline: none;
+	min-width: 0;
+}
+
+.input:focus {
+	border-color: var(--brand-primary, #5865f2);
+}
+
+.friendList {
+	display: flex;
+	flex-direction: column;
+	gap: 0.125rem;
+	max-height: 11rem;
+	overflow-y: auto;
+	padding: 0.25rem;
+	border-radius: 0.375rem;
+	background-color: #121316;
+}
+
+.friendEmpty {
+	padding: 0.75rem;
+	color: #a1a1aa;
+	font-size: 0.8125rem;
+	text-align: center;
+}
+
+.friendRow {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.375rem 0.5rem;
+	border: none;
+	border-radius: 0.375rem;
+	background: none;
+	color: #f2f3f5;
+	font-size: 0.875rem;
+	text-align: start;
+	cursor: pointer;
+}
+
+.friendRow:hover {
+	background-color: #26272c;
+}
+
+.friendRowActive,
+.friendRowActive:hover {
+	background-color: var(--brand-primary, #5865f2);
+	color: #fff;
+}
+
+.friendAvatar {
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.hint {
+	font-size: 0.75rem;
+	color: #a1a1aa;
+}
+
+.success {
+	padding: 0.5rem 0.75rem;
+	border-radius: 0.375rem;
+	background-color: rgb(74 222 128 / 0.12);
+	color: #86efac;
+	font-size: 0.875rem;
+}
+
+.giftNotice {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 1.25rem;
+	padding: 1rem 1.25rem;
+	border-radius: 0.75rem;
+	background: linear-gradient(135deg, #4c1d95, #9d174d);
+	color: #fff;
+}
+
+.giftNoticeIcon {
+	flex-shrink: 0;
+	color: #fde68a;
+}
+
+.giftNoticeBody {
+	flex: 1;
+	min-width: 0;
+	font-size: 0.875rem;
+	line-height: 1.5;
+}
+
+.giftNoticeTitle {
+	font-weight: 800;
+	font-size: 1rem;
+}
+
+/* ---------- admin ---------- */
+.adminLayout {
+	display: flex;
+	gap: 1.5rem;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+
+.adminList {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	flex: 1 1 22rem;
+	min-width: 0;
+}
+
+.adminAddRow {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.adminAddRow .input {
+	flex: 1;
+}
+
+.adminRows {
+	display: flex;
+	flex-direction: column;
+	gap: 0.125rem;
+	max-height: 32rem;
+	overflow-y: auto;
+}
+
+.adminRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.5rem 0.75rem;
+	border: none;
+	border-radius: 0.375rem;
+	background-color: var(--background-secondary);
+	color: var(--text-primary);
+	text-align: start;
+	cursor: pointer;
+}
+
+.adminRow:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+.adminRowName {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	font-weight: 600;
+	font-size: 0.875rem;
+}
+
+.adminRowId {
+	font-weight: 400;
+	font-size: 0.75rem;
+	color: var(--text-primary-muted);
+}
+
+.adminRowBalance {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-weight: 600;
+	font-size: 0.875rem;
+	white-space: nowrap;
+}
+
+.adminDetail {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	flex: 1 1 18rem;
+	padding: 1.25rem;
+	border-radius: 0.75rem;
+	background-color: #1b1c20;
+	color: #f2f3f5;
+	position: sticky;
+	top: 0;
+}
+
+.adminDetail .filterTitle {
+	margin-top: 1rem;
+}
+
+.adminSelectedName {
+	font-size: 1.375rem;
+	font-weight: 800;
+}
+
+.adminBalance {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+	font-size: 1.125rem;
+	font-weight: 700;
+}
+
+.adminButtons {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.5rem;
+}

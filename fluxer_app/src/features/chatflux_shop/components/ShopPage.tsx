@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {GiftNotice, GiftPicker, ShopAdminPanel} from '@app/features/chatflux_shop/components/ShopGiftAndAdmin';
 import {ShopItemPreview} from '@app/features/chatflux_shop/components/ShopItemPreview';
 import styles from '@app/features/chatflux_shop/components/ShopPage.module.css';
 import {
@@ -13,13 +14,20 @@ import {
 	tr,
 } from '@app/features/chatflux_shop/ShopApi';
 import ShopStore from '@app/features/chatflux_shop/ShopStore';
-import {CheckCircleIcon, CoinVerticalIcon, MagnifyingGlassIcon, StorefrontIcon, XIcon} from '@phosphor-icons/react';
+import {
+	CheckCircleIcon,
+	CoinVerticalIcon,
+	GiftIcon,
+	MagnifyingGlassIcon,
+	StorefrontIcon,
+	XIcon,
+} from '@phosphor-icons/react';
 import {clsx} from 'clsx';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
-type Tab = 'featured' | 'browse' | 'owned';
+type Tab = 'featured' | 'browse' | 'owned' | 'admin';
 type SortKey = 'featured' | 'price-asc' | 'price-desc' | 'name';
 
 const TYPE_ORDER: Array<ShopItemType> = ['decoration', 'nameplate', 'effect', 'frame', 'bundle'];
@@ -104,6 +112,7 @@ const ItemCard: React.FC<{item: ShopItem; onOpen: (item: ShopItem) => void}> = o
 
 const ItemModal: React.FC<{item: ShopItem; onClose: () => void}> = observer(({item, onClose}) => {
 	const [error, setError] = useState<string | null>(null);
+	const [gifting, setGifting] = useState(false);
 	const owned = ShopStore.owns(item.sku);
 	const equipped = ShopStore.isEquipped(item);
 	const busy = ShopStore.pendingSku != null;
@@ -142,7 +151,9 @@ const ItemModal: React.FC<{item: ShopItem; onClose: () => void}> = observer(({it
 		});
 
 	let actions: React.ReactNode;
-	if (ShopStore.meState === 'error' && !ShopStore.me) {
+	if (gifting) {
+		actions = <GiftPicker item={item} onClose={() => setGifting(false)} />;
+	} else if (ShopStore.meState === 'error' && !ShopStore.me) {
 		actions = <div className={styles.error}>{errorText(null)}</div>;
 	} else if (!owned) {
 		const affordable = balance >= price;
@@ -225,6 +236,12 @@ const ItemModal: React.FC<{item: ShopItem; onClose: () => void}> = observer(({it
 					<div className={styles.modalSpacer} />
 					<div className={styles.modalActions}>
 						{actions}
+						{!gifting && ShopStore.me && (
+							<button type="button" className={styles.secondaryButton} onClick={() => setGifting(true)}>
+								<GiftIcon weight="fill" size={18} />
+								{tr('Ajándékba adom valakinek', 'Gift it to someone')}
+							</button>
+						)}
 						{error && <div className={styles.error}>{error}</div>}
 					</div>
 				</div>
@@ -462,6 +479,8 @@ export const ShopPage: React.FC = observer(() => {
 				</aside>
 			</div>
 		);
+	} else if (tab === 'admin' && ShopStore.me?.isAdmin) {
+		body = <ShopAdminPanel />;
 	} else {
 		body = (
 			<>
@@ -522,6 +541,7 @@ export const ShopPage: React.FC = observer(() => {
 							['featured', tr('Kiemelt', 'Featured')],
 							['browse', tr('Böngészés', 'Browse')],
 							['owned', tr('Gyűjteményem', 'My collection')],
+							...(ShopStore.me?.isAdmin ? [['admin', 'Admin']] : []),
 						] as Array<[Tab, string]>
 					).map(([id, label]) => (
 						<button
@@ -566,6 +586,7 @@ export const ShopPage: React.FC = observer(() => {
 							)}
 						</div>
 					)}
+					<GiftNotice />
 					{body}
 				</div>
 			</div>
