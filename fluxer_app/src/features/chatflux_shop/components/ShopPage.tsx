@@ -389,6 +389,34 @@ export const ShopPage: React.FC = observer(() => {
 						</div>
 					</section>
 				)}
+				{collections
+					.filter((c) => c.id !== featuredCollection?.id)
+					.map((c) => {
+						const items = allItems.filter((item) => item.collection === c.id && item.type !== 'bundle');
+						if (items.length === 0) return null;
+						return (
+							<section key={c.id} className={styles.section}>
+								<div className={styles.sectionHeader}>
+									<div className={styles.sectionTitle}>
+										{localize(c.name)}
+										{c.tagline && (
+											<span style={{marginLeft: 8, fontSize: '0.8em', fontWeight: 500, opacity: 0.7}}>
+												{localize(c.tagline)}
+											</span>
+										)}
+									</div>
+									<button type="button" className={styles.linkButton} onClick={() => browseTo({collection: c.id})}>
+										{tr(`Mind (${items.length})`, `See all (${items.length})`)}
+									</button>
+								</div>
+								<div className={styles.grid}>
+									{items.slice(0, 4).map((item) => (
+										<ItemCard key={item.sku} item={item} onOpen={openItem} />
+									))}
+								</div>
+							</section>
+						);
+					})}
 				{SLOTS.map((type) => {
 					const items = allItems.filter((item) => item.type === type);
 					if (items.length === 0) return null;
