@@ -4,6 +4,8 @@ import {DiscoveryGuildHeader} from '@app/features/app/components/layout/Discover
 import styles from '@app/features/app/components/layout/GuildLayout.module.css';
 import {GuildSidebar} from '@app/features/app/components/layout/GuildSidebar';
 import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
+import {ChatFluxExplore} from '@app/features/chatflux_themes/ChatFluxThemes';
+import {ChatFluxThemesPage} from '@app/features/chatflux_themes/ChatFluxThemesPage';
 import {DiscoveryPage} from '@app/features/discovery/discovery/DiscoveryPage';
 import {DiscoverySidebar} from '@app/features/discovery/discovery/DiscoverySidebar';
 import Discovery from '@app/features/discovery/state/Discovery';
@@ -25,6 +27,7 @@ export const DiscoveryLayout = observer(function DiscoveryLayout() {
 		void Discovery.search({offset: 0});
 		return () => {
 			Discovery.reset();
+			ChatFluxExplore.setSection('communities');
 		};
 	}, [available]);
 	if (!available) {
@@ -42,7 +45,11 @@ export const DiscoveryLayout = observer(function DiscoveryLayout() {
 					data-flx="app.discovery-layout.guild-sidebar"
 				/>
 				<div className={styles.guildMainContent} data-flx="app.discovery-layout.guild-main-content">
-					<DiscoveryPage data-flx="app.discovery-layout.discovery-page" />
+					{ChatFluxExplore.section === 'themes' ? (
+						<ChatFluxThemesPage />
+					) : (
+						<DiscoveryPage data-flx="app.discovery-layout.discovery-page" />
+					)}
 				</div>
 			</div>
 		</div>

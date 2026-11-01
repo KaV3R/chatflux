@@ -1,0 +1,279 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+.container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 0;
+	background: var(--background-secondary-lighter);
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	padding: 2rem 2rem 3rem;
+	max-width: 76rem;
+}
+
+.hero {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.title {
+	margin: 0;
+	font-size: 1.625rem;
+	font-weight: 800;
+	color: var(--text-primary);
+}
+
+.subtitle {
+	margin: 0;
+	font-size: 0.9375rem;
+	color: var(--text-tertiary);
+	max-width: 42rem;
+}
+
+.warning {
+	margin: 0;
+	padding: 0.5rem 0.75rem;
+	border-radius: var(--radius-lg);
+	background: color-mix(in srgb, var(--status-warning) 15%, transparent);
+	color: var(--text-warning);
+	font-size: 0.875rem;
+	max-width: 42rem;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+	gap: 1rem;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border-radius: var(--radius-xl);
+	border: 1px solid var(--border-color);
+	background: var(--background-secondary);
+	transition:
+		border-color 0.15s ease,
+		transform 0.15s ease,
+		box-shadow 0.15s ease;
+}
+
+.card:hover {
+	border-color: var(--theme-accent);
+	transform: translateY(-2px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.cardActive {
+	border-color: var(--theme-accent);
+	box-shadow: 0 0 0 2px var(--theme-accent);
+}
+
+.preview {
+	position: relative;
+	display: flex;
+	gap: 4px;
+	height: 10rem;
+	padding: 8px;
+}
+
+.previewGuilds {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding-top: 2px;
+}
+
+.previewGuild {
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+}
+
+.previewSidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 26%;
+	padding: 8px 6px;
+	border-radius: 6px;
+}
+
+.previewChannel {
+	display: flex;
+	align-items: center;
+	padding: 4px;
+	border-radius: 4px;
+}
+
+.previewLine {
+	display: block;
+	height: 5px;
+	border-radius: 3px;
+	opacity: 0.85;
+}
+
+.previewChat {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-width: 0;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.previewHeader {
+	padding: 7px 8px;
+}
+
+.previewMessages {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 8px;
+	padding: 8px;
+}
+
+.previewMessage {
+	display: flex;
+	gap: 6px;
+	align-items: flex-start;
+}
+
+.previewAvatar {
+	flex-shrink: 0;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+}
+
+.previewMessageBody {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.previewInput {
+	display: flex;
+	justify-content: flex-end;
+	margin: 0 8px 8px;
+	padding: 4px;
+	border-radius: 6px;
+}
+
+.previewSend {
+	width: 12px;
+	height: 12px;
+	border-radius: 4px;
+}
+
+.previewEmoji {
+	position: absolute;
+	right: 10px;
+	bottom: 34px;
+	font-size: 1.75rem;
+	filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.cardBody {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 0.625rem;
+	padding: 0.875rem 1rem 1rem;
+}
+
+.cardTitleRow {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.cardTitle {
+	margin: 0;
+	font-size: 1.0625rem;
+	font-weight: 700;
+	color: var(--text-primary);
+}
+
+.badge {
+	padding: 0.125rem 0.5rem;
+	border-radius: var(--radius-full);
+	background: var(--theme-accent);
+	color: #fff;
+	font-size: 0.6875rem;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+}
+
+.cardDescription {
+	margin: 0;
+	flex: 1;
+	font-size: 0.875rem;
+	color: var(--text-tertiary);
+}
+
+.swatches {
+	display: flex;
+	gap: 0.375rem;
+}
+
+.swatch {
+	width: 1.25rem;
+	height: 1.25rem;
+	border-radius: 50%;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.button {
+	margin-top: 0.25rem;
+	padding: 0.5rem 0.875rem;
+	border: none;
+	border-radius: var(--radius-lg);
+	background: var(--theme-accent);
+	color: #fff;
+	font-size: 0.875rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition: filter 0.15s ease;
+}
+
+.button:hover:not(:disabled) {
+	filter: brightness(1.1);
+}
+
+.button:disabled {
+	opacity: 0.6;
+	cursor: default;
+}
+
+.buttonActive {
+	background: transparent;
+	color: var(--text-primary);
+	box-shadow: inset 0 0 0 1px var(--theme-accent);
+}
+
+.resetButton {
+	align-self: flex-start;
+	padding: 0.5rem 0.875rem;
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-lg);
+	background: transparent;
+	color: var(--text-secondary);
+	font-size: 0.875rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.resetButton:hover:not(:disabled) {
+	background: var(--background-modifier-hover);
+}

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {ChatFluxExplore} from '@app/features/chatflux_themes/ChatFluxThemes';
 import styles from '@app/features/discovery/discovery/DiscoverySidebar.module.css';
 import {COMMUNITIES_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
 import Navigation from '@app/features/navigation/state/Navigation';
@@ -38,15 +39,30 @@ interface DiscoveryNavigationItem {
 	icon: Icon;
 	active?: boolean;
 	disabled?: boolean;
+	onSelect?: () => void;
 }
 
 export const DiscoverySidebar = observer(function DiscoverySidebar() {
 	const {i18n} = useLingui();
 	const comingSoonLabel = i18n._(COMING_SOON_DESCRIPTOR);
+	const section = ChatFluxExplore.section;
 	const items: Array<DiscoveryNavigationItem> = [
-		{label: i18n._(COMMUNITIES_DESCRIPTOR), icon: UsersThreeIcon, active: true},
+		{
+			label: i18n._(COMMUNITIES_DESCRIPTOR),
+			icon: UsersThreeIcon,
+			active: section === 'communities',
+			onSelect: () => {
+				ChatFluxExplore.setSection('communities');
+				Navigation.navigateToDiscover('replace');
+			},
+		},
 		{label: i18n._(APPS_DESCRIPTOR), icon: AppWindowIcon, disabled: true},
-		{label: i18n._(THEMES_DESCRIPTOR), icon: PaletteIcon, disabled: true},
+		{
+			label: i18n._(THEMES_DESCRIPTOR),
+			icon: PaletteIcon,
+			active: section === 'themes',
+			onSelect: () => ChatFluxExplore.setSection('themes'),
+		},
 	];
 	return (
 		<div className={styles.container} data-flx="discovery.discovery.discovery-sidebar.container">
@@ -69,7 +85,7 @@ export const DiscoverySidebar = observer(function DiscoverySidebar() {
 										item.disabled && styles.navItemDisabled,
 									)}
 									disabled={item.disabled}
-									onClick={item.active ? () => Navigation.navigateToDiscover('replace') : undefined}
+									onClick={item.disabled ? undefined : item.onSelect}
 									aria-current={item.active ? 'page' : undefined}
 									aria-label={
 										item.disabled ? i18n._(COMING_SOON_NAV_ITEM_DESCRIPTOR, {itemLabel: item.label}) : undefined
