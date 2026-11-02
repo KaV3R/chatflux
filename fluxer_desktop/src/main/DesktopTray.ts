@@ -110,6 +110,7 @@ export function updateTrayRuntimeState(update: Partial<TrayRuntimeStatePayload>,
 		typeof update.hidePersonalInformation === 'boolean' &&
 		update.hidePersonalInformation !== trayState.hidePersonalInformation;
 	Object.assign(trayState, update);
+	syncTrayIcon(false);
 	refreshDesktopTrayMenu();
 	if (privacyChanged) {
 		for (const listener of Array.from(privacyListeners)) listener();
@@ -307,26 +308,40 @@ function resolveTrayIcon(): {key: string; image: Electron.NativeImage} | null {
 		darkSystemUI: nativeTheme.shouldUseDarkColorsForSystemIntegratedUI,
 	});
 	const indicator = trayUnreadBadge !== 0;
-	const speaking = trayState.speaking === true && process.platform !== 'darwin';
-	const key = `${appearance}:${indicator}:${speaking}`;
+	const voiceTint = resolveVoiceTint();
+	const key = `${appearance}:${indicator}:${voiceTint}`;
 	let image = trayIconCache.get(key);
 	if (!image) {
 		image = renderTrayIcon(trayBaseIcon, appearance, indicator, process.platform);
-		if (speaking) image = tintTrayIconGreen(image);
+		if (voiceTint !== 'none') image = tintTrayIcon(image, VOICE_TINT_COLORS[voiceTint]);
 		trayIconCache.set(key, image);
 	}
 	return {key, image};
 }
 
-/** ChatFlux: light parts of the icon turn green while the user talks; dark lines stay. */
-function tintTrayIconGreen(source: Electron.NativeImage): Electron.NativeImage {
+type VoiceTint = 'none' | 'speaking' | 'muted';
+
+const VOICE_TINT_COLORS: Record<Exclude<VoiceTint, 'none'>, {r: number; g: number; b: number}> = {
+	speaking: {r: 0x23, g: 0xd1, b: 0x5a},
+	muted: {r: 0xef, g: 0x44, b: 0x44},
+};
+
+/** ChatFlux: red while muted/deafened in a voice channel, green while talking. */
+function resolveVoiceTint(): VoiceTint {
+	if (process.platform === 'darwin' || !trayState.voiceConnected) return 'none';
+	if (trayState.selfMute || trayState.selfDeaf) return 'muted';
+	return trayState.speaking === true ? 'speaking' : 'none';
+}
+
+/** ChatFlux: light parts of the icon take the given colour; dark lines stay. */
+function tintTrayIcon(source: Electron.NativeImage, color: {r: number; g: number; b: number}): Electron.NativeImage {
 	try {
 		const scaleFactors = source.getScaleFactors?.() ?? [1];
 		const result = nativeImage.createEmpty();
 		for (const scaleFactor of scaleFactors.length > 0 ? scaleFactors : [1]) {
 			const size = source.getSize(scaleFactor);
 			const bitmap = Buffer.from(source.toBitmap({scaleFactor}));
-			const green = {b: 0x5a, g: 0xd1, r: 0x23};
+			const green = color;
 			for (let i = 0; i + 3 < bitmap.length; i += 4) {
 				if (bitmap[i + 3] === 0) continue;
 				const b = bitmap[i];
