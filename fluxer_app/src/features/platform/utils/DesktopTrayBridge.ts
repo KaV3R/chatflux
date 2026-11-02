@@ -92,8 +92,13 @@ export function initializeDesktopTrayBridge(): (() => void) | null {
 	};
 	// Speaking flips many times a second, so it gets its own small reaction instead of
 	// rebuilding the whole tray state (and menu) every time.
+	// The voice model is a plain object, so read the engine's MobX version counter to
+	// make this reaction re-run whenever the engine reports a change.
 	const disposeSpeakingReaction = reaction(
-		() => resolveLocalSpeaking(resolveVoiceConnectionProjection().connected),
+		() => {
+			MediaEngine.getMobxSnapshot();
+			return resolveLocalSpeaking(resolveVoiceConnectionProjection().connected);
+		},
 		(speaking) => electronApi.setTrayRuntimeState?.({speaking}),
 		{fireImmediately: true, name: 'DesktopTrayBridge-speaking'},
 	);
