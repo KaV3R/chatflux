@@ -32,7 +32,9 @@ export const FluxerWordmark = observer(
 		const {i18n} = useLingui();
 		const [failedUrl, setFailedUrl] = useState<string | null>(null);
 		const resolved = branding ?? resolveAppShellBranding(RuntimeConfig.getSnapshotOrNull());
-		const productName = resolved.productName;
+		// ChatFlux: show our own name instead of the bundled upstream "Fluxer" wordmark.
+		const productName =
+			resolved.productName === DEFAULT_APP_SHELL_BRANDING.productName ? 'ChatFlux' : resolved.productName;
 		const wordmarkUrl = resolved.wordmarkUrl;
 		const ariaLabel = i18n._(APPLICATION_WORDMARK_DESCRIPTOR, {productName});
 		if (wordmarkUrl !== null && wordmarkUrl !== failedUrl) {
@@ -52,7 +54,7 @@ export const FluxerWordmark = observer(
 				/>
 			);
 		}
-		if (productName !== DEFAULT_APP_SHELL_BRANDING.productName) {
+		if (productName.length > 0) {
 			const style: React.CSSProperties = {
 				alignItems: 'center',
 				display: 'inline-flex',

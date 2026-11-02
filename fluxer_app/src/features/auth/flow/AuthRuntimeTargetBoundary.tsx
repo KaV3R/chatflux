@@ -22,6 +22,8 @@ import {type ReactNode, useCallback, useEffect, useLayoutEffect, useReducer, use
 
 const logger = new Logger('AuthRuntimeTargetBoundary');
 
+const CHATFLUX_DESKTOP_INSTANCE = 'https://chat.catflux.hu';
+
 const AuthRuntimeResolutionStatus = Object.freeze({
 	LOADING: 'loading',
 	READY: 'ready',
@@ -177,11 +179,9 @@ async function resolveDesktopAuthRuntime(signal: AbortSignal): Promise<RuntimeCo
 	if (api === undefined) {
 		throw new DesktopAuthRuntimeUnavailableError();
 	}
-	const initialInput = await api.initialInput();
+	// ChatFlux: the desktop app always starts on chat.catflux.hu instead of asking for an instance.
+	const initialInput = (await api.initialInput()) ?? CHATFLUX_DESKTOP_INSTANCE;
 	signal.throwIfAborted();
-	if (initialInput === null) {
-		return null;
-	}
 	const resolution = await InstanceSnapshotStore.resolve({input: initialInput, signal});
 	return resolution.snapshot;
 }
