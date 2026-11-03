@@ -4,7 +4,7 @@ import {UserSettingsModal} from '@app/features/app/components/dialogs/LoadableSe
 import * as Modal from '@app/features/app/components/dialogs/Modal';
 import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
 import Authentication from '@app/features/auth/state/Authentication';
-import {ProfileCardCosmetics} from '@app/features/chatflux_shop/components/Cosmetics';
+import {ProfileEffectLayer, ProfileFrameLayer} from '@app/features/chatflux_shop/components/Cosmetics';
 import ShopStore from '@app/features/chatflux_shop/ShopStore';
 import DeveloperOptions from '@app/features/devtools/state/DeveloperOptions';
 import {
@@ -98,6 +98,7 @@ import {
 	UserPlusIcon,
 	VideoCameraIcon,
 } from '@phosphor-icons/react';
+import {clsx} from 'clsx';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -768,7 +769,10 @@ export const UserProfileModal: UserProfileModalComponent = observer(
 				size="medium"
 				centered
 				initialFocusRef={autoFocusNote ? noteRef : undefined}
-				className={userProfileModalStyles.modalRoot}
+				className={clsx(
+					userProfileModalStyles.modalRoot,
+					worn.frame && !showProfileSkeleton && userProfileModalStyles.modalRootFramed,
+				)}
 				data-flx="user.user-profile-modal.modal-root"
 			>
 				<Modal.ScreenReaderLabel
@@ -780,7 +784,7 @@ export const UserProfileModal: UserProfileModalComponent = observer(
 					style={{borderColor, position: 'relative'}}
 					data-flx="user.user-profile-modal.div"
 				>
-					{!showProfileSkeleton && <ProfileCardCosmetics worn={worn} />}
+					{!showProfileSkeleton && <ProfileEffectLayer effect={worn.effect} />}
 					{showProfileSkeleton ? (
 						<UserProfileLoadingSkeleton
 							variant="modal"
@@ -801,6 +805,8 @@ export const UserProfileModal: UserProfileModalComponent = observer(
 						/>
 					)}
 				</div>
+				{/* ChatFlux: frame sits outside the clipped container so its edges are not cut off. */}
+				{!showProfileSkeleton && <ProfileFrameLayer frame={worn.frame} />}
 			</Modal.Root>
 		);
 	},

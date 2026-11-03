@@ -22,6 +22,14 @@
 	overflow: hidden;
 }
 
+/* ChatFlux: let a worn profile frame reach past the modal edges instead of being cut off. */
+.modalRoot.modalRoot.modalRootFramed {
+	position: relative;
+	overflow: visible;
+	/* Leave room above and below for the frame art (about 12% of the width each side). */
+	width: min(36rem, calc(100vw - 6rem), calc(76.923svh - 10rem));
+}
+
 .userInfo {
 	user-select: text;
 	-webkit-user-select: text;

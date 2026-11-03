@@ -12,7 +12,9 @@ import type {UpdateInfo} from 'velopack';
 
 const requireModule = createRequire(import.meta.url);
 
-const CHATFLUX_UPDATE_FEED_URL = 'https://github.com/KaV3R/chatflux/releases/latest/download';
+// The trailing slash matters: Velopack joins "releases.win.json" onto this URL, and without
+// the slash the last segment ("download") is replaced, which gives a 404.
+const CHATFLUX_UPDATE_FEED_URL = 'https://github.com/KaV3R/chatflux/releases/latest/download/';
 const FIRST_CHECK_DELAY_MS = 15_000;
 const CHECK_INTERVAL_MS = 2 * 60 * 60_000;
 
