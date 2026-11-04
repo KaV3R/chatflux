@@ -4,6 +4,7 @@ import {useContextMenuHoverState} from '@app/features/app/hooks/useContextMenuHo
 import {CrosspostCommunityPopout} from '@app/features/channel/components/CrosspostCommunityPopout';
 import {useMaybeMessageViewContext} from '@app/features/channel/components/MessageViewContext';
 import {PreloadableUserPopout} from '@app/features/channel/components/PreloadableUserPopout';
+import {StyledName} from '@app/features/chatflux_shop/components/NameStyle';
 import type {Guild} from '@app/features/guild/models/Guild';
 import {isKeyboardActivationKey} from '@app/features/input/utils/KeyboardUtils';
 import type {GuildMember} from '@app/features/member/models/GuildMember';
@@ -64,7 +65,7 @@ export const MessageUsername = observer(
 					onKeyDown={handleKeyDown}
 					data-flx="channel.message-username.context-menu-underline.key-down"
 				>
-					{displayName}
+					<StyledName userId={message.webhookId ? null : user.id}>{displayName}</StyledName>
 				</span>
 			</FocusRing>
 		);

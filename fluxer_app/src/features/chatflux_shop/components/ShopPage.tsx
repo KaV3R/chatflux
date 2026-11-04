@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {NameStyleEditor} from '@app/features/chatflux_shop/components/NameStyleEditor';
 import {GiftNotice, GiftPicker, ShopAdminPanel} from '@app/features/chatflux_shop/components/ShopGiftAndAdmin';
 import {ShopItemPreview} from '@app/features/chatflux_shop/components/ShopItemPreview';
 import styles from '@app/features/chatflux_shop/components/ShopPage.module.css';
@@ -30,8 +31,16 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 type Tab = 'featured' | 'browse' | 'owned' | 'admin';
 type SortKey = 'featured' | 'price-asc' | 'price-desc' | 'name';
 
-const TYPE_ORDER: Array<ShopItemType> = ['decoration', 'nameplate', 'effect', 'frame', 'bundle'];
-const SLOTS: Array<ShopSlot> = ['decoration', 'nameplate', 'effect', 'frame'];
+const TYPE_ORDER: Array<ShopItemType> = [
+	'decoration',
+	'nameplate',
+	'effect',
+	'frame',
+	'namefont',
+	'nameeffect',
+	'bundle',
+];
+const SLOTS: Array<ShopSlot> = ['decoration', 'nameplate', 'effect', 'frame', 'namefont', 'nameeffect'];
 
 function typeLabel(type: ShopItemType, plural = false): string {
 	switch (type) {
@@ -43,6 +52,10 @@ function typeLabel(type: ShopItemType, plural = false): string {
 			return plural ? tr('Profil effektek', 'Profile Effects') : tr('Profil effekt', 'Profile Effect');
 		case 'frame':
 			return plural ? tr('Profilkeretek', 'Profile Frames') : tr('Profilkeret', 'Profile Frame');
+		case 'namefont':
+			return plural ? tr('Név betűtípusok', 'Name Fonts') : tr('Név betűtípus', 'Name Font');
+		case 'nameeffect':
+			return plural ? tr('Névhatások', 'Name Effects') : tr('Névhatás', 'Name Effect');
 		case 'bundle':
 			return plural ? tr('Csomagok', 'Bundles') : tr('Csomag', 'Bundle');
 	}
@@ -513,6 +526,7 @@ export const ShopPage: React.FC = observer(() => {
 	} else {
 		body = (
 			<>
+				{ShopStore.me && <NameStyleEditor onOpenItem={openItem} />}
 				<div className={styles.listHeader}>
 					<div className={styles.listTitle}>{tr('Amit most viselsz', 'Currently wearing')}</div>
 				</div>

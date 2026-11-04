@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {UserTag} from '@app/features/channel/components/ChannelUserTag';
+import {StyledName} from '@app/features/chatflux_shop/components/NameStyle';
 import FocusRing from '@app/features/ui/focus_ring/FocusRing';
 import {useTextOverflow} from '@app/features/ui/hooks/useTextOverflow';
 import {Tooltip} from '@app/features/ui/tooltip/Tooltip';
@@ -60,7 +61,7 @@ export const ProfileCardUserInfo: React.FC<ProfileCardUserInfoProps> = observer(
 				style={displayNameStyle}
 				data-flx="user.profile.profile-card.profile-card-user-info.name-button.display-name-click"
 			>
-				{displayName}
+				<StyledName userId={isWebhook ? null : user.id}>{displayName}</StyledName>
 			</button>
 		);
 		const displayNameContent = isDisplayNameOverflowing ? (

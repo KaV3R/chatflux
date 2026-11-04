@@ -143,6 +143,19 @@ class ShopStore {
 		}
 	}
 
+	/** Saves font + effect + colours of the display name style in one request. */
+	async saveNameStyle(body: {font: string | null; effect: string | null; colors: Array<string> | null}): Promise<void> {
+		this.pendingSku = 'namestyle';
+		try {
+			const me = await ShopApi.nameStyle(body);
+			runInAction(() => this.applyMe(me));
+		} finally {
+			runInAction(() => {
+				this.pendingSku = null;
+			});
+		}
+	}
+
 	async markGiftsSeen(): Promise<void> {
 		const me = await ShopApi.giftsSeen();
 		runInAction(() => this.applyMe(me));

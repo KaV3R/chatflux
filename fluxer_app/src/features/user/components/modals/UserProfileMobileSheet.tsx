@@ -10,6 +10,7 @@ import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
 import Authentication from '@app/features/auth/state/Authentication';
 import {GifIndicator} from '@app/features/channel/components/embeds/media/GifIndicator';
 import Channels from '@app/features/channel/state/Channels';
+import {StyledName} from '@app/features/chatflux_shop/components/NameStyle';
 import {ExpressionInfoBottomSheet} from '@app/features/expressions/components/bottomsheets/ExpressionInfoBottomSheet';
 import {OPEN_DM_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
 import GuildMembers from '@app/features/member/state/GuildMembers';
@@ -581,7 +582,7 @@ const UserProfileMobileSheetContent: React.FC<UserProfileMobileSheetContentProps
 														className={styles.username}
 														data-flx="user.user-profile-mobile-sheet.user-profile-mobile-sheet-content.username"
 													>
-														{displayName}
+														<StyledName userId={user.id}>{displayName}</StyledName>
 													</span>
 													{isDisplayNameUsername && shouldShowDiscriminator(user) && (
 														<span

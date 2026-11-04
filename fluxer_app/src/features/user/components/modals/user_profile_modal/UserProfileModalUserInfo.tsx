@@ -2,6 +2,7 @@
 
 import {CustomStatusDisplay} from '@app/features/app/components/shared/custom_status_display/CustomStatusDisplay';
 import {UserTag} from '@app/features/channel/components/ChannelUserTag';
+import {StyledName} from '@app/features/chatflux_shop/components/NameStyle';
 import * as ModalCommands from '@app/features/ui/commands/ModalCommands';
 import {openProfileBadgeSettings} from '@app/features/user/commands/UserSettingsModalCommands';
 import userProfileModalStyles from '@app/features/user/components/modals/UserProfileModal.module.css';
@@ -55,7 +56,7 @@ export const UserInfo: React.FC<UserInfoProps> = observer(({user, profile, guild
 					)}
 					<div className={userProfileModalStyles.nameRow} data-flx="user.user-profile-modal.user-info.div--5">
 						<span className={userProfileModalStyles.userName} data-flx="user.user-profile-modal.user-info.span">
-							{displayName}
+							<StyledName userId={user.id}>{displayName}</StyledName>
 						</span>
 						{user.bot && (
 							<UserTag

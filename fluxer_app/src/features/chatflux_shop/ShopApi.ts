@@ -7,9 +7,11 @@ import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
 import SessionManager from '@app/features/platform/state/AuthSession';
 import {i18n} from '@lingui/core';
 
-export type ShopSlot = 'decoration' | 'nameplate' | 'effect' | 'frame';
+export type ShopSlot = 'decoration' | 'nameplate' | 'effect' | 'frame' | 'namefont' | 'nameeffect';
 export type ShopItemType = ShopSlot | 'bundle';
 export type LocalizedText = string | {hu?: string; en?: string};
+
+export type NameEffect = 'solid' | 'gradient' | 'neon' | 'toon' | 'pop' | 'gummy' | 'prism' | 'shimmer';
 
 export interface ShopRender {
 	asset?: string;
@@ -17,6 +19,23 @@ export interface ShopRender {
 	bottom?: string;
 	color?: string;
 	align?: 'top' | 'center' | 'bottom';
+	/** namefont: font id, its file and a size correction. */
+	font?: string;
+	file?: string;
+	scale?: number;
+	/** nameeffect: effect id and the colours used in the shop preview. */
+	effect?: NameEffect;
+	colors?: Array<string>;
+}
+
+/** Display name style, as the server combines it from font + effect + chosen colours. */
+export interface WornNameStyle {
+	sku: string;
+	font: string | null;
+	file: string | null;
+	scale?: number;
+	effect: NameEffect;
+	colors: Array<string> | null;
 }
 
 export interface ShopItem {
@@ -51,7 +70,7 @@ export interface ShopCatalog {
 }
 
 export type WornCosmetic = ShopRender & {sku: string};
-export type WornCosmetics = Partial<Record<ShopSlot, WornCosmetic>>;
+export type WornCosmetics = Partial<Record<ShopSlot, WornCosmetic>> & {namestyle?: WornNameStyle};
 
 export interface ShopGift {
 	sku: string | null;
@@ -66,6 +85,7 @@ export interface ShopMe {
 	balance: number;
 	owned: Array<string>;
 	equipped: Partial<Record<ShopSlot, string>>;
+	nameColors?: Array<string> | null;
 	wearing: WornCosmetics;
 	isAdmin?: boolean;
 	gifts?: Array<ShopGift>;
@@ -151,6 +171,8 @@ export const ShopApi = {
 	equip: (slot: ShopSlot, sku: string | null) => request<ShopMe>('POST', '/equip', {slot, sku}, true),
 	gift: (sku: string, toUserId: string) => request<ShopMe>('POST', '/gift', {sku, toUserId}, true),
 	giftsSeen: () => request<ShopMe>('POST', '/gifts/seen', {}, true),
+	nameStyle: (body: {font: string | null; effect: string | null; colors: Array<string> | null}) =>
+		request<ShopMe>('POST', '/namestyle', body, true),
 	adminUsers: () => request<{users: Array<ShopAdminUser>}>('GET', '/admin/users', undefined, true),
 	adminGrant: (body: {userId: string; coins?: number; sku?: string; name?: string}) =>
 		request<ShopMe>('POST', '/admin/grant', body, true),

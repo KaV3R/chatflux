@@ -1,0 +1,103 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+/* ChatFlux display name styles. Colours come in as --cfn-* variables. */
+.name {
+	color: var(--cfn-c1);
+	/* Room for glyphs that lean past their box (script fonts), without moving the layout. */
+	padding: 0 0.08em;
+	margin: 0 -0.08em;
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+}
+
+.clip {
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+	-webkit-background-clip: text;
+	background-clip: text;
+}
+
+.gradient {
+	background-image: linear-gradient(90deg, var(--cfn-c1), var(--cfn-c2));
+}
+
+.neon {
+	color: var(--cfn-light);
+	text-shadow:
+		0 0 0.08em var(--cfn-c1),
+		0 0 0.25em var(--cfn-c1),
+		0 0 0.55em var(--cfn-c1);
+}
+
+.toon {
+	color: var(--cfn-c1);
+	text-shadow:
+		0.06em 0 0 var(--cfn-dark),
+		-0.06em 0 0 var(--cfn-dark),
+		0 0.06em 0 var(--cfn-dark),
+		0 -0.06em 0 var(--cfn-dark),
+		0.045em 0.045em 0 var(--cfn-dark),
+		-0.045em 0.045em 0 var(--cfn-dark),
+		0.045em -0.045em 0 var(--cfn-dark),
+		-0.045em -0.045em 0 var(--cfn-dark),
+		0 0.13em 0 var(--cfn-dark);
+}
+
+.pop {
+	color: var(--cfn-c1);
+	text-shadow: 0.09em 0.09em 0 var(--cfn-c2);
+}
+
+/* filter needs a box of its own, so gummy names are inline-block. */
+.gummy {
+	display: inline-block;
+	max-width: 100%;
+	vertical-align: bottom;
+	background-image: linear-gradient(180deg, var(--cfn-light) 0%, var(--cfn-c1) 48%, var(--cfn-c2) 100%);
+	filter: drop-shadow(0 0.08em 0 var(--cfn-dark)) drop-shadow(0 0 0.15em var(--cfn-c1));
+}
+
+.prism {
+	background-image: linear-gradient(90deg, var(--cfn-c1), var(--cfn-c2), var(--cfn-c3), var(--cfn-c4), var(--cfn-c1));
+	background-size: 300% 100%;
+	animation: cfnFlow 5s linear infinite;
+}
+
+.shimmer {
+	background-image: linear-gradient(
+		100deg,
+		var(--cfn-c1) 0%,
+		var(--cfn-c1) 38%,
+		var(--cfn-shine) 50%,
+		var(--cfn-c1) 62%,
+		var(--cfn-c1) 100%
+	);
+	background-size: 250% 100%;
+	animation: cfnShine 2.8s ease-in-out infinite;
+}
+
+@keyframes cfnFlow {
+	from {
+		background-position: 0% 50%;
+	}
+	to {
+		background-position: 150% 50%;
+	}
+}
+
+@keyframes cfnShine {
+	0% {
+		background-position: 130% 50%;
+	}
+	70%,
+	100% {
+		background-position: -30% 50%;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.prism,
+	.shimmer {
+		animation: none;
+	}
+}

@@ -6,6 +6,7 @@ import {CompactMemberCustomStatus} from '@app/features/channel/components/Compac
 import styles from '@app/features/channel/components/MemberListItem.module.css';
 import {PreloadableUserPopout} from '@app/features/channel/components/PreloadableUserPopout';
 import {nameplateContentClassName, UserNameplate} from '@app/features/chatflux_shop/components/Cosmetics';
+import {StyledName} from '@app/features/chatflux_shop/components/NameStyle';
 import Guilds from '@app/features/guild/state/Guilds';
 import {useMemberListCustomStatus} from '@app/features/member/hooks/useMemberListCustomStatus';
 import {useMemberListMobile} from '@app/features/member/hooks/useMemberListMobile';
@@ -187,7 +188,7 @@ export const MemberListItem: React.FC<MemberListItemProps> = observer((props) =>
 			style={nameStyle}
 			data-flx="channel.member-list-item.name"
 		>
-			{nickname}
+			<StyledName userId={user.id}>{nickname}</StyledName>
 		</span>
 	);
 	const content = (

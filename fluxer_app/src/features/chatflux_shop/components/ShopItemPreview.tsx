@@ -5,8 +5,15 @@ import {
 	NameplateBackground,
 	ProfileCardCosmetics,
 } from '@app/features/chatflux_shop/components/Cosmetics';
+import {composeNameStyle, NameStyleText} from '@app/features/chatflux_shop/components/NameStyle';
 import styles from '@app/features/chatflux_shop/components/ShopItemPreview.module.css';
-import {type ShopItem, shopAssetUrl, type WornCosmetic, type WornCosmetics} from '@app/features/chatflux_shop/ShopApi';
+import {
+	type ShopItem,
+	shopAssetUrl,
+	type WornCosmetic,
+	type WornCosmetics,
+	type WornNameStyle,
+} from '@app/features/chatflux_shop/ShopApi';
 import ShopStore from '@app/features/chatflux_shop/ShopStore';
 import Users from '@app/features/user/state/Users';
 import * as AvatarUtils from '@app/features/user/utils/AvatarUtils';
@@ -84,9 +91,46 @@ const NameplateRows: React.FC<{nameplate?: WornCosmetic; size: PreviewSize}> = (
 	);
 };
 
+/** The user's own name in a chat-like row, drawn in the given name style. */
+export const NameStylePreview: React.FC<{nameStyle: WornNameStyle; size: PreviewSize}> = observer(
+	({nameStyle, size}) => {
+		const me = useMe();
+		return (
+			<div className={clsx(styles.nameRow, size === 'large' && styles.nameRowLarge)}>
+				{me.avatarUrl ? (
+					<img className={styles.nameAvatar} src={me.avatarUrl} alt="" draggable={false} />
+				) : (
+					<div className={styles.nameAvatar} />
+				)}
+				<div className={styles.nameLines}>
+					<span className={styles.nameText}>
+						<NameStyleText nameStyle={nameStyle}>{me.name}</NameStyleText>
+					</span>
+					<div className={styles.skeleton} style={{width: '70%'}} />
+				</div>
+			</div>
+		);
+	},
+);
+
+/** Colours the user picked, if any, otherwise the item's own preview colours. */
+function previewColors(item: ShopItem): Array<string> | null {
+	return ShopStore.me?.nameColors ?? item.render?.colors ?? null;
+}
+
+function itemNameStyle(item: ShopItem): WornNameStyle {
+	const wearing = ShopStore.me?.wearing.namestyle;
+	if (item.type === 'namefont') {
+		const effect = wearing ? {effect: wearing.effect, colors: wearing.colors ?? undefined} : null;
+		return composeNameStyle(item.render, effect, wearing?.colors ?? null);
+	}
+	return composeNameStyle(null, item.render, previewColors(item));
+}
+
 const MiniProfileCard: React.FC<{worn: WornCosmetics; size: PreviewSize}> = ({worn, size}) => {
 	const me = useMe();
 	const decorationUrl = shopAssetUrl(worn.decoration?.asset);
+	const nameStyle = worn.namefont || worn.nameeffect ? composeNameStyle(worn.namefont, worn.nameeffect) : null;
 	return (
 		<div
 			className={clsx(styles.card, size === 'large' ? styles.cardLarge : styles.cardSmall)}
@@ -98,7 +142,9 @@ const MiniProfileCard: React.FC<{worn: WornCosmetics; size: PreviewSize}> = ({wo
 				{decorationUrl && <AvatarDecorationImage url={decorationUrl} />}
 			</div>
 			<div className={styles.cardBody}>
-				<span className={styles.cardName}>{me.name}</span>
+				<span className={styles.cardName}>
+					<NameStyleText nameStyle={nameStyle}>{me.name}</NameStyleText>
+				</span>
 				{worn.nameplate ? (
 					<div className={styles.cardNameplate}>
 						<NameplateBackground nameplate={worn.nameplate} />
@@ -126,6 +172,9 @@ export const ShopItemPreview: React.FC<{item: ShopItem; size?: PreviewSize}> = o
 			return <MiniProfileCard worn={{effect: asWorn(item)}} size={size} />;
 		case 'frame':
 			return <MiniProfileCard worn={{frame: asWorn(item)}} size={size} />;
+		case 'namefont':
+		case 'nameeffect':
+			return <NameStylePreview nameStyle={itemNameStyle(item)} size={size} />;
 		case 'bundle':
 			return <MiniProfileCard worn={bundleWorn(item)} size={size} />;
 		default:
