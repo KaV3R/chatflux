@@ -236,10 +236,11 @@ const ItemModal: React.FC<{item: ShopItem; onClose: () => void}> = observer(({it
 					<div className={styles.modalSpacer} />
 					<div className={styles.modalActions}>
 						{actions}
-						{!gifting && ShopStore.me && (
+						{/* Gifting is always a new purchase, so items already in "My collection" can't be gifted on. */}
+						{!gifting && !owned && ShopStore.me && (
 							<button type="button" className={styles.secondaryButton} onClick={() => setGifting(true)}>
 								<GiftIcon weight="fill" size={18} />
-								{tr('Ajándékba adom valakinek', 'Gift it to someone')}
+								{tr('Megveszem ajándékba valakinek', 'Buy it as a gift')}
 							</button>
 						)}
 						{error && <div className={styles.error}>{error}</div>}
