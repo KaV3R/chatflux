@@ -147,6 +147,9 @@ all_blocked(UserId, Others) ->
 
 -spec maybe_dispatch_state_update(map(), map()) -> {map(), boolean()}.
 maybe_dispatch_state_update(PrevState, NewState) ->
+    ok = publish_ring_stops(
+        maps:get(ringing, PrevState) -- maps:get(ringing, NewState), NewState
+    ),
     CountedState = call_state:sync_voice_state_count_diff(PrevState, NewState),
     case maps:get(initiator_ready, PrevState) of
         true ->
@@ -154,6 +157,33 @@ maybe_dispatch_state_update(PrevState, NewState) ->
         false ->
             {CountedState, false}
     end.
+
+%% ChatFlux: a phone that is ringing from a push cannot see gateway events, so when a
+%% user stops ringing (answered or declined on another device, timed out, call ended)
+%% send them a notification_clear push for the call message. The mobile app ends the
+%% matching ring when it gets it.
+-spec publish_ring_stops([integer()], map()) -> ok.
+publish_ring_stops([], _State) ->
+    ok;
+publish_ring_stops(UserIds, State) ->
+    case {maps:get(channel_id, State, undefined), maps:get(message_id, State, undefined)} of
+        {ChannelId, MessageId} when is_integer(ChannelId), is_integer(MessageId) ->
+            spawn_ring_stops(UserIds, ChannelId, MessageId);
+        _ ->
+            ok
+    end.
+
+-spec spawn_ring_stops([integer()], integer(), integer()) -> ok.
+spawn_ring_stops(UserIds, ChannelId, MessageId) ->
+    _ = proc_lib:spawn(fun() ->
+        lists:foreach(
+            fun(UserId) ->
+                _ = push_job_publisher:publish_clear(UserId, ChannelId, MessageId)
+            end,
+            UserIds
+        )
+    end),
+    ok.
 
 -spec maybe_dispatch_ringing_change(map(), map()) -> {map(), boolean()}.
 maybe_dispatch_ringing_change(PrevState, CountedState) ->
@@ -249,6 +279,7 @@ dispatch_call_delete(State) ->
     },
     Recipients = maps:get(recipients, State),
     dispatch_to_recipients(Recipients, call_delete, Event),
+    ok = publish_ring_stops(maps:get(ringing, State), State),
     notify_call_ended(cancel_all_ringing_timers(State)),
     ok.
 
