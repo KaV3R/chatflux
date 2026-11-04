@@ -145,6 +145,17 @@ function computeCropRect(containerWidth: number, containerHeight: number, aspect
 	return {width, height};
 }
 
+function isQuarterTurn(rotationDeg: number): boolean {
+	const rot = ((rotationDeg % 360) + 360) % 360;
+	return rot === 90 || rot === 270;
+}
+
+// The image element keeps its unrotated size and is turned with CSS, so on
+// screen a 90/270 degree turn swaps its width and height.
+function visualSize(size: Size, rotationDeg: number): Size {
+	return isQuarterTurn(rotationDeg) ? {width: size.height, height: size.width} : size;
+}
+
 function computeDragBoundaries(imageWidth: number, imageHeight: number, cropRect: Size): DragBoundaries {
 	const excessWidth = imageWidth - cropRect.width;
 	const excessHeight = imageHeight - cropRect.height;
@@ -551,7 +562,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = observer(
 			img.style.transform = `translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), 0) rotate(${rotationDeg}deg)`;
 		}, []);
 		const recalculateLayout = useCallback(
-			(nextHeightRatio: number, resetTransform: boolean) => {
+			(nextHeightRatio: number, resetTransform: boolean, nextRotation?: number) => {
 				const img = imageRef.current;
 				const container = cropperContainerRef.current;
 				if (!img || !container) return;
@@ -563,19 +574,21 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = observer(
 				if (!naturalWidth || !naturalHeight || !containerWidth || !containerHeight) {
 					return;
 				}
-				const scale = Math.min(containerWidth / naturalWidth, containerHeight / naturalHeight);
+				const rotationDeg = resetTransform ? 0 : (nextRotation ?? rotation);
+				const naturalVisual = visualSize({width: naturalWidth, height: naturalHeight}, rotationDeg);
+				const scale = Math.min(containerWidth / naturalVisual.width, containerHeight / naturalVisual.height);
 				const fittedWidth = naturalWidth * scale;
 				const fittedHeight = naturalHeight * scale;
+				const fittedVisual = visualSize({width: fittedWidth, height: fittedHeight}, rotationDeg);
 				const baseAspect = isRound ? 1 : aspectRatio;
 				const clampedHeightRatio = heightSliderEnabled
 					? clamp(nextHeightRatio, effectiveMinHeightRatio, effectiveMaxHeightRatio)
 					: 1;
 				const effectiveAspect = baseAspect / clampedHeightRatio;
-				const cropRect = computeCropRect(fittedWidth, fittedHeight, effectiveAspect);
+				const cropRect = computeCropRect(fittedVisual.width, fittedVisual.height, effectiveAspect);
 				const zoom = resetTransform ? 1 : zoomRatio;
-				const rotationDeg = resetTransform ? 0 : rotation;
-				const scaledWidth = fittedWidth * zoom;
-				const scaledHeight = fittedHeight * zoom;
+				const scaledWidth = fittedVisual.width * zoom;
+				const scaledHeight = fittedVisual.height * zoom;
 				const bounds = computeDragBoundaries(scaledWidth, scaledHeight, cropRect);
 				const nextTransform = resetTransform ? {x: 0, y: 0} : transformRef.current;
 				const clampedTransform = clampTransformToBounds(nextTransform.x, nextTransform.y, bounds);
@@ -654,8 +667,9 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = observer(
 			(ratio: number) => {
 				if (!displayDimensions || !cropDimensions) return;
 				const clampedZoom = clamp(ratio, MIN_ZOOM, MAX_ZOOM);
-				const scaledWidth = displayDimensions.width * clampedZoom;
-				const scaledHeight = displayDimensions.height * clampedZoom;
+				const visual = visualSize(displayDimensions, rotation);
+				const scaledWidth = visual.width * clampedZoom;
+				const scaledHeight = visual.height * clampedZoom;
 				const newBounds = computeDragBoundaries(scaledWidth, scaledHeight, cropDimensions);
 				let {x, y} = transformRef.current;
 				if (!inRange(x, newBounds.right, newBounds.left) || !inRange(y, newBounds.top, newBounds.bottom)) {
@@ -680,17 +694,11 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = observer(
 		const handleRotate = useCallback(() => {
 			if (!displayDimensions || !cropDimensions) return;
 			const nextRotation = (rotation + 90) % 360;
-			const current = transformRef.current;
-			const rotatedTransform = rotatePoint(current, 90);
-			const scaledWidth = displayDimensions.width * zoomRatio;
-			const scaledHeight = displayDimensions.height * zoomRatio;
-			const newBounds = computeDragBoundaries(scaledWidth, scaledHeight, cropDimensions);
-			const clamped = clampTransformToBounds(rotatedTransform.x, rotatedTransform.y, newBounds);
-			applyTransform(clamped.x, clamped.y, nextRotation);
-			setRotation(nextRotation);
-			setDragBoundaries(newBounds);
-			setHasEdits(hasEditsFrom(zoomRatio, nextRotation, clamped, heightRatio));
-		}, [applyTransform, cropDimensions, displayDimensions, heightRatio, rotation, zoomRatio]);
+			// Turn the current offset clockwise with the image, then lay out the
+			// crop box again for the rotated size (it clamps the offset too).
+			transformRef.current = rotatePoint(transformRef.current, 270);
+			recalculateLayout(heightRatio, false, nextRotation);
+		}, [cropDimensions, displayDimensions, heightRatio, recalculateLayout, rotation]);
 		const handleReset = useCallback(() => {
 			if (!displayDimensions || !cropDimensions) return;
 			recalculateLayout(1, true);
