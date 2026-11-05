@@ -6,16 +6,17 @@ if [[ $_channel == canary ]]; then
 	_appname='Fluxer Canary'
 	_comment='Canary build of Fluxer'
 else
-	pkgname=fluxer
-	_desktopid=app.fluxer.FluxerDesktop
-	_appname='Fluxer'
+	# ChatFlux names; must match linuxPackageName / linuxDesktopId in electron-builder.config.cjs.
+	pkgname=chatflux
+	_desktopid=hu.catflux.ChatFlux
+	_appname='ChatFlux'
 	_comment='Instant messaging and VoIP'
 fi
 pkgver="${FLUXER_VERSION:?FLUXER_VERSION must be set}"
 pkgrel=1
-pkgdesc='Instant messaging and VoIP application'
+pkgdesc='ChatFlux desktop app (chat.catflux.hu)'
 arch=('x86_64' 'aarch64')
-url='https://fluxer.app'
+url='https://chat.catflux.hu'
 license=('AGPL-3.0-or-later')
 depends=(
 	'alsa-lib'
@@ -62,7 +63,8 @@ sha256sums=('SKIP')
 
 package() {
 	local payload opt size
-	payload=$(printf '%s\n' "$srcdir"/*-linux-*/ | head -n1)
+	# The unpacked app is the folder that holds chrome-sandbox, whatever the tarball calls it.
+	payload=$(dirname "$(find -L "$srcdir" -maxdepth 3 -name chrome-sandbox -print -quit)")
 	opt="$pkgdir/opt/$pkgname"
 
 	install -dm755 "$opt"
@@ -103,7 +105,11 @@ package() {
 	chmod 644 "$pkgdir/usr/share/applications/$_desktopid.desktop"
 
 	for size in 16 24 32 48 64 128 256 512; do
+		[[ -f "$opt/resources/icons/${size}x${size}.png" ]] || continue
 		install -Dm644 "$opt/resources/icons/${size}x${size}.png" \
 			"$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png"
 	done
+	if [[ -n ${CHATFLUX_ICON:-} && -f $CHATFLUX_ICON ]]; then
+		install -Dm644 "$CHATFLUX_ICON" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
+	fi
 }

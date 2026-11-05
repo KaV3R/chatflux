@@ -147,7 +147,7 @@ function stageApp(options, sandbox) {
 			.find((candidate) => {
 				const stats = fs.statSync(candidate);
 				const name = path.basename(candidate);
-				if (!stats.isFile() || !/^fluxer/iu.test(name)) return false;
+				if (!stats.isFile() || !/^(?:fluxer|chatflux)/iu.test(name)) return false;
 				if (process.platform === 'win32') return /\.exe$/iu.test(name) && !/_ExecutionStub\.exe$/iu.test(name);
 				return (stats.mode & 0o111) !== 0;
 			});

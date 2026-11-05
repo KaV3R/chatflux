@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 // ChatFlux desktop: looks at the running programs every few seconds, recognises games and
-// reports the current one to the activity service. Only runs in the Windows desktop app.
+// reports the current one to the activity service. Only runs in the desktop app (Windows, Linux).
 
 import Authentication from '@app/features/auth/state/Authentication';
 import {ActivityApi, type KnownGame, type ReportedGame} from '@app/features/chatflux_activity/ActivityApi';

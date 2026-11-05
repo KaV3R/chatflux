@@ -13,12 +13,12 @@ const MACOS_BUNDLE_IDS: Record<BuildChannel, string> = {
 	development: 'app.fluxer.development',
 };
 const LINUX_DESKTOP_ENTRY_IDS: Record<BuildChannel, string> = {
-	stable: 'app.fluxer.FluxerDesktop',
+	stable: 'hu.catflux.ChatFlux', // must match linuxDesktopId in electron-builder.config.cjs
 	canary: 'app.fluxer.FluxerDesktopCanary',
 	development: 'app.fluxer.FluxerDesktopDevelopment',
 };
 const LEGACY_LINUX_DESKTOP_ENTRY_IDS: Record<BuildChannel, string> = {
-	stable: 'fluxer',
+	stable: 'chatflux', // also the icon name = linuxPackageName
 	canary: 'fluxer-canary',
 	development: 'fluxer-development',
 };

@@ -1,0 +1,327 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# ChatFlux: builds the Linux desktop app (x64) and publishes it as a GitHub Release.
+# Outputs: AppImage (any distro), .deb (Ubuntu/Debian/Mint), .rpm (Fedora/openSUSE),
+# .tar.gz (anything) and .pkg.tar.zst (Arch/Manjaro/EndeavourOS, built from packaging/arch/PKGBUILD).
+# Simplified from build-desktop.yaml. Uses upstream Fluxer's patched Linux Electron runtime.
+name: ChatFlux desktop (Linux)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chatflux-desktop-linux
+  cancel-in-progress: false
+
+env:
+  BUILD_CHANNEL: stable
+
+jobs:
+  meta:
+    name: Resolve version
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - id: v
+        shell: bash
+        run: |
+          set -euo pipefail
+          y=$(date -u +%Y); m=$((10#$(date -u +%m))); d=$(date -u +%d); t=$((10#$(date -u +%H%M%S)))
+          echo "version=${y}.${m}${d}.${t}" >> "$GITHUB_OUTPUT"
+
+  shared_assets:
+    name: Build renderer
+    needs: meta
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      BUILD_VERSION: ${{ needs.meta.outputs.version }}
+      SOURCE_SHA: ${{ github.sha }}
+    steps:
+      - name: Checkout CI helpers
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: _ci
+
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: source
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+        with:
+          toolchain: "1.98.1"
+          targets: wasm32-unknown-unknown
+
+      - name: Set workdir
+        env:
+          SUBST_TARGET: ${{ github.workspace }}/source
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step set_workdir_unix
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26
+
+      - name: Set up pnpm
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step setup_pnpm
+
+      - name: Resolve pnpm store path
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step resolve_pnpm_store_unix
+
+      - name: Cache pnpm store
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: ${{ runner.os }}-renderer-pnpm-${{ hashFiles('source/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-renderer-pnpm-
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step install_dependencies
+
+      - name: Update version
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step update_version
+
+      - name: Set build channel
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step set_build_channel
+
+      - name: Build renderer assets
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step build_shared_assets
+
+      - name: Prepare renderer artifact
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step prepare_shared_assets
+
+      - name: Upload renderer artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: renderer-${{ needs.meta.outputs.version }}
+          path: source/desktop-shared-assets
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
+  linux:
+    name: Build Linux packages
+    needs: [meta, shared_assets]
+    # 22.04 = glibc 2.35, the oldest glibc the packages promise to run on.
+    runs-on: ubuntu-22.04
+    timeout-minutes: 180
+    env:
+      BUILD_VERSION: ${{ needs.meta.outputs.version }}
+      SOURCE_SHA: ${{ github.sha }}
+      FLUXER_MODULES: "1"
+      PLATFORM: linux
+      DESKTOP_PLATFORM: linux
+      ARCH: x64
+      DESKTOP_ARCH: x64
+      ELECTRON_ARCH: x64
+    steps:
+      - name: Checkout CI helpers
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: _ci
+
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: source
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+        with:
+          toolchain: "1.98.1"
+          targets: x86_64-unknown-linux-gnu
+
+      - name: Set workdir
+        env:
+          SUBST_TARGET: ${{ github.workspace }}/source
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step set_workdir_unix
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26
+
+      - name: Set up pnpm
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step setup_pnpm
+
+      - name: Resolve pnpm store path
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step resolve_pnpm_store_unix
+
+      - name: Cache pnpm store
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: ${{ runner.os }}-linux-x64-pnpm-${{ hashFiles('source/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-linux-x64-pnpm-
+
+      - name: Install Linux dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step install_linux_deps
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step install_dependencies
+
+      - name: Update version
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step update_version
+
+      - name: Set build channel
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step set_build_channel
+
+      - name: Download renderer artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: renderer-${{ needs.meta.outputs.version }}
+          path: source/desktop-shared-assets
+
+      - name: Restore renderer assets
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step restore_shared_assets
+
+      - name: Build Electron main process
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step build_electron_main
+
+      - name: Download patched Electron (from upstream Fluxer releases)
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FLUXER_ELECTRON_DIST: ${{ runner.temp }}/fluxer-electron-dist
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_tag=$(jq -er .releaseTag electron/runtime.json)
+          version=$(jq -er .electronVersion electron/runtime.json)
+          gh release download "$release_tag" --repo fluxerapp/fluxer \
+            --pattern "electron-v$version-linux-$ELECTRON_ARCH.zip" \
+            --pattern "electron-v$version-linux-$ELECTRON_ARCH.fluxer.json" \
+            --dir "$FLUXER_ELECTRON_DIST"
+          ls -la "$FLUXER_ELECTRON_DIST"
+
+      - name: Build Electron app
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        env:
+          USE_SYSTEM_FPM: true
+          FLUXER_ELECTRON_DIST: ${{ runner.temp }}/fluxer-electron-dist
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step build_app_linux
+
+      - name: Check the app starts
+        # Informational: upstream's check also assumes Fluxer's data directory names.
+        continue-on-error: true
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        run: >-
+          cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
+          --step verify_bundled_renderer_linux
+
+      - name: Collect packages
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          ls -la dist-electron
+          for f in dist-electron/*.AppImage dist-electron/*.deb dist-electron/*.rpm dist-electron/*.tar.gz; do
+            [ -f "$f" ] && cp "$f" release/
+          done
+          ls -la release
+
+      - name: Build Arch Linux package
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        shell: bash
+        run: |
+          set -euo pipefail
+          tarball=$(ls release/*-linux-x64.tar.gz | head -n1)
+          work=$(mktemp -d)
+          cp packaging/arch/PKGBUILD "$work/"
+          cp "$tarball" "$work/chatflux-${BUILD_VERSION}-x86_64.tar.gz"
+          cp build_resources/icons-stable/512x512.png "$work/icon.png"
+          chmod -R a+rwX "$work"
+          docker run --rm -v "$work:/build" -w /build archlinux:base-devel bash -c '
+            set -euo pipefail
+            useradd -m builder
+            chown -R builder /build
+            su builder -c "FLUXER_VERSION='"$BUILD_VERSION"' CHATFLUX_ICON=/build/icon.png CARCH=x86_64 makepkg --nodeps --noconfirm"
+          '
+          cp "$work"/chatflux-*.pkg.tar.zst release/
+          ls -la release
+
+      - name: Checksums
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop/release
+        run: sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
+
+      - name: Publish GitHub release
+        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="linux-v${BUILD_VERSION}"
+          notes=$(cat <<'EOF'
+          ChatFlux Linux (x64).
+
+          - Arch / Manjaro / EndeavourOS: töltsd le a `.pkg.tar.zst` fájlt, majd `sudo pacman -U chatflux-*.pkg.tar.zst`
+          - Ubuntu / Debian / Mint / Pop!_OS: töltsd le a `.deb` fájlt, majd `sudo apt install ./ChatFlux-*.deb`
+          - Fedora / openSUSE: töltsd le az `.rpm` fájlt, majd `sudo dnf install ./ChatFlux-*.rpm`
+          - Bármelyik másik: az `.AppImage` fájl, `chmod +x ChatFlux-*.AppImage`, utána indítsd el.
+
+          Frissíteni az új verzió letöltésével és telepítésével lehet.
+          EOF
+          )
+          # Not "latest": the Windows auto-updater reads releases/latest.
+          gh release create "$tag" release/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "ChatFlux Linux ${BUILD_VERSION}" \
+            --notes "$notes" \
+            --latest=false

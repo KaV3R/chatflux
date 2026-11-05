@@ -15,8 +15,9 @@ const CHANNELS = {
 		appId: 'hu.catflux.chatflux',
 		iconDirectory: 'icons-stable',
 		packageName: 'fluxer_desktop',
-		linuxPackageName: 'fluxer',
-		linuxDesktopId: 'app.fluxer.FluxerDesktop',
+		// ChatFlux: own Linux names so it can be installed next to the real Fluxer.
+		linuxPackageName: 'chatflux',
+		linuxDesktopId: 'hu.catflux.ChatFlux',
 		linuxComment: 'Instant messaging and VoIP',
 		protocolScheme: 'fluxer',
 		macEntitlements: 'build_resources/entitlements.mac.stable.plist',
@@ -101,8 +102,9 @@ const rpmBuildIdLinkFpmArgs = [
 	'--rpm-rpmbuild-define',
 	'_missing_build_ids_terminate_build 0',
 ];
-const legacyLinuxStableDebPackageName = 'fluxer-app';
-const legacyLinuxStableRpmPackageName = 'fluxer_app';
+// ChatFlux: upstream replaces its old 'fluxer-app' package here; ours must not remove a real Fluxer install.
+const legacyLinuxStableDebPackageName = 'chatflux-app';
+const legacyLinuxStableRpmPackageName = 'chatflux_app';
 const legacyLinuxStablePackageNames = {
 	'.deb': legacyLinuxStableDebPackageName,
 	'.rpm': legacyLinuxStableRpmPackageName,

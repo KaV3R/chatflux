@@ -205,8 +205,8 @@ const ActivitySettingsTab: React.FC = observer(() => {
 					<Switch
 						label={tr('Aktivitásom megosztása', 'Share my activity')}
 						description={tr(
-							'Mások látják, mivel játszol és mióta: a taglistában, a profilkártyádon és a profilodon. A játékokat a ChatFlux Windows alkalmazás ismeri fel.',
-							'Others see what you play and for how long: in the member list, on your profile card and on your profile. Games are detected by the ChatFlux Windows app.',
+							'Mások látják, mivel játszol és mióta: a taglistában, a profilkártyádon és a profilodon. A játékokat a ChatFlux gépes alkalmazás (Windows, Linux) ismeri fel.',
+							'Others see what you play and for how long: in the member list, on your profile card and on your profile. Games are detected by the ChatFlux desktop app (Windows, Linux).',
 						)}
 						value={settings?.share ?? true}
 						disabled={!settings}
@@ -269,8 +269,8 @@ const ActivitySettingsTab: React.FC = observer(() => {
 						ActivityDetector.supported
 							? tr('Az itt kikapcsolt játékokat senki nem látja.', 'Games switched off here are never shown to anyone.')
 							: tr(
-									'A játékokat a ChatFlux Windows alkalmazás ismeri fel. A böngészőből nem látszik, mivel játszol.',
-									'Games are detected by the ChatFlux Windows app. The browser cannot see what you play.',
+									'A játékokat a ChatFlux gépes alkalmazás (Windows, Linux) ismeri fel. A böngészőből nem látszik, mivel játszol.',
+									'Games are detected by the ChatFlux desktop app (Windows, Linux). The browser cannot see what you play.',
 								)
 					}
 				>

@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-// ChatFlux: finds the game the user is playing (Windows only).
+// ChatFlux: finds the game the user is playing (Windows and Linux).
 // The renderer asks for the running process names, matches them against the game list and
 // reports the match to the ChatFlux activity service. Nothing here leaves the machine by itself.
 
 import {execFile} from 'node:child_process';
+import {readdirSync, readFileSync, statSync} from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {requirePrivilegedRendererDocumentSender} from '@electron/main/PrivilegedRendererDocuments';
 import {app, ipcMain, nativeImage} from 'electron';
 
@@ -56,8 +59,88 @@ function parseCsvLine(line: string): Array<string> {
 	return cells;
 }
 
+// ---- Linux: /proc instead of tasklist, Steam's registry.vdf instead of the registry ----
+
+/** Program name of a Linux process. Proton/Wine games show up with their Windows .exe name. */
+function linuxProcessName(pid: string): string | null {
+	try {
+		const cmdline = readFileSync(`/proc/${pid}/cmdline`, 'utf8');
+		const argv0 = cmdline.split('\0')[0] ?? '';
+		const base = argv0.split(/[\\/]/).pop()?.trim().toLowerCase();
+		if (base) return base;
+		return readFileSync(`/proc/${pid}/comm`, 'utf8').trim().toLowerCase() || null;
+	} catch {
+		return null;
+	}
+}
+
+function listLinuxProcesses(onlyMine: boolean): Array<ChatFluxRunningProcess> {
+	const uid = process.getuid?.() ?? -1;
+	const result: Array<ChatFluxRunningProcess> = [];
+	let entries: Array<string> = [];
+	try {
+		entries = readdirSync('/proc');
+	} catch {
+		return result;
+	}
+	for (const entry of entries) {
+		if (!/^\d+$/.test(entry)) continue;
+		if (onlyMine) {
+			try {
+				if (statSync(`/proc/${entry}`).uid !== uid) continue;
+			} catch {
+				continue;
+			}
+		}
+		const name = linuxProcessName(entry);
+		if (!name) continue;
+		const pid = Number(entry);
+		result.push({pid, name});
+		// The game list uses Windows names; let native Linux builds (e.g. "cs2") match "cs2.exe" too.
+		if (!name.endsWith('.exe')) result.push({pid, name: `${name}.exe`});
+	}
+	return result;
+}
+
+/** Programs of the current user, for the "add a game" picker (Linux has no portable window list). */
+function listLinuxWindowProcesses(): Array<ChatFluxWindowProcess> {
+	const seen = new Set<string>();
+	const result: Array<ChatFluxWindowProcess> = [];
+	for (const proc of listLinuxProcesses(true)) {
+		if (seen.has(proc.name)) continue;
+		// Skip the ".exe" aliases of native programs, they are not real names.
+		if (proc.name.endsWith('.exe') && seen.has(proc.name.slice(0, -4))) continue;
+		seen.add(proc.name);
+		result.push({...proc, title: ''});
+	}
+	return result.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function linuxSteamRunningApp(): {appId: number; name: string | null} | null {
+	const home = os.homedir();
+	const candidates = [
+		path.join(home, '.steam', 'registry.vdf'),
+		path.join(home, '.var', 'app', 'com.valvesoftware.Steam', '.steam', 'registry.vdf'),
+	];
+	for (const file of candidates) {
+		let text: string;
+		try {
+			text = readFileSync(file, 'utf8');
+		} catch {
+			continue;
+		}
+		const appId = Number.parseInt(/"RunningAppID"\s+"(\d+)"/i.exec(text)?.[1] ?? '', 10);
+		if (!appId) continue;
+		const block = new RegExp(`"${appId}"\\s*\\{([^}]*)\\}`).exec(text)?.[1] ?? '';
+		const name = /"name"\s+"([^"]+)"/i.exec(block)?.[1] ?? null;
+		return {appId, name};
+	}
+	return null;
+}
+
 /** Every running process (name + pid). Cheap enough to call every few seconds. */
 async function listProcesses(): Promise<Array<ChatFluxRunningProcess>> {
+	if (process.platform === 'linux') return listLinuxProcesses(false);
 	if (process.platform !== 'win32') return [];
 	const out = await run('tasklist', ['/fo', 'csv', '/nh']);
 	const processes: Array<ChatFluxRunningProcess> = [];
@@ -72,6 +155,7 @@ async function listProcesses(): Promise<Array<ChatFluxRunningProcess>> {
 
 /** Processes that have a visible window, for the "add a game" picker. */
 async function listWindowProcesses(): Promise<Array<ChatFluxWindowProcess>> {
+	if (process.platform === 'linux') return listLinuxWindowProcesses();
 	if (process.platform !== 'win32') return [];
 	const script =
 		'[Console]::OutputEncoding=[Text.Encoding]::UTF8;' +
@@ -89,6 +173,7 @@ async function listWindowProcesses(): Promise<Array<ChatFluxWindowProcess>> {
 
 /** The Steam game running right now, read from the registry Steam keeps up to date. */
 async function steamRunningApp(): Promise<{appId: number; name: string | null} | null> {
+	if (process.platform === 'linux') return linuxSteamRunningApp();
 	if (process.platform !== 'win32') return null;
 	const out = await run('reg', ['query', 'HKCU\\Software\\Valve\\Steam', '/v', 'RunningAppID']);
 	const match = /RunningAppID\s+REG_DWORD\s+0x([0-9a-f]+)/i.exec(out);
