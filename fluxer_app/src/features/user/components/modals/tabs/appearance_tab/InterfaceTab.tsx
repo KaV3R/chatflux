@@ -6,7 +6,10 @@ import {SettingsTabSection} from '@app/features/app/components/dialogs/shared/Se
 import {ChannelItemCore} from '@app/features/app/components/layout/ChannelItem';
 import channelItemSurfaceStyles from '@app/features/app/components/layout/ChannelItemSurface.module.css';
 import {Typing} from '@app/features/channel/components/ChannelTyping';
+import ChatFluxPrefs from '@app/features/chatflux_shop/ChatFluxPrefs';
+import {tr} from '@app/features/chatflux_shop/ShopApi';
 import {AvatarStack} from '@app/features/ui/avatars/AvatarStack';
+import {Switch} from '@app/features/ui/components/form/FormSwitch';
 import {MockAvatar} from '@app/features/ui/components/MockAvatar';
 import type {RadioOption} from '@app/features/ui/radio_group/RadioGroup';
 import {RadioGroup} from '@app/features/ui/radio_group/RadioGroup';
@@ -141,21 +144,38 @@ export const InterfaceTabContent: React.FC = observer(() => {
 		},
 	];
 	return (
-		<SettingsTabSection
-			title={i18n._(CHANNEL_LIST_TYPING_INDICATORS_DESCRIPTOR)}
-			data-flx="user.appearance-tab.interface-tab.interface-tab-content.settings-tab-section"
-		>
-			<ChannelListPreview
-				mode={Accessibility.channelTypingIndicatorMode}
-				data-flx="user.appearance-tab.interface-tab.interface-tab-content.channel-list-preview"
-			/>
-			<RadioGroup
-				options={channelTypingIndicatorOptions}
-				value={Accessibility.channelTypingIndicatorMode}
-				onChange={(value) => AccessibilityCommands.update({channelTypingIndicatorMode: value})}
-				aria-label={i18n._(CHANNEL_LIST_TYPING_INDICATOR_MODE_DESCRIPTOR)}
-				data-flx="user.appearance-tab.interface-tab.interface-tab-content.radio-group.update"
-			/>
-		</SettingsTabSection>
+		<>
+			<SettingsTabSection
+				title={tr('Névstílus a bal alsó sávban', 'Name style in the user panel')}
+				data-flx="user.appearance-tab.interface-tab.interface-tab-content.settings-tab-section--chatflux-name-style"
+			>
+				<Switch
+					label={tr('Névstílus mutatása a saját nevemen', 'Show the name style on my name')}
+					description={tr(
+						'A boltban vett betűtípus és effekt a bal alsó sávban, a mikrofon mellett is látszik a neveden. Ez csak ezen a helyen kapcsolja ki.',
+						'Your font and effect from the shop also show on your name in the bottom-left panel next to the microphone. This only turns it off there.',
+					)}
+					value={ChatFluxPrefs.userAreaNameStyle}
+					onChange={(value) => ChatFluxPrefs.setUserAreaNameStyle(value)}
+					data-flx="user.appearance-tab.interface-tab.interface-tab-content.switch--chatflux-name-style"
+				/>
+			</SettingsTabSection>
+			<SettingsTabSection
+				title={i18n._(CHANNEL_LIST_TYPING_INDICATORS_DESCRIPTOR)}
+				data-flx="user.appearance-tab.interface-tab.interface-tab-content.settings-tab-section"
+			>
+				<ChannelListPreview
+					mode={Accessibility.channelTypingIndicatorMode}
+					data-flx="user.appearance-tab.interface-tab.interface-tab-content.channel-list-preview"
+				/>
+				<RadioGroup
+					options={channelTypingIndicatorOptions}
+					value={Accessibility.channelTypingIndicatorMode}
+					onChange={(value) => AccessibilityCommands.update({channelTypingIndicatorMode: value})}
+					aria-label={i18n._(CHANNEL_LIST_TYPING_INDICATOR_MODE_DESCRIPTOR)}
+					data-flx="user.appearance-tab.interface-tab.interface-tab-content.radio-group.update"
+				/>
+			</SettingsTabSection>
+		</>
 	);
 });

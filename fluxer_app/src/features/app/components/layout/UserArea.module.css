@@ -85,6 +85,9 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 100%;
+	/* Room for glow/shadow name styles without moving the layout. */
+	padding-block: 3px;
+	margin-block: -3px;
 }
 
 .userStatus {

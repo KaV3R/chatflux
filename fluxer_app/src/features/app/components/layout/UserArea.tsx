@@ -10,6 +10,8 @@ import {CustomStatusDisplay} from '@app/features/app/components/shared/custom_st
 import {reportSkeletonVoicePresence} from '@app/features/app/components/skeleton/SkeletonLayoutMemory';
 import {getStatusTypeLabel} from '@app/features/app/constants/AppConstants';
 import {useContextMenuHoverState} from '@app/features/app/hooks/useContextMenuHoverState';
+import ChatFluxPrefs from '@app/features/chatflux_shop/ChatFluxPrefs';
+import {StyledName} from '@app/features/chatflux_shop/components/NameStyle';
 import * as VoiceStateCommands from '@app/features/devtools/commands/VoiceStateCommands';
 import Keybind from '@app/features/input/state/InputKeybind';
 import {getPushToTalkHoldLabel} from '@app/features/input/utils/PushToTalkHint';
@@ -282,7 +284,11 @@ const UserAreaInner = observer(
 								<StatusAwareAvatar user={user} size={32} data-flx="app.user-area.user-area-inner.status-aware-avatar" />
 								<div className={styles.userInfoText} data-flx="app.user-area.user-area-inner.user-info-text">
 									<div className={styles.userName} data-flx="app.user-area.user-area-inner.user-name">
-										{displayName}
+										{ChatFluxPrefs.userAreaNameStyle ? (
+											<StyledName userId={user.id}>{displayName}</StyledName>
+										) : (
+											displayName
+										)}
 									</div>
 									<div className={styles.userStatus} data-flx="app.user-area.user-area-inner.user-status">
 										<div
