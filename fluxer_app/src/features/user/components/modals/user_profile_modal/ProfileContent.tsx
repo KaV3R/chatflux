@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {RecentGamesSection, UserGameActivity} from '@app/features/chatflux_activity/components/GameActivity';
 import Permission from '@app/features/permissions/state/Permission';
 import * as ModalCommands from '@app/features/ui/commands/ModalCommands';
 import userProfileModalStyles from '@app/features/user/components/modals/UserProfileModal.module.css';
@@ -32,6 +33,7 @@ export const ProfileContent: React.FC<ProfileContentProps> = observer(
 					className={userProfileModalStyles.profileContentHeader}
 					data-flx="user.user-profile-modal.profile-content.div--2"
 				>
+					{!user.bot && <UserGameActivity userId={user.id} guildId={profile?.guild?.id ?? null} />}
 					<VoiceActivitySection
 						userId={user.id}
 						onNavigate={handleNavigate}
@@ -60,6 +62,7 @@ export const ProfileContent: React.FC<ProfileContentProps> = observer(
 						variant="cards"
 						data-flx="user.user-profile-modal.profile-content.user-profile-connections"
 					/>
+					{!user.bot && <RecentGamesSection userId={user.id} guildId={profile?.guild?.id ?? null} />}
 					<UserNoteEditor
 						userId={user.id}
 						initialNote={userNote}

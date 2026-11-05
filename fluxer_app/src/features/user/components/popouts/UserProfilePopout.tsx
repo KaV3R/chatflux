@@ -5,6 +5,7 @@ import {CustomStatusDisplay} from '@app/features/app/components/shared/custom_st
 import {useHover} from '@app/features/app/hooks/useHover';
 import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
 import Authentication from '@app/features/auth/state/Authentication';
+import {UserGameActivity} from '@app/features/chatflux_activity/components/GameActivity';
 import DeveloperOptions from '@app/features/devtools/state/DeveloperOptions';
 import {OPEN_DM_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
 import type {GuildMember} from '@app/features/member/models/GuildMember';
@@ -331,6 +332,7 @@ export const UserProfilePopout: React.FC<UserProfilePopoutProps> = observer(
 						/>
 					</div>
 				)}
+				{!isWebhook && !user.bot && <UserGameActivity userId={user.id} guildId={profileGuildId} />}
 				{!isWebhook && (
 					<VoiceActivitySection
 						userId={user.id}

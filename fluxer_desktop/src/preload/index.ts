@@ -428,6 +428,13 @@ const api: ElectronAPI = {
 	getGpuInfo: (): Promise<GpuInfo> => ipcRenderer.invoke('get-gpu-info'),
 	getAppMetrics: (): Promise<AppMetricsSnapshot> => ipcRenderer.invoke('get-app-metrics'),
 	getSystemIdleTimeMs: (): Promise<number> => ipcRenderer.invoke('system-idle-time-ms'),
+	chatfluxGameProcesses: (): Promise<Array<{pid: number; name: string}>> =>
+		ipcRenderer.invoke('chatflux-games:processes'),
+	chatfluxGameWindows: (): Promise<Array<{pid: number; name: string; title: string}>> =>
+		ipcRenderer.invoke('chatflux-games:windows'),
+	chatfluxSteamRunningApp: (): Promise<{appId: number; name: string | null} | null> =>
+		ipcRenderer.invoke('chatflux-games:steam'),
+	chatfluxProcessIcon: (pid: number): Promise<string | null> => ipcRenderer.invoke('chatflux-games:icon', pid),
 	getDesktopWindowBehaviorSettings: (): Promise<DesktopWindowBehaviorSettings> =>
 		ipcRenderer.invoke('desktop-window-behavior-get'),
 	setDesktopWindowBehaviorSettings: (

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import ActivitySettingsTab from '@app/features/chatflux_activity/components/ActivitySettingsTab';
 import {ThemesTab} from '@app/features/theme_settings/ThemesTab';
 import {AccessibilityTab} from '@app/features/user/components/modals/tabs/AccessibilityTab';
 import AccountSecurityTab from '@app/features/user/components/modals/tabs/AccountSecurityTab';
@@ -45,6 +46,7 @@ const DESKTOP_TAB_COMPONENTS: Partial<Record<UserSettingsTabType, React.Componen
 	embed_debugger: EmbedDebuggerTab,
 	applications: ApplicationsTab,
 	component_gallery: ComponentGalleryTab,
+	chatflux_activity: ActivitySettingsTab,
 };
 export const getSettingsTabComponent = (
 	tabType: UserSettingsTabType,

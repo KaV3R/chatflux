@@ -5,6 +5,8 @@ import {UserTag} from '@app/features/channel/components/ChannelUserTag';
 import {CompactMemberCustomStatus} from '@app/features/channel/components/CompactMemberCustomStatus';
 import styles from '@app/features/channel/components/MemberListItem.module.css';
 import {PreloadableUserPopout} from '@app/features/channel/components/PreloadableUserPopout';
+import {useGameActivity} from '@app/features/chatflux_activity/ActivityStore';
+import {MemberListGameActivity} from '@app/features/chatflux_activity/components/GameActivity';
 import {nameplateContentClassName, UserNameplate} from '@app/features/chatflux_shop/components/Cosmetics';
 import {StyledName} from '@app/features/chatflux_shop/components/NameStyle';
 import Guilds from '@app/features/guild/state/Guilds';
@@ -104,6 +106,7 @@ export const MemberListItem: React.FC<MemberListItemProps> = observer((props) =>
 	});
 	const isMobile = isCurrentUser ? undefined : (providedIsMobile ?? hookIsMobile);
 	const isTyping = RollingTypingStore.isMemberListTyping(channelId, user.id, Authentication.currentUserId);
+	const gameActivity = useGameActivity(user.bot ? null : user.id, guildId);
 	const handleContextMenu = useCallback(
 		(event: React.MouseEvent) => {
 			event.preventDefault();
@@ -252,12 +255,16 @@ export const MemberListItem: React.FC<MemberListItemProps> = observer((props) =>
 									/>
 								)}
 							</div>
-							<CompactMemberCustomStatus
-								customStatus={memberListCustomStatus}
-								userId={user.id}
-								className={styles.memberCustomStatus}
-								data-flx="channel.member-list-item.member-custom-status"
-							/>
+							{gameActivity ? (
+								<MemberListGameActivity activity={gameActivity} className={styles.memberCustomStatus} />
+							) : (
+								<CompactMemberCustomStatus
+									customStatus={memberListCustomStatus}
+									userId={user.id}
+									className={styles.memberCustomStatus}
+									data-flx="channel.member-list-item.member-custom-status"
+								/>
+							)}
 						</div>
 					</span>
 				</div>

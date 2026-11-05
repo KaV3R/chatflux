@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {tr} from '@app/features/chatflux_shop/ShopApi';
 import {getPremiumProductFullName, shouldShowPremiumFeatures} from '@app/features/premium/utils/PremiumUtils';
 import {guessPlatform, isDesktop} from '@app/features/ui/utils/NativeUtils';
 import {
@@ -49,6 +50,7 @@ import {
 	DesktopIcon,
 	DevicesIcon,
 	EyeSlashIcon,
+	GameControllerIcon,
 	GearIcon,
 	GiftIcon,
 	type Icon,
@@ -217,6 +219,12 @@ const ALL_TABS_DESCRIPTORS: Array<SettingsTabDescriptor> = [
 		category: 'app_settings',
 		label: THEMES_DESCRIPTOR,
 		icon: SwatchesIcon,
+	},
+	{
+		type: 'chatflux_activity',
+		category: 'app_settings',
+		label: () => tr('Aktivitás', 'Activity'),
+		icon: GameControllerIcon,
 	},
 	{
 		type: 'notifications',

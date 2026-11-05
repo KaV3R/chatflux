@@ -137,6 +137,11 @@ export function shopAssetUrl(path: string | undefined | null): string | null {
 	return `${shopBaseUrl()}/${path.replace(/^\/+/, '')}`;
 }
 
+/** JSON request to the ChatFlux service (shop + activity). `auth` sends the Fluxer token. */
+export async function shopRequest<T>(method: 'GET' | 'POST', path: string, body?: unknown, auth = false): Promise<T> {
+	return request<T>(method, path, body, auth);
+}
+
 async function request<T>(method: 'GET' | 'POST', path: string, body?: unknown, auth = false): Promise<T> {
 	const headers: Record<string, string> = {};
 	if (body !== undefined) headers['Content-Type'] = 'application/json';

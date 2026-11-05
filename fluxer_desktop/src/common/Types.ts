@@ -398,6 +398,10 @@ export interface ElectronAPI {
 		options?: GetDesktopSourcesOptions,
 	) => Promise<Array<DesktopSource>>;
 	getSystemIdleTimeMs: () => Promise<number>;
+	chatfluxGameProcesses: () => Promise<Array<{pid: number; name: string}>>;
+	chatfluxGameWindows: () => Promise<Array<{pid: number; name: string; title: string}>>;
+	chatfluxSteamRunningApp: () => Promise<{appId: number; name: string | null} | null>;
+	chatfluxProcessIcon: (pid: number) => Promise<string | null>;
 	onDisplayMediaRequested?: (callback: (requestId: string, info: DisplayMediaRequestInfo) => void) => () => void;
 	onDisplayMediaPortalEmpty?: (callback: (requestId: string) => void) => () => void;
 	selectDisplayMediaSource: (requestId: string, sourceId: string | null, withAudio: boolean) => void;

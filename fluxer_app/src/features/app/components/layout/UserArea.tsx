@@ -10,6 +10,7 @@ import {CustomStatusDisplay} from '@app/features/app/components/shared/custom_st
 import {reportSkeletonVoicePresence} from '@app/features/app/components/skeleton/SkeletonLayoutMemory';
 import {getStatusTypeLabel} from '@app/features/app/constants/AppConstants';
 import {useContextMenuHoverState} from '@app/features/app/hooks/useContextMenuHoverState';
+import ActivityDetector from '@app/features/chatflux_activity/ActivityDetector';
 import ChatFluxPrefs from '@app/features/chatflux_shop/ChatFluxPrefs';
 import {StyledName} from '@app/features/chatflux_shop/components/NameStyle';
 import * as VoiceStateCommands from '@app/features/devtools/commands/VoiceStateCommands';
@@ -106,6 +107,8 @@ const UserAreaInner = observer(
 	}: UserAreaInnerProps) => {
 		const {i18n} = useLingui();
 		const {isOpen, openProps} = usePopout('user-area');
+		// ChatFlux: game detection runs in the Windows app for as long as someone is logged in.
+		useEffect(() => ActivityDetector.start(), []);
 		const status = Presence.getStatus(user.id);
 		const customStatus = Presence.getCustomStatus(user.id);
 		const {inputDevices, outputDevices} = useMediaDevices();
