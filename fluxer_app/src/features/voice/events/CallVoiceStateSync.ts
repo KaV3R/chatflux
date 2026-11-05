@@ -9,6 +9,7 @@
 import type {CallVoiceState, VoiceState} from '@app/features/gateway/types/GatewayVoiceTypes';
 import Users from '@app/features/user/state/Users';
 import MediaEngine from '@app/features/voice/engine/MediaEngineFacade';
+import {startCallAloneAutoLeave} from '@app/features/voice/events/CallAloneAutoLeave';
 import {startCallParticipantHeal} from '@app/features/voice/events/CallParticipantHeal';
 import {ME} from '@fluxer/constants/src/AppConstants';
 
@@ -24,6 +25,7 @@ export function syncCallVoiceStates(
 	prune: boolean,
 ): void {
 	startCallParticipantHeal();
+	startCallAloneAutoLeave();
 	if (!voiceStates) return;
 	const me = Users.getCurrentUser()?.id ?? null;
 	const known = MediaEngine.getAllVoiceStatesInChannel(ME, channelId);
