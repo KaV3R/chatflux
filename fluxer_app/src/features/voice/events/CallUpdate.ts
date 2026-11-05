@@ -2,6 +2,7 @@
 
 import type {GatewayHandlerContext} from '@app/features/gateway/events/EventRouter';
 import type {CallVoiceState} from '@app/features/gateway/types/GatewayVoiceTypes';
+import {syncCallVoiceStates} from '@app/features/voice/events/CallVoiceStateSync';
 import CallAvailability from '@app/features/voice/state/CallAvailability';
 import CallState, {type GatewayCallData} from '@app/features/voice/state/CallState';
 
@@ -23,4 +24,5 @@ export function handleCallUpdate(data: CallUpdatePayload, _context: GatewayHandl
 	};
 	CallAvailability.setCallAvailable(data.channel_id);
 	CallState.handleCallUpdate(callData);
+	syncCallVoiceStates(data.channel_id, data.voice_states, false);
 }
