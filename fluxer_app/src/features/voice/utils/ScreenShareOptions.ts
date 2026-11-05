@@ -335,9 +335,12 @@ export function resolveScreenShareDegradationPreference(
 ): NonNullable<TrackPublishOptions['degradationPreference']> {
 	if (target.degradationPreference) return target.degradationPreference;
 	if (target.context === 'device') return 'balanced';
-	if (target.rung === 'source') return 'maintain-resolution';
-	if (target.contentHint === 'text' || target.contentHint === 'detail') return 'maintain-resolution';
-	if (target.maxBitrate < SCREEN_SHARE_MIN_MAINTAIN_FRAMERATE_BITRATE_BPS) return 'maintain-resolution';
+	// ChatFlux: never 'maintain-resolution'. Under bandwidth or CPU pressure it
+	// keeps 1080p and lets the frame rate collapse to 1 FPS. 'balanced' trades a
+	// little sharpness for motion instead.
+	if (target.rung === 'source') return 'balanced';
+	if (target.contentHint === 'text' || target.contentHint === 'detail') return 'balanced';
+	if (target.maxBitrate < SCREEN_SHARE_MIN_MAINTAIN_FRAMERATE_BITRATE_BPS) return 'balanced';
 	return 'maintain-framerate';
 }
 

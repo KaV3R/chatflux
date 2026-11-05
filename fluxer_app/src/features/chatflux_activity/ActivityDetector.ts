@@ -6,14 +6,18 @@
 import Authentication from '@app/features/auth/state/Authentication';
 import {ActivityApi, type KnownGame, type ReportedGame} from '@app/features/chatflux_activity/ActivityApi';
 import ActivityStore from '@app/features/chatflux_activity/ActivityStore';
+import {shopBaseUrl} from '@app/features/chatflux_shop/ShopApi';
 import SessionManager from '@app/features/platform/state/AuthSession';
 import {getElectronAPI} from '@app/features/ui/utils/NativeUtils';
 import {makeAutoObservable, runInAction} from 'mobx';
 
 const STORAGE_KEY = 'chatflux.games.v1';
-const SCAN_MS = 15_000;
+const SCAN_MS = 5_000;
 const BEAT_MS = 60_000;
+const LIVE_RETRY_MS = 3_000;
 const GAMES_REFRESH_MS = 60 * 60 * 1000;
+/** `lastReported` value that forces the next beat to report, even "no game". */
+const RECONNECTED = '\u0000reconnected';
 
 /** A game this device has seen or the user added. `enabled: false` = never share it. */
 export interface RegisteredGame {
@@ -92,6 +96,38 @@ class ActivityDetector {
 		setInterval(this.beat, BEAT_MS);
 		window.addEventListener('beforeunload', this.stopSharing);
 		void this.scan();
+		void this.holdLiveConnection();
+	}
+
+	/**
+	 * Keeps one request open to the activity service. When the app closes or crashes the
+	 * connection drops and the service clears our game within a few seconds.
+	 */
+	private async holdLiveConnection(): Promise<void> {
+		for (;;) {
+			const token = SessionManager.token;
+			if (token) {
+				try {
+					const res = await fetch(`${shopBaseUrl()}/activity/live`, {
+						headers: {Authorization: token},
+						credentials: 'omit',
+						cache: 'no-store',
+					});
+					if (res.ok && res.body) {
+						const reader = res.body.getReader();
+						// The service may have dropped our game while we were away: report it again.
+						this.lastReported = RECONNECTED;
+						void this.beat();
+						// The service pings every 20 s, so a logout or account switch is noticed quickly.
+						while (SessionManager.token === token && !(await reader.read()).done) {}
+						void reader.cancel().catch(() => {});
+					}
+				} catch {
+					// Network error or service down; retry below.
+				}
+			}
+			await new Promise((resolve) => setTimeout(resolve, LIVE_RETRY_MS));
+		}
 	}
 
 	setEnabled(id: string, enabled: boolean): void {

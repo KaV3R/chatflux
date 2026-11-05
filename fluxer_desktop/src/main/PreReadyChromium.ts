@@ -44,6 +44,10 @@ export function applyPreReadyChromiumConfiguration(channel: BuildChannel, argv: 
 		});
 	}
 	app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+	// ChatFlux: keep streaming smooth while the window is minimised or behind a game.
+	app.commandLine.appendSwitch('disable-renderer-backgrounding');
+	app.commandLine.appendSwitch('disable-background-timer-throttling');
+	app.commandLine.appendSwitch('disable-backgrounding-occluded-windows');
 	const windowBehaviorSettings = getDesktopWindowBehaviorSettings();
 	app.commandLine.appendSwitch(
 		windowBehaviorSettings.smoothScrolling ? 'enable-smooth-scrolling' : 'disable-smooth-scrolling',

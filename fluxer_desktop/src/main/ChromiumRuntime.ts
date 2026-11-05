@@ -91,6 +91,9 @@ export const BASE_DISABLED_CHROMIUM_FEATURES = [
 	'UseEcoQoSForBackgroundProcess',
 	'IntensiveWakeUpThrottling',
 	'AllowAggressiveThrottlingWithWebSocket',
+	// ChatFlux: a fullscreen game covering the window made Chromium treat it as
+	// hidden and throttle the screen share pipeline down to a few FPS.
+	'CalculateNativeWinOcclusion',
 ];
 
 interface RuntimeCacheState {

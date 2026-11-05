@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {ActivityApi, type GameActivity, type RecentGame} from '@app/features/chatflux_activity/ActivityApi';
+import {shopBaseUrl} from '@app/features/chatflux_shop/ShopApi';
 import {makeAutoObservable, runInAction} from 'mobx';
 import {useEffect, useState} from 'react';
 
+/** Safety net only: changes normally arrive right away over /activity/events. */
 const POLL_MS = 30_000;
+const POLL_LIVE_MS = 5 * 60_000;
 const BATCH_DELAY_MS = 80;
 const BATCH_SIZE = 100;
 
@@ -19,13 +22,60 @@ class ActivityStore {
 	private queue = new Set<string>();
 	private timer: ReturnType<typeof setTimeout> | null = null;
 	private poller: ReturnType<typeof setInterval> | null = null;
+	private events: EventSource | null = null;
+	private eventsOpen = false;
+	private lastPoll = 0;
 
 	constructor() {
-		makeAutoObservable<ActivityStore, 'watchers' | 'fetchedAt' | 'queue' | 'timer' | 'poller'>(
+		makeAutoObservable<
+			ActivityStore,
+			'watchers' | 'fetchedAt' | 'queue' | 'timer' | 'poller' | 'events' | 'eventsOpen' | 'lastPoll'
+		>(
 			this,
-			{watchers: false, fetchedAt: false, queue: false, timer: false, poller: false},
+			{
+				watchers: false,
+				fetchedAt: false,
+				queue: false,
+				timer: false,
+				poller: false,
+				events: false,
+				eventsOpen: false,
+				lastPoll: false,
+			},
 			{autoBind: true},
 		);
+	}
+
+	/** Listens for "someone's game changed" pushes from the activity service. */
+	private connectEvents(): void {
+		if (this.events || typeof EventSource === 'undefined') return;
+		try {
+			const source = new EventSource(`${shopBaseUrl()}/activity/events`);
+			source.onopen = () => {
+				// We may have missed changes while disconnected.
+				if (!this.eventsOpen) for (const key of this.watchers.keys()) this.enqueue(key);
+				this.eventsOpen = true;
+			};
+			source.onerror = () => {
+				// EventSource reconnects by itself; poll in the meantime.
+				this.eventsOpen = false;
+			};
+			source.addEventListener('change', (event) => {
+				try {
+					const {id} = JSON.parse((event as MessageEvent<string>).data) as {id?: string};
+					if (id) this.refreshUser(id);
+				} catch {}
+			});
+			this.events = source;
+		} catch {
+			this.events = null;
+		}
+	}
+
+	private disconnectEvents(): void {
+		this.events?.close();
+		this.events = null;
+		this.eventsOpen = false;
 	}
 
 	get(userId: string, guildId: string | null): GameActivity | null {
@@ -38,15 +88,23 @@ class ActivityStore {
 		const key = keyOf(userId, guildId);
 		this.watchers.set(key, (this.watchers.get(key) ?? 0) + 1);
 		const fetched = this.fetchedAt.get(key);
-		if (fetched == null || Date.now() - fetched > POLL_MS) this.enqueue(key);
+		// While the event stream is open a cached result stays correct.
+		if (fetched == null || (!this.eventsOpen && Date.now() - fetched > POLL_MS)) this.enqueue(key);
+		this.connectEvents();
 		this.poller ??= setInterval(this.poll, POLL_MS);
 		return () => {
 			const count = (this.watchers.get(key) ?? 1) - 1;
-			if (count > 0) this.watchers.set(key, count);
-			else this.watchers.delete(key);
+			if (count > 0) {
+				this.watchers.set(key, count);
+				return;
+			}
+			this.watchers.delete(key);
+			// Nobody gets change events for it any more, so fetch it again next time.
+			this.fetchedAt.delete(key);
 			if (this.watchers.size === 0 && this.poller != null) {
 				clearInterval(this.poller);
 				this.poller = null;
+				this.disconnectEvents();
 			}
 		};
 	}
@@ -60,6 +118,8 @@ class ActivityStore {
 
 	private poll(): void {
 		if (typeof document !== 'undefined' && document.hidden) return;
+		if (this.eventsOpen && Date.now() - this.lastPoll < POLL_LIVE_MS) return;
+		this.lastPoll = Date.now();
 		for (const key of this.watchers.keys()) this.enqueue(key);
 	}
 
