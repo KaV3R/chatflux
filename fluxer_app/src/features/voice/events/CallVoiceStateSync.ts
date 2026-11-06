@@ -28,14 +28,19 @@ export function syncCallVoiceStates(
 	startCallAloneAutoLeave();
 	if (!voiceStates) return;
 	const me = Users.getCurrentUser()?.id ?? null;
+	// This device's own connection is managed by the local voice engine. Our other devices
+	// (e.g. the desktop app while this is the browser) are fed in, so the call shows
+	// "in the call on another device" with a button to join here.
+	const localConnectionId = MediaEngine.connectionId;
+	const isLocal = (userId: string | undefined, connectionId: string) =>
+		userId === me && localConnectionId != null && connectionId === localConnectionId;
 	const known = MediaEngine.getAllVoiceStatesInChannel(ME, channelId);
 	const listed = new Set<string>();
 	for (const raw of voiceStates as ReadonlyArray<FullCallVoiceState>) {
 		const connectionId = raw.connection_id;
 		if (!connectionId || !raw.user_id) continue;
 		listed.add(connectionId);
-		// Our own connections arrive through VOICE_STATE_UPDATE and the local voice engine.
-		if (raw.user_id === me) continue;
+		if (isLocal(raw.user_id, connectionId)) continue;
 		if (known[connectionId]?.channel_id === channelId) continue;
 		MediaEngine.handleGatewayVoiceStateUpdate(null, {
 			mute: false,
@@ -53,7 +58,7 @@ export function syncCallVoiceStates(
 	}
 	if (!prune) return;
 	for (const [connectionId, state] of Object.entries(known)) {
-		if (listed.has(connectionId) || state.user_id === me) continue;
+		if (listed.has(connectionId) || isLocal(state.user_id, connectionId)) continue;
 		MediaEngine.handleGatewayVoiceStateUpdate(null, {...state, channel_id: null} as unknown as VoiceState);
 	}
 }

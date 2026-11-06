@@ -552,6 +552,20 @@
 	opacity: 0.85;
 }
 
+/* ChatFlux: "In a call" line */
+.dmItemCallSubtext {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	color: var(--status-online, #23a55a);
+}
+
+.dmItemCallIcon {
+	flex-shrink: 0;
+	width: 0.75rem;
+	height: 0.75rem;
+}
+
 .dmItemCustomStatus {
 	composes: dmItemSubtext;
 	width: fit-content;

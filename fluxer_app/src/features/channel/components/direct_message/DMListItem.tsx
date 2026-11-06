@@ -15,6 +15,9 @@ import {buildMobileMenuGroups} from '@app/features/channel/components/direct_mes
 import {useDMListItemHandlers} from '@app/features/channel/components/direct_message/useDMListItemHandlers';
 import type {Channel} from '@app/features/channel/models/Channel';
 import * as ChannelUtils from '@app/features/channel/utils/ChannelUtils';
+import {useGameActivity} from '@app/features/chatflux_activity/ActivityStore';
+import {MemberListGameActivity} from '@app/features/chatflux_activity/components/GameActivity';
+import {tr} from '@app/features/chatflux_shop/ShopApi';
 import {useLeaveGroup} from '@app/features/guild/hooks/useLeaveGroup';
 import Guilds from '@app/features/guild/state/Guilds';
 import {MENTION_COUNT_ARIA_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
@@ -43,11 +46,12 @@ import type {User} from '@app/features/user/models/User';
 import UserGuildSettings from '@app/features/user/state/UserGuildSettings';
 import Users from '@app/features/user/state/Users';
 import * as NicknameUtils from '@app/features/user/utils/NicknameUtils';
+import CallState from '@app/features/voice/state/CallState';
 import {ChannelTypes, MessageTypes} from '@fluxer/constants/src/ChannelConstants';
 import {extractTimestamp} from '@fluxer/snowflake/src/SnowflakeUtils';
 import {msg, plural} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
-import {PushPinIcon, XIcon} from '@phosphor-icons/react';
+import {PhoneIcon, PushPinIcon, XIcon} from '@phosphor-icons/react';
 import {clsx} from 'clsx';
 import {AnimatePresence, motion} from 'framer-motion';
 import {observer} from 'mobx-react-lite';
@@ -292,6 +296,24 @@ const ResolvedDMListItem = observer(function ResolvedDMListItem({
 		return null;
 	};
 	const messagePreview = shouldShowMessagePreviewSetting ? getMessagePreview() : null;
+	// ChatFlux: an ongoing call (also when you are in it on another device) or the game the
+	// other person plays replaces the usual second line.
+	const gameActivity = useGameActivity(!isGroupDM && recipient && !isBotDM ? recipient.id : null, null);
+	const callParticipantCount = CallState.getCall(channel.id) ? CallState.getParticipants(channel.id).length : 0;
+	let chatfluxSubtext: React.ReactNode = null;
+	if (callParticipantCount > 0) {
+		chatfluxSubtext = (
+			<span
+				className={clsx(styles.dmItemSubtext, styles.dmItemCallSubtext)}
+				data-flx="channel.direct-message.dm-list-item.chatflux-call"
+			>
+				<PhoneIcon weight="fill" className={styles.dmItemCallIcon} />
+				{tr(`Hívásban · ${callParticipantCount} fő`, `In a call · ${callParticipantCount}`)}
+			</span>
+		);
+	} else if (gameActivity) {
+		chatfluxSubtext = <MemberListGameActivity activity={gameActivity} className={styles.dmItemCustomStatus} />;
+	}
 	const dmAriaLabel = useMemo(() => {
 		const parts = [displayName];
 		if (isSelected) parts.push(i18n._(SELECTED_DESCRIPTOR));
@@ -414,34 +436,41 @@ const ResolvedDMListItem = observer(function ResolvedDMListItem({
 										/>
 									)}
 								</span>
-								{!isGroupDM && recipient && !messagePreview && (
-									<CustomStatusDisplay
-										userId={recipient.id}
-										className={styles.dmItemCustomStatus}
-										showTooltip
-										tooltipPosition="bottom"
-										animateOnParentHover
-										data-flx="channel.direct-message.dm-list-item.dm-item-custom-status"
-									/>
-								)}
-								{isGroupDM && (
-									<span
-										className={clsx(styles.dmItemSubtext, styles.dmItemMembersSubtext)}
-										data-flx="channel.direct-message.dm-list-item.dm-item"
-									>
-										{plural(
-											{count: channel.recipientIds.length + 1},
-											{
-												one: '# member',
-												other: '# members',
-											},
+								{chatfluxSubtext ?? (
+									<>
+										{!isGroupDM && recipient && !messagePreview && (
+											<CustomStatusDisplay
+												userId={recipient.id}
+												className={styles.dmItemCustomStatus}
+												showTooltip
+												tooltipPosition="bottom"
+												animateOnParentHover
+												data-flx="channel.direct-message.dm-list-item.dm-item-custom-status"
+											/>
 										)}
-									</span>
-								)}
-								{!isGroupDM && messagePreview && (
-									<span className={styles.dmItemSubtext} data-flx="channel.direct-message.dm-list-item.dm-item-subtext">
-										{messagePreview}
-									</span>
+										{isGroupDM && (
+											<span
+												className={clsx(styles.dmItemSubtext, styles.dmItemMembersSubtext)}
+												data-flx="channel.direct-message.dm-list-item.dm-item"
+											>
+												{plural(
+													{count: channel.recipientIds.length + 1},
+													{
+														one: '# member',
+														other: '# members',
+													},
+												)}
+											</span>
+										)}
+										{!isGroupDM && messagePreview && (
+											<span
+												className={styles.dmItemSubtext}
+												data-flx="channel.direct-message.dm-list-item.dm-item-subtext"
+											>
+												{messagePreview}
+											</span>
+										)}
+									</>
 								)}
 							</div>
 							{relativeTime && (
@@ -562,34 +591,41 @@ const ResolvedDMListItem = observer(function ResolvedDMListItem({
 								/>
 							)}
 						</span>
-						{!isGroupDM && recipient && !messagePreview && (
-							<CustomStatusDisplay
-								userId={recipient.id}
-								className={styles.dmItemCustomStatus}
-								showTooltip
-								tooltipPosition="bottom"
-								animateOnParentHover
-								data-flx="channel.direct-message.dm-list-item.dm-item-custom-status--2"
-							/>
-						)}
-						{isGroupDM && (
-							<span
-								className={clsx(styles.dmItemSubtext, styles.dmItemMembersSubtext)}
-								data-flx="channel.direct-message.dm-list-item.dm-item--2"
-							>
-								{plural(
-									{count: channel.recipientIds.length + 1},
-									{
-										one: '# member',
-										other: '# members',
-									},
+						{chatfluxSubtext ?? (
+							<>
+								{!isGroupDM && recipient && !messagePreview && (
+									<CustomStatusDisplay
+										userId={recipient.id}
+										className={styles.dmItemCustomStatus}
+										showTooltip
+										tooltipPosition="bottom"
+										animateOnParentHover
+										data-flx="channel.direct-message.dm-list-item.dm-item-custom-status--2"
+									/>
 								)}
-							</span>
-						)}
-						{!isGroupDM && messagePreview && (
-							<span className={styles.dmItemSubtext} data-flx="channel.direct-message.dm-list-item.dm-item-subtext--2">
-								{messagePreview}
-							</span>
+								{isGroupDM && (
+									<span
+										className={clsx(styles.dmItemSubtext, styles.dmItemMembersSubtext)}
+										data-flx="channel.direct-message.dm-list-item.dm-item--2"
+									>
+										{plural(
+											{count: channel.recipientIds.length + 1},
+											{
+												one: '# member',
+												other: '# members',
+											},
+										)}
+									</span>
+								)}
+								{!isGroupDM && messagePreview && (
+									<span
+										className={styles.dmItemSubtext}
+										data-flx="channel.direct-message.dm-list-item.dm-item-subtext--2"
+									>
+										{messagePreview}
+									</span>
+								)}
+							</>
 						)}
 					</div>
 					<FocusRing offset={-2} data-flx="channel.direct-message.dm-list-item.focus-ring--3">
