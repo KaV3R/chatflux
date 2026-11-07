@@ -312,7 +312,7 @@ const ResolvedDMListItem = observer(function ResolvedDMListItem({
 			</span>
 		);
 	} else if (gameActivity) {
-		chatfluxSubtext = <MemberListGameActivity activity={gameActivity} className={styles.dmItemCustomStatus} />;
+		chatfluxSubtext = <MemberListGameActivity activity={gameActivity} className={styles.dmItemGameActivity} />;
 	}
 	const dmAriaLabel = useMemo(() => {
 		const parts = [displayName];

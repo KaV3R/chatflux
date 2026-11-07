@@ -589,6 +589,27 @@
 	margin-top: -0.125rem;
 }
 
+/* ChatFlux: controller icon and game name on one line. */
+.dmItemGameActivity {
+	composes: dmItemSubtext;
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	min-width: 0;
+	max-width: 100%;
+}
+
+.dmItemGameActivity > span {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dmItemGameActivity > svg {
+	flex-shrink: 0;
+}
+
 .dmItemSubtextItalic {
 	font-style: italic;
 	color: color-mix(in srgb, currentcolor 70%, transparent);
