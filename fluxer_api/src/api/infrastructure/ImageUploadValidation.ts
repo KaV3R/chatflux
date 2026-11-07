@@ -42,11 +42,19 @@ export async function decodeValidatedImage(
 		throw InputValidationError.fromCode(errorPath, ValidationErrorCodes.IMAGE_SIZE_EXCEEDS_LIMIT, {maxSize});
 	}
 	const imageBuffer = new Uint8Array(Buffer.from(base64Data, 'base64'));
+	// ChatFlux: avatars, banners, server icons, emojis and stickers are scanned for nudity
+	// (FLUXER_NSFW_SERVICE_ENDPOINT on the media proxy). Without that service nothing is flagged.
 	const metadata = requireAllowedMetadata({
-		metadata: await mediaService.getMetadata({type: 'base64', base64: base64Data, version: 2, nsfw: 'allow'}),
+		metadata: await mediaService.getMetadata({type: 'base64', base64: base64Data, version: 2, nsfw: 'flag'}),
 		kind,
 		errorPath,
 	});
+	if (metadata.nsfw) {
+		throw InputValidationError.create(
+			errorPath,
+			'Ez a kép +18-as tartalmat tartalmaz, ezért nem tölthető fel. / This image contains adult content and cannot be uploaded.',
+		);
+	}
 	return {imageBuffer, metadata};
 }
 
