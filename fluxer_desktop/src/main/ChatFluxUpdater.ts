@@ -94,8 +94,8 @@ function setProgress(win: BrowserWindow | null, percent: number): void {
 		.catch(() => {});
 }
 
-async function offerUpdate(manager: VelopackUpdateManager, update: UpdateInfo): Promise<void> {
-	const version = update.TargetFullRelease.Version;
+async function offerUpdate(manager: VelopackUpdateManager, offered: UpdateInfo): Promise<void> {
+	const version = offered.TargetFullRelease.Version;
 	if (dismissedVersion === version) return;
 	let current = '';
 	try {
@@ -116,12 +116,22 @@ async function offerUpdate(manager: VelopackUpdateManager, update: UpdateInfo): 
 		return;
 	}
 
+	// The dialog may have been open for a while: if a newer release came out meanwhile,
+	// download that one instead (the feed only ever lists the newest full package).
+	let update = offered;
+	try {
+		const fresher = await manager.checkForUpdatesAsync();
+		if (fresher != null) update = fresher;
+	} catch (error) {
+		log.warn('[ChatFluxUpdater] Re-check before download failed, using the offered version', error);
+	}
+
 	const progressWindow = openProgressWindow();
 	try {
-		log.info('[ChatFluxUpdater] Downloading update', {version});
+		log.info('[ChatFluxUpdater] Downloading update', {version: update.TargetFullRelease.Version});
 		await manager.downloadUpdateAsync(update, (percent: number) => setProgress(progressWindow, percent));
 		setProgress(progressWindow, 100);
-		log.info('[ChatFluxUpdater] Update downloaded, restarting', {version});
+		log.info('[ChatFluxUpdater] Update downloaded, restarting', {version: update.TargetFullRelease.Version});
 		manager.waitExitThenApplyUpdate(update, false, true);
 		app.quit();
 	} catch (error) {
