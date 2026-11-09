@@ -5,8 +5,17 @@ import type {VirtmicNode} from '@electron/common/Types';
 import {app, webContents} from 'electron';
 
 const FLUXER_AUDIO_DISPLAY_IDENTITY_KEYS = ['application.name', 'node.name', 'node.nick', 'node.description'] as const;
-const FALLBACK_PRODUCT_NAMES = ['Fluxer', 'Fluxer Canary', 'Fluxer Development'];
-const FLUXER_AUDIO_PREFIXES = ['fluxer ', 'fluxer-', 'fluxer_', 'fluxer.'];
+const FALLBACK_PRODUCT_NAMES = ['ChatFlux', 'Fluxer', 'Fluxer Canary', 'Fluxer Development'];
+const FLUXER_AUDIO_PREFIXES = [
+	'chatflux ',
+	'chatflux-',
+	'chatflux_',
+	'chatflux.',
+	'fluxer ',
+	'fluxer-',
+	'fluxer_',
+	'fluxer.',
+];
 
 function stripDesktopBinarySuffix(name: string): string | null {
 	const suffixes = ['.AppImage', '.bin', '.exe'];

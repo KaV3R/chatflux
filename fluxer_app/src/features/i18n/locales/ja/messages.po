@@ -1497,7 +1497,7 @@ msgstr "{displayName}さんから友達リクエストが届きました"
 #. Instance selector error shown when the instance speaks a protocol generation this client does not know. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "{domain} runs a newer version of Fluxer than this app. Update Fluxer, then try again."
-msgstr "{domain} はこのアプリより新しいバージョンの Fluxer を実行しています。Fluxer をアップデートしてから、もう一度お試しください。"
+msgstr "{domain} はこのアプリより新しいバージョンの ChatFlux を実行しています。ChatFlux をアップデートしてから、もう一度お試しください。"
 
 #. Profile timezone difference text. duration is a localized hours/minutes phrase for how far ahead the target user's local time is.
 #: src/features/user/components/popouts/UserProfileShared.tsx
@@ -6829,7 +6829,7 @@ msgstr "アイコン付きボタン"
 #. Help text under the theme color picker in the setup wizard branding step.
 #: src/features/app/components/setup/SetupBrandingFields.tsx
 msgid "Buttons, links and highlights across the app use this color, and phone browsers use it for their toolbar. Reset it to keep Fluxer's indigo."
-msgstr "アプリ全体のボタン、リンク、ハイライトにこの色が使われます。スマートフォンのブラウザでは、ツールバーの色にも使われます。リセットすると、Fluxerのインディゴのままになります。"
+msgstr "アプリ全体のボタン、リンク、ハイライトにこの色が使われます。スマートフォンのブラウザでは、ツールバーの色にも使われます。リセットすると、ChatFluxのインディゴのままになります。"
 
 #. Gift inventory empty-state description. premiumProductName is the premium tab name and product name.
 #: src/features/user/components/modals/tabs/GiftInventoryTab.tsx
@@ -7435,7 +7435,7 @@ msgstr "絵文字を変更"
 #. Completion in the quick CSS editor that inserts a :root rule, where theme variables are set.
 #: src/features/theme_settings/editor/CssCompletions.ts
 msgid "Change Fluxer variables"
-msgstr "Fluxer変数を変更"
+msgstr "ChatFlux変数を変更"
 
 #. Generic action label that opens the friend-nickname edit flow.
 #: src/features/i18n/utils/CommonMessageDescriptors.ts
@@ -11098,7 +11098,7 @@ msgstr "このメッセージを公開できませんでした"
 #. Instance selector error shown when no Fluxer instance answered at the address. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "Couldn't reach a Fluxer instance at {domain}. Check the address and that the instance is online."
-msgstr "{domain} の Fluxer インスタンスに接続できませんでした。アドレスを確認し、インスタンスがオンラインであることを確認してください。"
+msgstr "{domain} の ChatFlux インスタンスに接続できませんでした。アドレスを確認し、インスタンスがオンラインであることを確認してください。"
 
 #. Title of the generic fallback error modal shown when reactivating a Plutonium subscription fails.
 #: src/features/app/components/dialogs/components/plutonium/hooks/useSubscriptionActions.ts
@@ -16712,47 +16712,47 @@ msgstr "フロリダ州"
 #. Description of the shared usernames option in the setup wizard. Keep the example alex#4821 as it is.
 #: src/features/app/components/setup/SetupIdentitySteps.tsx
 msgid "Fluxer adds a random number to each username, like alex#4821, so many people can use the same name."
-msgstr "Fluxerは各ユーザー名にalex#4821のようなランダムな番号を付けるので、多くの人が同じ名前を使えます。"
+msgstr "ChatFluxは各ユーザー名にalex#4821のようなランダムな番号を付けるので、多くの人が同じ名前を使えます。"
 
 #. Problem shown in the quick CSS editor on a web address that the app is not allowed to load. Assets are files uploaded under "Assets".
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer blocked loading {url}. Upload it as an asset."
-msgstr "Fluxerは{url}の読み込みをブロックしました。アセットとしてアップロードしてください。"
+msgstr "ChatFluxは{url}の読み込みをブロックしました。アセットとしてアップロードしてください。"
 
 #. Problem shown in the quick CSS editor on a reference to an uploaded theme asset that does not exist.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the asset \"{name}\"."
-msgstr "Fluxerはアセット「{name}」が見つかりません。"
+msgstr "ChatFluxはアセット「{name}」が見つかりません。"
 
 #. Problem shown in the quick CSS editor on a reference to a file on the computer that Fluxer cannot read.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the file \"{path}\"."
-msgstr "Fluxerはファイル「{path}」が見つかりません。"
+msgstr "ChatFluxはファイル「{path}」が見つかりません。"
 
 #. Shown for a watched theme folder in Settings > Themes when the folder was moved, deleted or disconnected.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't find this folder. It will load the themes again when the folder is back."
-msgstr "Fluxerはこのフォルダーが見つかりません。フォルダーが戻ればテーマを再読み込みします。"
+msgstr "ChatFluxはこのフォルダーが見つかりません。フォルダーが戻ればテーマを再読み込みします。"
 
 #. Shown for a watched theme folder in Settings > Themes when the desktop app no longer has permission to read it.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't open this folder. Import it again to keep watching it."
-msgstr "Fluxerはこのフォルダーを開けません。もう一度インポートして監視を続けてください。"
+msgstr "ChatFluxはこのフォルダーを開けません。もう一度インポートして監視を続けてください。"
 
 #. Error toast in "Your themes" when the chosen theme folder cannot be opened.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't read this folder."
-msgstr "Fluxerはこのフォルダーを読み込めません。"
+msgstr "ChatFluxはこのフォルダーを読み込めません。"
 
 #. Alert when the SMTP check fails and the mail server sent no reply. host is the mail server address.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}."
-msgstr "Fluxerは{host}に接続できませんでした。"
+msgstr "ChatFluxは{host}に接続できませんでした。"
 
 #. Alert when the SMTP check fails. host is the mail server address and error is its reply.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}. The server said: \"{error}\""
-msgstr "Fluxerは{host}に接続できませんでした。サーバーの応答：「{error}」"
+msgstr "ChatFluxは{host}に接続できませんでした。サーバーの応答：「{error}」"
 
 #. Status shown in the desktop app when it stopped checking the browser sign-in because the instance could not be reached. instanceName is the server name, such as Fluxer. "Try again" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
@@ -16762,7 +16762,7 @@ msgstr "ブラウザでこのサインインが承認されたか確認するた
 #. Status shown when browser sign-in status polling gives up after repeated failures.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "Fluxer stopped checking whether the browser approved this sign-in. It didn't lose your code."
-msgstr "Fluxer はブラウザでのサインイン承認の確認を停止しました。コードは失われていません。"
+msgstr "ChatFlux はブラウザでのサインイン承認の確認を停止しました。コードは失われていません。"
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/AccessibilitySections.ts
@@ -19027,7 +19027,7 @@ msgstr "誰かがここに何かを貼り付けるように言ってきたら、
 #. Hint in the desktop app while it waits for the browser, for people with more than one Fluxer app installed. "Signing in on another device?" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "If the link opens a different Fluxer app, select \"Signing in on another device?\" and type the code in your browser instead."
-msgstr "リンクで別の Fluxer アプリが開いた場合は、「別のデバイスでサインインしていますか？」を選択し、代わりにブラウザでコードを入力してください。"
+msgstr "リンクで別の ChatFlux アプリが開いた場合は、「別のデバイスでサインインしていますか？」を選択し、代わりにブラウザでコードを入力してください。"
 
 #. Helper text under the Explain the problem field on the details step of the DSA report form.
 #: src/features/moderation/components/report/ReportStepDetails.tsx
@@ -23183,7 +23183,7 @@ msgstr "すべてのデバイスを移動…"
 #. Button in the quick CSS editor window that moves the editor back into a panel inside the app.
 #: src/features/theme_settings/components/QuickCssWorkspace.tsx
 msgid "Move back into Fluxer"
-msgstr "Fluxer に戻す"
+msgstr "ChatFlux に戻す"
 
 #. Label in the keybinds tab.
 #: src/features/user/components/modals/tabs/keybinds_tab/AssignableActionOptions.ts
@@ -32362,7 +32362,7 @@ msgstr "メッセージアクションバーを表示できるメッセージに
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
 msgid "Set on messages that Fluxer sends, such as when someone joins."
-msgstr "誰かが参加した時など、Fluxerが送信するメッセージに設定されます。"
+msgstr "誰かが参加した時など、ChatFluxが送信するメッセージに設定されます。"
 
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
@@ -36753,7 +36753,7 @@ msgstr "サードパーティ"
 #. Error in the import-template form when the desktop app loaded the template from the third-party platform named by {theOtherPlatform} but its contents were not in the expected shape.
 #: src/features/guild/components/modals/add_guild_modal/shared.ts
 msgid "This {theOtherPlatform} template couldn't be read. It may use a format Fluxer doesn't support yet."
-msgstr "この {theOtherPlatform} テンプレートは読み込めませんでした。Fluxer がまだサポートしていない形式を使用している可能性があります。"
+msgstr "この {theOtherPlatform} テンプレートは読み込めませんでした。ChatFlux がまだサポートしていない形式を使用している可能性があります。"
 
 #. Section title in Settings > Themes on the desktop app, for choosing whether the current account uses the theme shared by every account.
 #: src/features/user/components/settings_utils/section_registry/ThemesSections.ts
@@ -42702,7 +42702,7 @@ msgstr "パスは友達にしか渡せません。先に友達を追加してか
 #. Error when you try to pass an Operator Pass on to someone you are not friends with.
 #: src/features/premium/components/operator_pass/OperatorPassPassItOnModal.tsx
 msgid "You can only pass this on to one of your friends on Fluxer."
-msgstr "Fluxerのフレンドにのみ渡すことができます。"
+msgstr "ChatFluxのフレンドにのみ渡すことができます。"
 
 #. Footnote on the Plutonium page about custom username tags. Keep Mina#4821, mina#4821 and #0000 unchanged. visionaryLink is a link whose text is "Learn more about Visionary".
 #: src/features/premium/components/plutonium_page/PlutoniumPageMessages.ts

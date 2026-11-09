@@ -96,17 +96,17 @@ function getStatusText(state) {
 		case SplashStatus.UPDATE_FAILURE:
 			return `Update failed. Retrying in ${state.seconds ?? 0} sec…`;
 		case SplashStatus.SHELL_UPDATE_DOWNLOADING:
-			return 'Updating Fluxer…';
+			return 'Updating ChatFlux…';
 		case SplashStatus.SHELL_UPDATE_RESTARTING:
 			return 'Restarting to finish the update…';
 		case SplashStatus.BLOCKED_UPDATE_REQUIRED:
 			return 'Update required to continue';
 		case SplashStatus.BLOCKED_UPDATE_UNREACHABLE:
-			return "Can't reach the Fluxer update server";
+			return "Can't reach the ChatFlux update server";
 		case SplashStatus.BLOCKED_SHELL_UPDATE:
-			return 'A new version of Fluxer is required';
+			return 'A new version of ChatFlux is required';
 		case SplashStatus.BLOCKED_UNSUPPORTED_BUILD:
-			return 'This installation is incomplete. Reinstall Fluxer';
+			return 'This installation is incomplete. Reinstall ChatFlux';
 		case SplashStatus.LAUNCHING:
 			return 'Starting…';
 		case SplashStatus.UNREACHABLE_LAUNCH:

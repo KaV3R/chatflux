@@ -17,7 +17,7 @@ msgstr ""
 #. Problem shown in the quick CSS editor on var() of a CSS variable that does not exist. {name} is the variable name without its leading dashes.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "--{name} isn't a Fluxer variable and isn't set anywhere in your CSS."
-msgstr "--{name} 不是 Fluxer 变量，也没有在你的 CSS 中设置。"
+msgstr "--{name} 不是 ChatFlux 变量，也没有在你的 CSS 中设置。"
 
 #. Description text in the messages tab.
 #: src/features/user/components/modals/tabs/appearance_tab/MessagesTab.tsx
@@ -1497,7 +1497,7 @@ msgstr "{displayName} 向你发送了好友请求"
 #. Instance selector error shown when the instance speaks a protocol generation this client does not know. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "{domain} runs a newer version of Fluxer than this app. Update Fluxer, then try again."
-msgstr "{domain} 运行的 Fluxer 版本比此应用新。请更新 Fluxer，然后重试。"
+msgstr "{domain} 运行的 ChatFlux 版本比此应用新。请更新 ChatFlux，然后重试。"
 
 #. Profile timezone difference text. duration is a localized hours/minutes phrase for how far ahead the target user's local time is.
 #: src/features/user/components/popouts/UserProfileShared.tsx
@@ -6829,7 +6829,7 @@ msgstr "带图标的按钮"
 #. Help text under the theme color picker in the setup wizard branding step.
 #: src/features/app/components/setup/SetupBrandingFields.tsx
 msgid "Buttons, links and highlights across the app use this color, and phone browsers use it for their toolbar. Reset it to keep Fluxer's indigo."
-msgstr "应用中的按钮、链接和高亮都会使用此颜色，手机浏览器也会将其用作工具栏颜色。重置后将保留 Fluxer 的靛蓝色。"
+msgstr "应用中的按钮、链接和高亮都会使用此颜色，手机浏览器也会将其用作工具栏颜色。重置后将保留 ChatFlux 的靛蓝色。"
 
 #. Gift inventory empty-state description. premiumProductName is the premium tab name and product name.
 #: src/features/user/components/modals/tabs/GiftInventoryTab.tsx
@@ -7435,7 +7435,7 @@ msgstr "更改表情"
 #. Completion in the quick CSS editor that inserts a :root rule, where theme variables are set.
 #: src/features/theme_settings/editor/CssCompletions.ts
 msgid "Change Fluxer variables"
-msgstr "更改 Fluxer 变量"
+msgstr "更改 ChatFlux 变量"
 
 #. Generic action label that opens the friend-nickname edit flow.
 #: src/features/i18n/utils/CommonMessageDescriptors.ts
@@ -11098,7 +11098,7 @@ msgstr "无法发布此消息"
 #. Instance selector error shown when no Fluxer instance answered at the address. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "Couldn't reach a Fluxer instance at {domain}. Check the address and that the instance is online."
-msgstr "无法在 {domain} 触达 Fluxer 实例。请检查地址并确保实例在线。"
+msgstr "无法在 {domain} 触达 ChatFlux 实例。请检查地址并确保实例在线。"
 
 #. Title of the generic fallback error modal shown when reactivating a Plutonium subscription fails.
 #: src/features/app/components/dialogs/components/plutonium/hooks/useSubscriptionActions.ts
@@ -16712,57 +16712,57 @@ msgstr "佛罗里达州"
 #. Description of the shared usernames option in the setup wizard. Keep the example alex#4821 as it is.
 #: src/features/app/components/setup/SetupIdentitySteps.tsx
 msgid "Fluxer adds a random number to each username, like alex#4821, so many people can use the same name."
-msgstr "Fluxer 会在每个用户名后加上一个随机编号，例如 alex#4821，这样很多人可以使用同一个名字。"
+msgstr "ChatFlux 会在每个用户名后加上一个随机编号，例如 alex#4821，这样很多人可以使用同一个名字。"
 
 #. Problem shown in the quick CSS editor on a web address that the app is not allowed to load. Assets are files uploaded under "Assets".
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer blocked loading {url}. Upload it as an asset."
-msgstr "Fluxer 阻止加载 {url}。请作为素材上传。"
+msgstr "ChatFlux 阻止加载 {url}。请作为素材上传。"
 
 #. Problem shown in the quick CSS editor on a reference to an uploaded theme asset that does not exist.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the asset \"{name}\"."
-msgstr "Fluxer 找不到素材“{name}”。"
+msgstr "ChatFlux 找不到素材“{name}”。"
 
 #. Problem shown in the quick CSS editor on a reference to a file on the computer that Fluxer cannot read.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the file \"{path}\"."
-msgstr "Fluxer 找不到文件“{path}”。"
+msgstr "ChatFlux 找不到文件“{path}”。"
 
 #. Shown for a watched theme folder in Settings > Themes when the folder was moved, deleted or disconnected.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't find this folder. It will load the themes again when the folder is back."
-msgstr "Fluxer 找不到此文件夹。文件夹恢复后会重新加载主题。"
+msgstr "ChatFlux 找不到此文件夹。文件夹恢复后会重新加载主题。"
 
 #. Shown for a watched theme folder in Settings > Themes when the desktop app no longer has permission to read it.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't open this folder. Import it again to keep watching it."
-msgstr "Fluxer 无法打开此文件夹。请重新导入以继续监视。"
+msgstr "ChatFlux 无法打开此文件夹。请重新导入以继续监视。"
 
 #. Error toast in "Your themes" when the chosen theme folder cannot be opened.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't read this folder."
-msgstr "Fluxer 无法读取此文件夹。"
+msgstr "ChatFlux 无法读取此文件夹。"
 
 #. Alert when the SMTP check fails and the mail server sent no reply. host is the mail server address.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}."
-msgstr "Fluxer 无法连接到 {host}。"
+msgstr "ChatFlux 无法连接到 {host}。"
 
 #. Alert when the SMTP check fails. host is the mail server address and error is its reply.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}. The server said: \"{error}\""
-msgstr "Fluxer 无法连接到 {host}。服务器返回：“{error}”"
+msgstr "ChatFlux 无法连接到 {host}。服务器返回：“{error}”"
 
 #. Status shown in the desktop app when it stopped checking the browser sign-in because the instance could not be reached. instanceName is the server name, such as Fluxer. "Try again" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "Fluxer couldn't reach {instanceName} to check whether your browser approved this sign-in. Check your connection, then select \"Try again\"."
-msgstr "Fluxer 无法连接到 {instanceName} 来检查浏览器是否已批准此登录。请检查网络连接，然后选择“重试”。"
+msgstr "ChatFlux 无法连接到 {instanceName} 来检查浏览器是否已批准此登录。请检查网络连接，然后选择“重试”。"
 
 #. Status shown when browser sign-in status polling gives up after repeated failures.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "Fluxer stopped checking whether the browser approved this sign-in. It didn't lose your code."
-msgstr "Fluxer 停止检查浏览器是否已批准此登录。您的代码未丢失。"
+msgstr "ChatFlux 停止检查浏览器是否已批准此登录。您的代码未丢失。"
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/AccessibilitySections.ts
@@ -19027,7 +19027,7 @@ msgstr "如果有人让你在这里粘贴内容，那是一个骗局，他们可
 #. Hint in the desktop app while it waits for the browser, for people with more than one Fluxer app installed. "Signing in on another device?" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "If the link opens a different Fluxer app, select \"Signing in on another device?\" and type the code in your browser instead."
-msgstr "如果链接打开了另一个 Fluxer 应用，请选择“在另一台设备上登录？”，然后在浏览器中输入代码。"
+msgstr "如果链接打开了另一个 ChatFlux 应用，请选择“在另一台设备上登录？”，然后在浏览器中输入代码。"
 
 #. Helper text under the Explain the problem field on the details step of the DSA report form.
 #: src/features/moderation/components/report/ReportStepDetails.tsx
@@ -23183,7 +23183,7 @@ msgstr "将所有设备移至…"
 #. Button in the quick CSS editor window that moves the editor back into a panel inside the app.
 #: src/features/theme_settings/components/QuickCssWorkspace.tsx
 msgid "Move back into Fluxer"
-msgstr "移回 Fluxer"
+msgstr "移回 ChatFlux"
 
 #. Label in the keybinds tab.
 #: src/features/user/components/modals/tabs/keybinds_tab/AssignableActionOptions.ts
@@ -32362,7 +32362,7 @@ msgstr "可显示消息操作栏的消息设置。"
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
 msgid "Set on messages that Fluxer sends, such as when someone joins."
-msgstr "Fluxer 发送的消息设置，比如有人加入时。"
+msgstr "ChatFlux 发送的消息设置，比如有人加入时。"
 
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
@@ -36449,7 +36449,7 @@ msgstr "电脑浏览器中的登录页面。桌面应用显示的也是同一页
 #. Caption under the phone preview in the setup wizard branding step.
 #: src/features/app/components/setup/SetupBrandingPreview.tsx
 msgid "The sign-in page on a phone, in a mobile browser or the Fluxer mobile app."
-msgstr "在手机的移动浏览器或 Fluxer 移动应用中显示的登录页面。"
+msgstr "在手机的移动浏览器或 ChatFlux 移动应用中显示的登录页面。"
 
 #. Error shown in the desktop app when a browser sign-in request expires before it is approved in the browser.
 #: src/features/auth/flow/browser_handoff/BrowserHandoffDescriptors.ts
@@ -36717,7 +36717,7 @@ msgstr "加载 Webhook 时出错。请重试。"
 #. Shown above the list of CSS attributes in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/components/QuickCssReference.tsx
 msgid "These attributes don't change between Fluxer updates."
-msgstr "这些属性在 Fluxer 更新时不会变。"
+msgstr "这些属性在 ChatFlux 更新时不会变。"
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts
@@ -36753,7 +36753,7 @@ msgstr "第三方"
 #. Error in the import-template form when the desktop app loaded the template from the third-party platform named by {theOtherPlatform} but its contents were not in the expected shape.
 #: src/features/guild/components/modals/add_guild_modal/shared.ts
 msgid "This {theOtherPlatform} template couldn't be read. It may use a format Fluxer doesn't support yet."
-msgstr "此 {theOtherPlatform} 模板无法读取。它可能使用了 Fluxer 尚不支持的格式。"
+msgstr "此 {theOtherPlatform} 模板无法读取。它可能使用了 ChatFlux 尚不支持的格式。"
 
 #. Section title in Settings > Themes on the desktop app, for choosing whether the current account uses the theme shared by every account.
 #: src/features/user/components/settings_utils/section_registry/ThemesSections.ts
@@ -36971,7 +36971,7 @@ msgstr "此检查仅在通过 HTTPS 或 localhost 打开应用时运行。请要
 #. Problem shown in the quick CSS editor on a generated class name. [data-flx] is CSS code and stays in English.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "This class name changes with every Fluxer update. Use a [data-flx] selector."
-msgstr "此类名每次 Fluxer 更新都会变化。请用 [data-flx] 选择器。"
+msgstr "此类名每次 ChatFlux 更新都会变化。请用 [data-flx] 选择器。"
 
 #. Developer tools debug menu label. Internal-only surface for developers; translators may keep this terse.
 #: src/features/channel/components/channel_header_components/developer_tools/ToolsMenu.tsx
@@ -42702,7 +42702,7 @@ msgstr "只能将通行证转赠给好友。请先添加对方为好友，然后
 #. Error when you try to pass an Operator Pass on to someone you are not friends with.
 #: src/features/premium/components/operator_pass/OperatorPassPassItOnModal.tsx
 msgid "You can only pass this on to one of your friends on Fluxer."
-msgstr "只能将此通行证转赠给你的 Fluxer 好友。"
+msgstr "只能将此通行证转赠给你的 ChatFlux 好友。"
 
 #. Footnote on the Plutonium page about custom username tags. Keep Mina#4821, mina#4821 and #0000 unchanged. visionaryLink is a link whose text is "Learn more about Visionary".
 #: src/features/premium/components/plutonium_page/PlutoniumPageMessages.ts

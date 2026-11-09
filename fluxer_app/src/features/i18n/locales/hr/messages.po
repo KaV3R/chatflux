@@ -17,7 +17,7 @@ msgstr ""
 #. Problem shown in the quick CSS editor on var() of a CSS variable that does not exist. {name} is the variable name without its leading dashes.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "--{name} isn't a Fluxer variable and isn't set anywhere in your CSS."
-msgstr "--{name} nije Fluxer varijabla i nije postavljena nigdje u tvom CSS-u."
+msgstr "--{name} nije ChatFlux varijabla i nije postavljena nigdje u tvom CSS-u."
 
 #. Description text in the messages tab.
 #: src/features/user/components/modals/tabs/appearance_tab/MessagesTab.tsx
@@ -1497,7 +1497,7 @@ msgstr "{displayName} vam šalje zahtjev za prijateljstvo"
 #. Instance selector error shown when the instance speaks a protocol generation this client does not know. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "{domain} runs a newer version of Fluxer than this app. Update Fluxer, then try again."
-msgstr "{domain} pokreće noviju verziju Fluxera od ove aplikacije. Ažurirajte Fluxer, a zatim pokušajte ponovno."
+msgstr "{domain} pokreće noviju verziju ChatFluxa od ove aplikacije. Ažurirajte ChatFlux, a zatim pokušajte ponovno."
 
 #. Profile timezone difference text. duration is a localized hours/minutes phrase for how far ahead the target user's local time is.
 #: src/features/user/components/popouts/UserProfileShared.tsx
@@ -6829,7 +6829,7 @@ msgstr "Gumbi s ikonama"
 #. Help text under the theme color picker in the setup wizard branding step.
 #: src/features/app/components/setup/SetupBrandingFields.tsx
 msgid "Buttons, links and highlights across the app use this color, and phone browsers use it for their toolbar. Reset it to keep Fluxer's indigo."
-msgstr "Gumbi, poveznice i istaknuti elementi u cijeloj aplikaciji koriste ovu boju, a preglednici na telefonima koriste je za svoju alatnu traku. Poništite je da biste zadržali indigo boju Fluxera."
+msgstr "Gumbi, poveznice i istaknuti elementi u cijeloj aplikaciji koriste ovu boju, a preglednici na telefonima koriste je za svoju alatnu traku. Poništite je da biste zadržali indigo boju ChatFluxa."
 
 #. Gift inventory empty-state description. premiumProductName is the premium tab name and product name.
 #: src/features/user/components/modals/tabs/GiftInventoryTab.tsx
@@ -7435,7 +7435,7 @@ msgstr "Promijeni emoji"
 #. Completion in the quick CSS editor that inserts a :root rule, where theme variables are set.
 #: src/features/theme_settings/editor/CssCompletions.ts
 msgid "Change Fluxer variables"
-msgstr "Promijeni Fluxer varijable"
+msgstr "Promijeni ChatFlux varijable"
 
 #. Generic action label that opens the friend-nickname edit flow.
 #: src/features/i18n/utils/CommonMessageDescriptors.ts
@@ -11098,7 +11098,7 @@ msgstr "Nije moguće objaviti ovu poruku"
 #. Instance selector error shown when no Fluxer instance answered at the address. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "Couldn't reach a Fluxer instance at {domain}. Check the address and that the instance is online."
-msgstr "Nismo mogli dohvatiti Fluxer instancu na adresi {domain}. Provjerite adresu i je li instanca online."
+msgstr "Nismo mogli dohvatiti ChatFlux instancu na adresi {domain}. Provjerite adresu i je li instanca online."
 
 #. Title of the generic fallback error modal shown when reactivating a Plutonium subscription fails.
 #: src/features/app/components/dialogs/components/plutonium/hooks/useSubscriptionActions.ts
@@ -16712,57 +16712,57 @@ msgstr "Florida"
 #. Description of the shared usernames option in the setup wizard. Keep the example alex#4821 as it is.
 #: src/features/app/components/setup/SetupIdentitySteps.tsx
 msgid "Fluxer adds a random number to each username, like alex#4821, so many people can use the same name."
-msgstr "Fluxer svakom korisničkom imenu dodaje nasumični broj, npr. alex#4821, kako bi više ljudi moglo koristiti isto ime."
+msgstr "ChatFlux svakom korisničkom imenu dodaje nasumični broj, npr. alex#4821, kako bi više ljudi moglo koristiti isto ime."
 
 #. Problem shown in the quick CSS editor on a web address that the app is not allowed to load. Assets are files uploaded under "Assets".
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer blocked loading {url}. Upload it as an asset."
-msgstr "Fluxer je blokirao učitavanje {url}. Učitaj ga kao resurs."
+msgstr "ChatFlux je blokirao učitavanje {url}. Učitaj ga kao resurs."
 
 #. Problem shown in the quick CSS editor on a reference to an uploaded theme asset that does not exist.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the asset \"{name}\"."
-msgstr "Fluxer ne može pronaći resurs \"{name}\"."
+msgstr "ChatFlux ne može pronaći resurs \"{name}\"."
 
 #. Problem shown in the quick CSS editor on a reference to a file on the computer that Fluxer cannot read.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the file \"{path}\"."
-msgstr "Fluxer ne može pronaći datoteku \"{path}\"."
+msgstr "ChatFlux ne može pronaći datoteku \"{path}\"."
 
 #. Shown for a watched theme folder in Settings > Themes when the folder was moved, deleted or disconnected.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't find this folder. It will load the themes again when the folder is back."
-msgstr "Fluxer ne može pronaći ovu mapu. Teme će se ponovno učitati kad se mapa vrati."
+msgstr "ChatFlux ne može pronaći ovu mapu. Teme će se ponovno učitati kad se mapa vrati."
 
 #. Shown for a watched theme folder in Settings > Themes when the desktop app no longer has permission to read it.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't open this folder. Import it again to keep watching it."
-msgstr "Fluxer ne može otvoriti ovu mapu. Uvezi je ponovno da bi nastavio pratiti."
+msgstr "ChatFlux ne može otvoriti ovu mapu. Uvezi je ponovno da bi nastavio pratiti."
 
 #. Error toast in "Your themes" when the chosen theme folder cannot be opened.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't read this folder."
-msgstr "Fluxer ne može pročitati ovu mapu."
+msgstr "ChatFlux ne može pročitati ovu mapu."
 
 #. Alert when the SMTP check fails and the mail server sent no reply. host is the mail server address.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}."
-msgstr "Fluxer se nije uspio povezati s {host}."
+msgstr "ChatFlux se nije uspio povezati s {host}."
 
 #. Alert when the SMTP check fails. host is the mail server address and error is its reply.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}. The server said: \"{error}\""
-msgstr "Fluxer se nije uspio povezati s {host}. Poslužitelj je odgovorio: „{error}”"
+msgstr "ChatFlux se nije uspio povezati s {host}. Poslužitelj je odgovorio: „{error}”"
 
 #. Status shown in the desktop app when it stopped checking the browser sign-in because the instance could not be reached. instanceName is the server name, such as Fluxer. "Try again" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "Fluxer couldn't reach {instanceName} to check whether your browser approved this sign-in. Check your connection, then select \"Try again\"."
-msgstr "Fluxer nije mogao doći do {instanceName} kako bi provjerio je li tvoj preglednik odobrio ovu prijavu. Provjeri vezu, a zatim odaberi „Pokušaj ponovno”."
+msgstr "ChatFlux nije mogao doći do {instanceName} kako bi provjerio je li tvoj preglednik odobrio ovu prijavu. Provjeri vezu, a zatim odaberi „Pokušaj ponovno”."
 
 #. Status shown when browser sign-in status polling gives up after repeated failures.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "Fluxer stopped checking whether the browser approved this sign-in. It didn't lose your code."
-msgstr "Fluxer je prestao provjeravati je li preglednik odobrio ovu prijavu. Nije izgubio vaš kod."
+msgstr "ChatFlux je prestao provjeravati je li preglednik odobrio ovu prijavu. Nije izgubio vaš kod."
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/AccessibilitySections.ts
@@ -19027,7 +19027,7 @@ msgstr "Ako vam je netko rekao da ovdje nešto zalijepite, to je prijevara kojom
 #. Hint in the desktop app while it waits for the browser, for people with more than one Fluxer app installed. "Signing in on another device?" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "If the link opens a different Fluxer app, select \"Signing in on another device?\" and type the code in your browser instead."
-msgstr "Ako poveznica otvori drugu Fluxer aplikaciju, odaberi „Prijavljuješ se na drugom uređaju?” i upiši kod u preglednik."
+msgstr "Ako poveznica otvori drugu ChatFlux aplikaciju, odaberi „Prijavljuješ se na drugom uređaju?” i upiši kod u preglednik."
 
 #. Helper text under the Explain the problem field on the details step of the DSA report form.
 #: src/features/moderation/components/report/ReportStepDetails.tsx
@@ -23183,7 +23183,7 @@ msgstr "Premjesti sve uređaje u…"
 #. Button in the quick CSS editor window that moves the editor back into a panel inside the app.
 #: src/features/theme_settings/components/QuickCssWorkspace.tsx
 msgid "Move back into Fluxer"
-msgstr "Vrati u Fluxer"
+msgstr "Vrati u ChatFlux"
 
 #. Label in the keybinds tab.
 #: src/features/user/components/modals/tabs/keybinds_tab/AssignableActionOptions.ts
@@ -32362,7 +32362,7 @@ msgstr "Postavljeno na poruke koje mogu prikazati traku radnji poruke."
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
 msgid "Set on messages that Fluxer sends, such as when someone joins."
-msgstr "Postavljeno na poruke koje šalje Fluxer, npr. kad se netko pridruži."
+msgstr "Postavljeno na poruke koje šalje ChatFlux, npr. kad se netko pridruži."
 
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
@@ -36449,7 +36449,7 @@ msgstr "Stranica za prijavu u pregledniku na računalu. Aplikacija za stolno ra�
 #. Caption under the phone preview in the setup wizard branding step.
 #: src/features/app/components/setup/SetupBrandingPreview.tsx
 msgid "The sign-in page on a phone, in a mobile browser or the Fluxer mobile app."
-msgstr "Stranica za prijavu na telefonu, u mobilnom pregledniku ili mobilnoj aplikaciji Fluxer."
+msgstr "Stranica za prijavu na telefonu, u mobilnom pregledniku ili mobilnoj aplikaciji ChatFlux."
 
 #. Error shown in the desktop app when a browser sign-in request expires before it is approved in the browser.
 #: src/features/auth/flow/browser_handoff/BrowserHandoffDescriptors.ts
@@ -36717,7 +36717,7 @@ msgstr "Došlo je do pogreške prilikom učitavanja webhookova. Pokušajte ponov
 #. Shown above the list of CSS attributes in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/components/QuickCssReference.tsx
 msgid "These attributes don't change between Fluxer updates."
-msgstr "Ovi atributi se ne mijenjaju između Fluxer ažuriranja."
+msgstr "Ovi atributi se ne mijenjaju između ChatFlux ažuriranja."
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts
@@ -36753,7 +36753,7 @@ msgstr "Treća strana"
 #. Error in the import-template form when the desktop app loaded the template from the third-party platform named by {theOtherPlatform} but its contents were not in the expected shape.
 #: src/features/guild/components/modals/add_guild_modal/shared.ts
 msgid "This {theOtherPlatform} template couldn't be read. It may use a format Fluxer doesn't support yet."
-msgstr "Ovu predlogu s {theOtherPlatform} nije moguće pročitati. Možda koristi format koji Fluxer još ne podržava."
+msgstr "Ovu predlogu s {theOtherPlatform} nije moguće pročitati. Možda koristi format koji ChatFlux još ne podržava."
 
 #. Section title in Settings > Themes on the desktop app, for choosing whether the current account uses the theme shared by every account.
 #: src/features/user/components/settings_utils/section_registry/ThemesSections.ts
@@ -36971,7 +36971,7 @@ msgstr "Ova provjera se pokreće samo kada se aplikacija otvori preko HTTPS-a il
 #. Problem shown in the quick CSS editor on a generated class name. [data-flx] is CSS code and stays in English.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "This class name changes with every Fluxer update. Use a [data-flx] selector."
-msgstr "Ovo ime klase se mijenja sa svakim Fluxer ažuriranjem. Koristi [data-flx] selektor."
+msgstr "Ovo ime klase se mijenja sa svakim ChatFlux ažuriranjem. Koristi [data-flx] selektor."
 
 #. Developer tools debug menu label. Internal-only surface for developers; translators may keep this terse.
 #: src/features/channel/components/channel_header_components/developer_tools/ToolsMenu.tsx
@@ -42702,7 +42702,7 @@ msgstr "Operatorovu propusnicu možeš poslati samo prijatelju. Prvo dodaj osobu
 #. Error when you try to pass an Operator Pass on to someone you are not friends with.
 #: src/features/premium/components/operator_pass/OperatorPassPassItOnModal.tsx
 msgid "You can only pass this on to one of your friends on Fluxer."
-msgstr "Ovo možeš proslijediti samo jednom od svojih prijatelja na Fluxeru."
+msgstr "Ovo možeš proslijediti samo jednom od svojih prijatelja na ChatFluxu."
 
 #. Footnote on the Plutonium page about custom username tags. Keep Mina#4821, mina#4821 and #0000 unchanged. visionaryLink is a link whose text is "Learn more about Visionary".
 #: src/features/premium/components/plutonium_page/PlutoniumPageMessages.ts

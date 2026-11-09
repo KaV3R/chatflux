@@ -17,7 +17,7 @@ msgstr ""
 #. Problem shown in the quick CSS editor on var() of a CSS variable that does not exist. {name} is the variable name without its leading dashes.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "--{name} isn't a Fluxer variable and isn't set anywhere in your CSS."
-msgstr "--{name}은(는) Fluxer 변수도 아니고, CSS 어디에도 설정되어 있지 않아요."
+msgstr "--{name}은(는) ChatFlux 변수도 아니고, CSS 어디에도 설정되어 있지 않아요."
 
 #. Description text in the messages tab.
 #: src/features/user/components/modals/tabs/appearance_tab/MessagesTab.tsx
@@ -1497,7 +1497,7 @@ msgstr "{displayName}님이 친구 요청을 보냈습니다"
 #. Instance selector error shown when the instance speaks a protocol generation this client does not know. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "{domain} runs a newer version of Fluxer than this app. Update Fluxer, then try again."
-msgstr "{domain}에서 더 최신 버전의 Fluxer를 사용 중입니다. Fluxer를 업데이트한 후 다시 시도하세요."
+msgstr "{domain}에서 더 최신 버전의 ChatFlux를 사용 중입니다. ChatFlux를 업데이트한 후 다시 시도하세요."
 
 #. Profile timezone difference text. duration is a localized hours/minutes phrase for how far ahead the target user's local time is.
 #: src/features/user/components/popouts/UserProfileShared.tsx
@@ -6829,7 +6829,7 @@ msgstr "아이콘 버튼"
 #. Help text under the theme color picker in the setup wizard branding step.
 #: src/features/app/components/setup/SetupBrandingFields.tsx
 msgid "Buttons, links and highlights across the app use this color, and phone browsers use it for their toolbar. Reset it to keep Fluxer's indigo."
-msgstr "앱 전체의 버튼, 링크, 강조 표시에 이 색상이 사용되며, 휴대폰 브라우저에서는 툴바 색상으로도 사용됩니다. 초기화하면 Fluxer의 인디고 색상이 유지됩니다."
+msgstr "앱 전체의 버튼, 링크, 강조 표시에 이 색상이 사용되며, 휴대폰 브라우저에서는 툴바 색상으로도 사용됩니다. 초기화하면 ChatFlux의 인디고 색상이 유지됩니다."
 
 #. Gift inventory empty-state description. premiumProductName is the premium tab name and product name.
 #: src/features/user/components/modals/tabs/GiftInventoryTab.tsx
@@ -7435,7 +7435,7 @@ msgstr "이모티콘 변경"
 #. Completion in the quick CSS editor that inserts a :root rule, where theme variables are set.
 #: src/features/theme_settings/editor/CssCompletions.ts
 msgid "Change Fluxer variables"
-msgstr "Fluxer 변수 변경"
+msgstr "ChatFlux 변수 변경"
 
 #. Generic action label that opens the friend-nickname edit flow.
 #: src/features/i18n/utils/CommonMessageDescriptors.ts
@@ -11098,7 +11098,7 @@ msgstr "메시지를 게시할 수 없습니다"
 #. Instance selector error shown when no Fluxer instance answered at the address. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "Couldn't reach a Fluxer instance at {domain}. Check the address and that the instance is online."
-msgstr "{domain}에서 Fluxer 인스턴스에 연결할 수 없습니다. 주소를 확인하고 인스턴스가 온라인 상태인지 확인하세요."
+msgstr "{domain}에서 ChatFlux 인스턴스에 연결할 수 없습니다. 주소를 확인하고 인스턴스가 온라인 상태인지 확인하세요."
 
 #. Title of the generic fallback error modal shown when reactivating a Plutonium subscription fails.
 #: src/features/app/components/dialogs/components/plutonium/hooks/useSubscriptionActions.ts
@@ -16712,57 +16712,57 @@ msgstr "플로리다"
 #. Description of the shared usernames option in the setup wizard. Keep the example alex#4821 as it is.
 #: src/features/app/components/setup/SetupIdentitySteps.tsx
 msgid "Fluxer adds a random number to each username, like alex#4821, so many people can use the same name."
-msgstr "Fluxer가 alex#4821처럼 사용자 이름마다 임의의 번호를 붙이므로 여러 사람이 같은 이름을 사용할 수 있습니다."
+msgstr "ChatFlux가 alex#4821처럼 사용자 이름마다 임의의 번호를 붙이므로 여러 사람이 같은 이름을 사용할 수 있습니다."
 
 #. Problem shown in the quick CSS editor on a web address that the app is not allowed to load. Assets are files uploaded under "Assets".
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer blocked loading {url}. Upload it as an asset."
-msgstr "Fluxer가 {url} 불러오기를 차단했어요. 에셋으로 업로드하세요."
+msgstr "ChatFlux가 {url} 불러오기를 차단했어요. 에셋으로 업로드하세요."
 
 #. Problem shown in the quick CSS editor on a reference to an uploaded theme asset that does not exist.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the asset \"{name}\"."
-msgstr "Fluxer가 에셋 \"{name}\"을(를) 찾을 수 없어요."
+msgstr "ChatFlux가 에셋 \"{name}\"을(를) 찾을 수 없어요."
 
 #. Problem shown in the quick CSS editor on a reference to a file on the computer that Fluxer cannot read.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the file \"{path}\"."
-msgstr "Fluxer가 파일 \"{path}\"을(를) 찾을 수 없어요."
+msgstr "ChatFlux가 파일 \"{path}\"을(를) 찾을 수 없어요."
 
 #. Shown for a watched theme folder in Settings > Themes when the folder was moved, deleted or disconnected.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't find this folder. It will load the themes again when the folder is back."
-msgstr "Fluxer에서 이 폴더를 찾을 수 없어요. 폴더가 돌아오면 테마를 다시 불러올 거예요."
+msgstr "ChatFlux에서 이 폴더를 찾을 수 없어요. 폴더가 돌아오면 테마를 다시 불러올 거예요."
 
 #. Shown for a watched theme folder in Settings > Themes when the desktop app no longer has permission to read it.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't open this folder. Import it again to keep watching it."
-msgstr "Fluxer에서 이 폴더를 열 수 없습니다. 계속 감시하려면 다시 가져오세요."
+msgstr "ChatFlux에서 이 폴더를 열 수 없습니다. 계속 감시하려면 다시 가져오세요."
 
 #. Error toast in "Your themes" when the chosen theme folder cannot be opened.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't read this folder."
-msgstr "Fluxer가 이 폴더를 읽을 수 없습니다."
+msgstr "ChatFlux가 이 폴더를 읽을 수 없습니다."
 
 #. Alert when the SMTP check fails and the mail server sent no reply. host is the mail server address.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}."
-msgstr "Fluxer가 {host}에 연결하지 못했습니다."
+msgstr "ChatFlux가 {host}에 연결하지 못했습니다."
 
 #. Alert when the SMTP check fails. host is the mail server address and error is its reply.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}. The server said: \"{error}\""
-msgstr "Fluxer가 {host}에 연결하지 못했습니다. 서버 응답: \"{error}\""
+msgstr "ChatFlux가 {host}에 연결하지 못했습니다. 서버 응답: \"{error}\""
 
 #. Status shown in the desktop app when it stopped checking the browser sign-in because the instance could not be reached. instanceName is the server name, such as Fluxer. "Try again" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "Fluxer couldn't reach {instanceName} to check whether your browser approved this sign-in. Check your connection, then select \"Try again\"."
-msgstr "Fluxer가 브라우저에서 이 로그인을 승인했는지 확인하기 위해 {instanceName}에 연결하지 못했습니다. 연결을 확인한 다음 \"다시 시도\"를 선택하세요."
+msgstr "ChatFlux가 브라우저에서 이 로그인을 승인했는지 확인하기 위해 {instanceName}에 연결하지 못했습니다. 연결을 확인한 다음 \"다시 시도\"를 선택하세요."
 
 #. Status shown when browser sign-in status polling gives up after repeated failures.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "Fluxer stopped checking whether the browser approved this sign-in. It didn't lose your code."
-msgstr "Fluxer가 브라우저에서 이 로그인을 승인했는지 확인을 중단했습니다. 코드는 잃지 않았습니다."
+msgstr "ChatFlux가 브라우저에서 이 로그인을 승인했는지 확인을 중단했습니다. 코드는 잃지 않았습니다."
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/AccessibilitySections.ts
@@ -19027,7 +19027,7 @@ msgstr "누군가 여기에 무언가를 붙여넣으라고 했다면, 이는 {p
 #. Hint in the desktop app while it waits for the browser, for people with more than one Fluxer app installed. "Signing in on another device?" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "If the link opens a different Fluxer app, select \"Signing in on another device?\" and type the code in your browser instead."
-msgstr "링크가 다른 Fluxer 앱을 열면 \"다른 기기에서 로그인 중이신가요?\"를 선택하고 브라우저에 코드를 입력하세요."
+msgstr "링크가 다른 ChatFlux 앱을 열면 \"다른 기기에서 로그인 중이신가요?\"를 선택하고 브라우저에 코드를 입력하세요."
 
 #. Helper text under the Explain the problem field on the details step of the DSA report form.
 #: src/features/moderation/components/report/ReportStepDetails.tsx
@@ -23183,7 +23183,7 @@ msgstr "모든 기기 이동 위치 선택…"
 #. Button in the quick CSS editor window that moves the editor back into a panel inside the app.
 #: src/features/theme_settings/components/QuickCssWorkspace.tsx
 msgid "Move back into Fluxer"
-msgstr "Fluxer로 다시 옮기기"
+msgstr "ChatFlux로 다시 옮기기"
 
 #. Label in the keybinds tab.
 #: src/features/user/components/modals/tabs/keybinds_tab/AssignableActionOptions.ts
@@ -32362,7 +32362,7 @@ msgstr "메시지 액션 바를 표시할 수 있는 메시지에 설정됨."
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
 msgid "Set on messages that Fluxer sends, such as when someone joins."
-msgstr "누군가가 참여할 때 등 Fluxer가 보내는 메시지에 설정됨."
+msgstr "누군가가 참여할 때 등 ChatFlux가 보내는 메시지에 설정됨."
 
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
@@ -36449,7 +36449,7 @@ msgstr "컴퓨터 브라우저에서 보이는 로그인 페이지입니다. 데
 #. Caption under the phone preview in the setup wizard branding step.
 #: src/features/app/components/setup/SetupBrandingPreview.tsx
 msgid "The sign-in page on a phone, in a mobile browser or the Fluxer mobile app."
-msgstr "휴대폰의 모바일 브라우저 또는 Fluxer 모바일 앱에서 보이는 로그인 페이지입니다."
+msgstr "휴대폰의 모바일 브라우저 또는 ChatFlux 모바일 앱에서 보이는 로그인 페이지입니다."
 
 #. Error shown in the desktop app when a browser sign-in request expires before it is approved in the browser.
 #: src/features/auth/flow/browser_handoff/BrowserHandoffDescriptors.ts
@@ -36717,7 +36717,7 @@ msgstr "웹훅을 불러오는 중 오류가 발생했습니다. 다시 시도�
 #. Shown above the list of CSS attributes in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/components/QuickCssReference.tsx
 msgid "These attributes don't change between Fluxer updates."
-msgstr "이 속성들은 Fluxer 업데이트에도 변하지 않아요."
+msgstr "이 속성들은 ChatFlux 업데이트에도 변하지 않아요."
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts
@@ -36753,7 +36753,7 @@ msgstr "타사"
 #. Error in the import-template form when the desktop app loaded the template from the third-party platform named by {theOtherPlatform} but its contents were not in the expected shape.
 #: src/features/guild/components/modals/add_guild_modal/shared.ts
 msgid "This {theOtherPlatform} template couldn't be read. It may use a format Fluxer doesn't support yet."
-msgstr "이 {theOtherPlatform} 템플릿을 읽을 수 없습니다. Fluxer에서 아직 지원하지 않는 형식일 수 있습니다."
+msgstr "이 {theOtherPlatform} 템플릿을 읽을 수 없습니다. ChatFlux에서 아직 지원하지 않는 형식일 수 있습니다."
 
 #. Section title in Settings > Themes on the desktop app, for choosing whether the current account uses the theme shared by every account.
 #: src/features/user/components/settings_utils/section_registry/ThemesSections.ts
@@ -36971,7 +36971,7 @@ msgstr "이 확인은 앱이 HTTPS 또는 localhost를 통해 열릴 때만 실�
 #. Problem shown in the quick CSS editor on a generated class name. [data-flx] is CSS code and stays in English.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "This class name changes with every Fluxer update. Use a [data-flx] selector."
-msgstr "이 클래스 이름은 Fluxer 업데이트마다 바뀌어요. [data-flx] 셀렉터를 사용하세요."
+msgstr "이 클래스 이름은 ChatFlux 업데이트마다 바뀌어요. [data-flx] 셀렉터를 사용하세요."
 
 #. Developer tools debug menu label. Internal-only surface for developers; translators may keep this terse.
 #: src/features/channel/components/channel_header_components/developer_tools/ToolsMenu.tsx
@@ -42702,7 +42702,7 @@ msgstr "패스는 친구에게만 보낼 수 있어요. 먼저 친구로 추가�
 #. Error when you try to pass an Operator Pass on to someone you are not friends with.
 #: src/features/premium/components/operator_pass/OperatorPassPassItOnModal.tsx
 msgid "You can only pass this on to one of your friends on Fluxer."
-msgstr "Fluxer 친구에게만 전달할 수 있습니다."
+msgstr "ChatFlux 친구에게만 전달할 수 있습니다."
 
 #. Footnote on the Plutonium page about custom username tags. Keep Mina#4821, mina#4821 and #0000 unchanged. visionaryLink is a link whose text is "Learn more about Visionary".
 #: src/features/premium/components/plutonium_page/PlutoniumPageMessages.ts

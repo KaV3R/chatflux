@@ -367,7 +367,7 @@ function buildLinuxDesktopFileContents(): string {
 		GENERATED_MARKER,
 		'Type=Application',
 		`Name=${escapeDesktopEntry(APP_NAME)}`,
-		'Comment=Fluxer',
+		'Comment=ChatFlux',
 		`Exec=${escapeDesktopEntry(execLine)}`,
 		`TryExec=${escapeDesktopEntry(execPath)}`,
 		'Terminal=false',
@@ -655,8 +655,39 @@ async function migrateLegacyLinuxAutostartEntry(): Promise<void> {
 	}
 }
 
+// ChatFlux: an old upstream Fluxer install leaves a "Fluxer" startup entry behind after it is
+// uninstalled. Remove it only when the program it would start no longer exists.
+const DEAD_UPSTREAM_RUN_NAMES = ['Fluxer.Fluxer', 'Fluxer'];
+
+function runCommandExecutable(command: string): string | null {
+	const trimmed = command.trim();
+	if (trimmed.startsWith('"')) {
+		const end = trimmed.indexOf('"', 1);
+		return end > 1 ? trimmed.slice(1, end) : null;
+	}
+	const match = /^\S+\.exe/i.exec(trimmed);
+	return match ? match[0] : null;
+}
+
+async function removeDeadUpstreamRunEntries(): Promise<void> {
+	if (!isWindows) return;
+	for (const name of DEAD_UPSTREAM_RUN_NAMES) {
+		const command = await getWindowsRunValue(name);
+		if (command === null) continue;
+		const exe = runCommandExecutable(command);
+		if (exe === null || fs.existsSync(exe)) continue;
+		try {
+			await deleteWindowsRunValue(name);
+			log.info('[Autostart] Removed dead upstream Fluxer startup entry', {name, exe});
+		} catch (error) {
+			log.warn('[Autostart] Failed to remove dead upstream startup entry:', {name, error});
+		}
+	}
+}
+
 export function registerAutostartHandlers(): void {
 	void migrateLegacyLinuxAutostartEntry().then(repairLinuxAutostartEntry);
+	void removeDeadUpstreamRunEntries();
 	ipcMain.handle('autostart-enable', async (): Promise<void> => {
 		await enableAutostart();
 	});

@@ -17,7 +17,7 @@ msgstr ""
 #. Problem shown in the quick CSS editor on var() of a CSS variable that does not exist. {name} is the variable name without its leading dashes.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "--{name} isn't a Fluxer variable and isn't set anywhere in your CSS."
-msgstr "--{name} nėra Fluxer kintamasis ir nėra nustatytas tavo CSS."
+msgstr "--{name} nėra ChatFlux kintamasis ir nėra nustatytas tavo CSS."
 
 #. Description text in the messages tab.
 #: src/features/user/components/modals/tabs/appearance_tab/MessagesTab.tsx
@@ -1497,7 +1497,7 @@ msgstr "{displayName} atsiuntė jums draugystės užklausą"
 #. Instance selector error shown when the instance speaks a protocol generation this client does not know. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "{domain} runs a newer version of Fluxer than this app. Update Fluxer, then try again."
-msgstr "{domain} naudoja naujesnę „Fluxer“ versiją nei ši programėlė. Atnaujinkite „Fluxer“ ir bandykite dar kartą."
+msgstr "{domain} naudoja naujesnę „ChatFlux“ versiją nei ši programėlė. Atnaujinkite „ChatFlux“ ir bandykite dar kartą."
 
 #. Profile timezone difference text. duration is a localized hours/minutes phrase for how far ahead the target user's local time is.
 #: src/features/user/components/popouts/UserProfileShared.tsx
@@ -6829,7 +6829,7 @@ msgstr "Mygtukai su piktogramomis"
 #. Help text under the theme color picker in the setup wizard branding step.
 #: src/features/app/components/setup/SetupBrandingFields.tsx
 msgid "Buttons, links and highlights across the app use this color, and phone browsers use it for their toolbar. Reset it to keep Fluxer's indigo."
-msgstr "Šią spalvą naudoja mygtukai, nuorodos ir paryškinimai visoje programoje, o telefonų naršyklės ja nuspalvina savo įrankių juostą. Atstatykite ją, kad liktų „Fluxer“ indigo spalva."
+msgstr "Šią spalvą naudoja mygtukai, nuorodos ir paryškinimai visoje programoje, o telefonų naršyklės ja nuspalvina savo įrankių juostą. Atstatykite ją, kad liktų „ChatFlux“ indigo spalva."
 
 #. Gift inventory empty-state description. premiumProductName is the premium tab name and product name.
 #: src/features/user/components/modals/tabs/GiftInventoryTab.tsx
@@ -7435,7 +7435,7 @@ msgstr "Keisti jaustuką"
 #. Completion in the quick CSS editor that inserts a :root rule, where theme variables are set.
 #: src/features/theme_settings/editor/CssCompletions.ts
 msgid "Change Fluxer variables"
-msgstr "Keisti Fluxer kintamuosius"
+msgstr "Keisti ChatFlux kintamuosius"
 
 #. Generic action label that opens the friend-nickname edit flow.
 #: src/features/i18n/utils/CommonMessageDescriptors.ts
@@ -11098,7 +11098,7 @@ msgstr "Nepavyko paskelbti šio pranešimo"
 #. Instance selector error shown when no Fluxer instance answered at the address. Domain is interpolated.
 #: src/features/auth/flow/instance_selector/InstanceDiscoveryFailure.ts
 msgid "Couldn't reach a Fluxer instance at {domain}. Check the address and that the instance is online."
-msgstr "Nepavyko susisiekti su Fluxer egzemplioriumi adresu {domain}. Patikrinkite adresą ir įsitikinkite, kad egzempliorius veikia."
+msgstr "Nepavyko susisiekti su ChatFlux egzemplioriumi adresu {domain}. Patikrinkite adresą ir įsitikinkite, kad egzempliorius veikia."
 
 #. Title of the generic fallback error modal shown when reactivating a Plutonium subscription fails.
 #: src/features/app/components/dialogs/components/plutonium/hooks/useSubscriptionActions.ts
@@ -16712,57 +16712,57 @@ msgstr "Florida"
 #. Description of the shared usernames option in the setup wizard. Keep the example alex#4821 as it is.
 #: src/features/app/components/setup/SetupIdentitySteps.tsx
 msgid "Fluxer adds a random number to each username, like alex#4821, so many people can use the same name."
-msgstr "Fluxer prie kiekvieno naudotojo vardo prideda atsitiktinį numerį, pvz., alex#4821, kad tą patį vardą galėtų naudoti daug žmonių."
+msgstr "ChatFlux prie kiekvieno naudotojo vardo prideda atsitiktinį numerį, pvz., alex#4821, kad tą patį vardą galėtų naudoti daug žmonių."
 
 #. Problem shown in the quick CSS editor on a web address that the app is not allowed to load. Assets are files uploaded under "Assets".
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer blocked loading {url}. Upload it as an asset."
-msgstr "Fluxer užblokavo {url} įkėlimą. Įkelk kaip išteklį."
+msgstr "ChatFlux užblokavo {url} įkėlimą. Įkelk kaip išteklį."
 
 #. Problem shown in the quick CSS editor on a reference to an uploaded theme asset that does not exist.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the asset \"{name}\"."
-msgstr "Fluxer neranda ištekliaus „{name}“."
+msgstr "ChatFlux neranda ištekliaus „{name}“."
 
 #. Problem shown in the quick CSS editor on a reference to a file on the computer that Fluxer cannot read.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "Fluxer can't find the file \"{path}\"."
-msgstr "Fluxer neranda failo „{path}“."
+msgstr "ChatFlux neranda failo „{path}“."
 
 #. Shown for a watched theme folder in Settings > Themes when the folder was moved, deleted or disconnected.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't find this folder. It will load the themes again when the folder is back."
-msgstr "Fluxer neranda šio aplanko. Kai aplankas vėl bus pasiekiamas, temos bus įkeltos iš naujo."
+msgstr "ChatFlux neranda šio aplanko. Kai aplankas vėl bus pasiekiamas, temos bus įkeltos iš naujo."
 
 #. Shown for a watched theme folder in Settings > Themes when the desktop app no longer has permission to read it.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't open this folder. Import it again to keep watching it."
-msgstr "Fluxer negali atidaryti šio aplanko. Importuokite jį dar kartą, kad galėtumėte toliau stebėti."
+msgstr "ChatFlux negali atidaryti šio aplanko. Importuokite jį dar kartą, kad galėtumėte toliau stebėti."
 
 #. Error toast in "Your themes" when the chosen theme folder cannot be opened.
 #: src/features/theme_settings/components/YourThemesSection.tsx
 msgid "Fluxer can't read this folder."
-msgstr "Fluxer negali perskaityti šio aplanko."
+msgstr "ChatFlux negali perskaityti šio aplanko."
 
 #. Alert when the SMTP check fails and the mail server sent no reply. host is the mail server address.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}."
-msgstr "Fluxer nepavyko prisijungti prie {host}."
+msgstr "ChatFlux nepavyko prisijungti prie {host}."
 
 #. Alert when the SMTP check fails. host is the mail server address and error is its reply.
 #: src/features/app/components/setup/SetupEmailSteps.tsx
 msgid "Fluxer couldn't connect to {host}. The server said: \"{error}\""
-msgstr "Fluxer nepavyko prisijungti prie {host}. Serveris atsakė: „{error}“"
+msgstr "ChatFlux nepavyko prisijungti prie {host}. Serveris atsakė: „{error}“"
 
 #. Status shown in the desktop app when it stopped checking the browser sign-in because the instance could not be reached. instanceName is the server name, such as Fluxer. "Try again" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "Fluxer couldn't reach {instanceName} to check whether your browser approved this sign-in. Check your connection, then select \"Try again\"."
-msgstr "Fluxer nepavyko pasiekti {instanceName} ir patikrinti, ar naršyklė patvirtino šį prisijungimą. Patikrinkite ryšį ir pasirinkite „Bandyti dar kartą“."
+msgstr "ChatFlux nepavyko pasiekti {instanceName} ir patikrinti, ar naršyklė patvirtino šį prisijungimą. Patikrinkite ryšį ir pasirinkite „Bandyti dar kartą“."
 
 #. Status shown when browser sign-in status polling gives up after repeated failures.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "Fluxer stopped checking whether the browser approved this sign-in. It didn't lose your code."
-msgstr "Fluxer nustojo tikrinti, ar naršyklė patvirtino šį prisijungimą. Ji neprarado jūsų kodo."
+msgstr "ChatFlux nustojo tikrinti, ar naršyklė patvirtino šį prisijungimą. Ji neprarado jūsų kodo."
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/AccessibilitySections.ts
@@ -19028,7 +19028,7 @@ msgstr "Jei kas nors liepė jums čia ką nors įklijuoti, tai sukčiavimas, kur
 #. Hint in the desktop app while it waits for the browser, for people with more than one Fluxer app installed. "Signing in on another device?" is the label of the button below and must match its translation.
 #: src/features/auth/flow/auth_login_core/AuthLoginBrowserStep.tsx
 msgid "If the link opens a different Fluxer app, select \"Signing in on another device?\" and type the code in your browser instead."
-msgstr "Jei nuoroda atidaro kitą Fluxer programėlę, pasirinkite „Prisijungiate kitame įrenginyje?“ ir įveskite kodą naršyklėje."
+msgstr "Jei nuoroda atidaro kitą ChatFlux programėlę, pasirinkite „Prisijungiate kitame įrenginyje?“ ir įveskite kodą naršyklėje."
 
 #. Helper text under the Explain the problem field on the details step of the DSA report form.
 #: src/features/moderation/components/report/ReportStepDetails.tsx
@@ -23184,7 +23184,7 @@ msgstr "Perkelti visus įrenginius į…"
 #. Button in the quick CSS editor window that moves the editor back into a panel inside the app.
 #: src/features/theme_settings/components/QuickCssWorkspace.tsx
 msgid "Move back into Fluxer"
-msgstr "Grąžinti į Fluxer"
+msgstr "Grąžinti į ChatFlux"
 
 #. Label in the keybinds tab.
 #: src/features/user/components/modals/tabs/keybinds_tab/AssignableActionOptions.ts
@@ -32363,7 +32363,7 @@ msgstr "Nustatoma žinutėms, kurios gali rodyti veiksmų juostą."
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
 msgid "Set on messages that Fluxer sends, such as when someone joins."
-msgstr "Nustatoma žinutėms, kurias siunčia Fluxer, pvz., kai kas nors prisijungia."
+msgstr "Nustatoma žinutėms, kurias siunčia ChatFlux, pvz., kai kas nors prisijungia."
 
 #. Describes a CSS attribute in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/editor/AppSelectors.ts
@@ -36450,7 +36450,7 @@ msgstr "Prisijungimo puslapis naršyklėje kompiuteryje. Darbalaukio programa ro
 #. Caption under the phone preview in the setup wizard branding step.
 #: src/features/app/components/setup/SetupBrandingPreview.tsx
 msgid "The sign-in page on a phone, in a mobile browser or the Fluxer mobile app."
-msgstr "Prisijungimo puslapis telefone, mobiliojoje naršyklėje arba „Fluxer“ mobiliojoje programėlėje."
+msgstr "Prisijungimo puslapis telefone, mobiliojoje naršyklėje arba „ChatFlux“ mobiliojoje programėlėje."
 
 #. Error shown in the desktop app when a browser sign-in request expires before it is approved in the browser.
 #: src/features/auth/flow/browser_handoff/BrowserHandoffDescriptors.ts
@@ -36718,7 +36718,7 @@ msgstr "Įkeliant webhookus įvyko klaida. Bandykite dar kartą."
 #. Shown above the list of CSS attributes in the "Reference" tab of the quick CSS editor.
 #: src/features/theme_settings/components/QuickCssReference.tsx
 msgid "These attributes don't change between Fluxer updates."
-msgstr "Šie atributai nesikeičia tarp Fluxer atnaujinimų."
+msgstr "Šie atributai nesikeičia tarp ChatFlux atnaujinimų."
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts
@@ -36754,7 +36754,7 @@ msgstr "Trečioji šalis"
 #. Error in the import-template form when the desktop app loaded the template from the third-party platform named by {theOtherPlatform} but its contents were not in the expected shape.
 #: src/features/guild/components/modals/add_guild_modal/shared.ts
 msgid "This {theOtherPlatform} template couldn't be read. It may use a format Fluxer doesn't support yet."
-msgstr "Šablono iš {theOtherPlatform} nepavyko nuskaityti. Gali būti, kad jis naudoja formatą, kurio Fluxer dar nepalaiko."
+msgstr "Šablono iš {theOtherPlatform} nepavyko nuskaityti. Gali būti, kad jis naudoja formatą, kurio ChatFlux dar nepalaiko."
 
 #. Section title in Settings > Themes on the desktop app, for choosing whether the current account uses the theme shared by every account.
 #: src/features/user/components/settings_utils/section_registry/ThemesSections.ts
@@ -36972,7 +36972,7 @@ msgstr "Šis patikrinimas atliekamas tik tada, kai programa atidaroma naudojant 
 #. Problem shown in the quick CSS editor on a generated class name. [data-flx] is CSS code and stays in English.
 #: src/features/theme_settings/editor/CssLint.ts
 msgid "This class name changes with every Fluxer update. Use a [data-flx] selector."
-msgstr "Šios klasės pavadinimas keičiasi su kiekvienu Fluxer atnaujinimu. Naudok [data-flx] selektorių."
+msgstr "Šios klasės pavadinimas keičiasi su kiekvienu ChatFlux atnaujinimu. Naudok [data-flx] selektorių."
 
 #. Developer tools debug menu label. Internal-only surface for developers; translators may keep this terse.
 #: src/features/channel/components/channel_header_components/developer_tools/ToolsMenu.tsx
@@ -42703,7 +42703,7 @@ msgstr "Operatoriaus leidimą galite perduoti tik draugui. Pirmiausia pridėkite
 #. Error when you try to pass an Operator Pass on to someone you are not friends with.
 #: src/features/premium/components/operator_pass/OperatorPassPassItOnModal.tsx
 msgid "You can only pass this on to one of your friends on Fluxer."
-msgstr "Šį perdavimą galite atlikti tik vienam iš savo Fluxer draugų."
+msgstr "Šį perdavimą galite atlikti tik vienam iš savo ChatFlux draugų."
 
 #. Footnote on the Plutonium page about custom username tags. Keep Mina#4821, mina#4821 and #0000 unchanged. visionaryLink is a link whose text is "Learn more about Visionary".
 #: src/features/premium/components/plutonium_page/PlutoniumPageMessages.ts

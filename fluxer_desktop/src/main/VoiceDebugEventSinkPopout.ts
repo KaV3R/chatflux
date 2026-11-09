@@ -7,7 +7,7 @@ import {isObjectLike as isRecord} from '@fluxer/record_utils/src/RecordGuards';
 import {BrowserWindow, ipcMain} from 'electron';
 import log from 'electron-log';
 
-const VOICE_DEBUG_EVENT_SINK_WINDOW_TITLE = 'Fluxer | Voice Debug Event Sink';
+const VOICE_DEBUG_EVENT_SINK_WINDOW_TITLE = 'ChatFlux | Voice Debug Event Sink';
 export const VOICE_DEBUG_EVENT_SINK_POPOUT_KEY = 'fluxer-voice-debug-event-sink';
 const VOICE_DEBUG_EVENT_SINK_WINDOW_WIDTH = 1000;
 const VOICE_DEBUG_EVENT_SINK_WINDOW_HEIGHT = 700;

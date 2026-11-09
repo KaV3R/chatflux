@@ -1676,7 +1676,8 @@ module.exports = {
 		: {}),
 	appId,
 	productName: installedProductName,
-	copyright: 'Copyright © 2026 Fluxer Platform AB',
+	// ChatFlux: shown in the exe details; keeps credit to the upstream project (AGPL).
+	copyright: 'Copyright © 2026 CatFlux – based on Fluxer by Fluxer Platform AB',
 	artifactName: `${artifactProductName}-\${version}-\${os}-\${arch}.\${ext}`,
 	directories: {
 		buildResources: 'build_resources',
@@ -1697,6 +1698,8 @@ module.exports = {
 		name: metadataName,
 		...(shellVersion ? {version: shellVersion} : {}),
 		...(targetPlatform === 'linux' ? {desktopName: `${linuxDesktopId}.desktop`} : {}),
+		// ChatFlux: the Windows exe "Publisher"/CompanyName (Task Manager, Apps list) comes from the author.
+		...(targetPlatform === 'win32' ? {author: {name: 'CatFlux'}} : {}),
 	},
 	extraResources: [
 		{
