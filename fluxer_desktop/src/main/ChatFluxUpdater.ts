@@ -14,7 +14,9 @@ const requireModule = createRequire(import.meta.url);
 
 // The trailing slash matters: Velopack joins "releases.win.json" onto this URL, and without
 // the slash the last segment ("download") is replaced, which gives a 404.
-const CHATFLUX_UPDATE_FEED_URL = 'https://github.com/KaV3R/chatflux/releases/latest/download/';
+// The "www." matters too: Velopack treats a plain "github.com" URL as a GitHub repo and calls the
+// GitHub API with this path, which gives a 404. "www.github.com" redirects to the same files.
+const CHATFLUX_UPDATE_FEED_URL = 'https://www.github.com/KaV3R/chatflux/releases/latest/download/';
 const FIRST_CHECK_DELAY_MS = 15_000;
 const CHECK_INTERVAL_MS = 2 * 60 * 60_000;
 
