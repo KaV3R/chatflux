@@ -4,6 +4,7 @@ import {SoundType} from '@app/features/notification/utils/SoundUtils';
 import {Logger} from '@app/features/platform/utils/AppLogger';
 import * as SoundCommands from '@app/features/ui/commands/SoundCommands';
 import {isVoiceMeshRoom} from '@app/features/voice/engine/mesh/VoiceMeshRoom';
+import {bindRemoteScreenShareSounds} from '@app/features/voice/engine/RemoteScreenShareSounds';
 import ScreenShareCodecNegotiation from '@app/features/voice/engine/ScreenShareCodecNegotiation';
 import ScreenSharePublicationMigration from '@app/features/voice/engine/ScreenSharePublicationMigration';
 import {getEffectiveAudioState} from '@app/features/voice/engine/VoiceEffectiveAudioState';
@@ -122,6 +123,7 @@ export function bindRoomEvents(
 	const remoteTrackLifecycleDisposers = new Map<string, () => void>();
 	let codecNegotiationDisposer: (() => void) | null = null;
 	let screenShareMigrationDisposer: (() => void) | null = null;
+	let remoteScreenShareSoundsDisposer: (() => void) | null = null;
 	let screenShareNegotiationBound = false;
 	let roomReconnecting = false;
 	let screenSharePublicationAwaitingReconnect: LocalTrackPublication | null = null;
@@ -321,6 +323,8 @@ export function bindRoomEvents(
 			dependencies.remoteSpeaking.hydrateFromRoom(room);
 			observeExistingRemoteScreenSharePublications();
 			bindScreenShareNegotiation();
+			remoteScreenShareSoundsDisposer?.();
+			remoteScreenShareSoundsDisposer = bindRemoteScreenShareSounds(room);
 			dependencies.permissions.applyDeafen(room, getEffectiveAudioState().effectiveDeaf);
 			dependencies.connection.markConnected();
 			await callbacks.onConnected();
@@ -350,6 +354,8 @@ export function bindRoomEvents(
 			participantSpeakingDisposers.forEach(({dispose}) => dispose());
 			participantSpeakingDisposers.clear();
 			unbindScreenShareNegotiation();
+			remoteScreenShareSoundsDisposer?.();
+			remoteScreenShareSoundsDisposer = null;
 			clearAllScreenShareDecodeMonitors();
 			clearAllRemoteTrackLifecycleBindings();
 			dependencies.remoteSpeaking.clear();
