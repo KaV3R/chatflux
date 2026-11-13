@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {tr} from '@app/features/chatflux_shop/ShopApi';
 import Users from '@app/features/user/state/Users';
 import * as NicknameUtils from '@app/features/user/utils/NicknameUtils';
 import {MessageTypes} from '@fluxer/constants/src/ChannelConstants';
@@ -239,6 +240,26 @@ export const SystemMessageUtils = {
 			}
 			case MessageTypes.CHANNEL_ICON_CHANGE:
 				return i18n._(CHANGED_THE_CHANNEL_ICON_DESCRIPTOR, {username});
+			case MessageTypes.CHATFLUX_NICKNAME_CHANGE: {
+				const targetId = message.mentions && message.mentions.length > 0 ? message.mentions[0].id : null;
+				const newNick = (message.content ?? '').trim();
+				if (targetId === message.author.id) {
+					return newNick
+						? tr(
+								`${username} átváltotta a saját becenevét erre: ${newNick}`,
+								`${username} changed their nickname to ${newNick}`,
+							)
+						: tr(`${username} visszaállította a saját becenevét`, `${username} reset their nickname`);
+				}
+				const target = targetId ? Users.getUser(targetId) : null;
+				const targetName = target ? NicknameUtils.getDisplayName(target) : tr('valaki', 'someone');
+				return newNick
+					? tr(
+							`${username} átváltotta ${targetName} becenevét erre: ${newNick}`,
+							`${username} changed ${targetName}'s nickname to ${newNick}`,
+						)
+					: tr(`${username} visszaállította ${targetName} becenevét`, `${username} reset ${targetName}'s nickname`);
+			}
 			case MessageTypes.CALL:
 				return i18n._(STARTED_A_CALL_DESCRIPTOR, {username});
 			case MessageTypes.CHANNEL_FOLLOW_ADD:

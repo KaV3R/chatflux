@@ -163,6 +163,26 @@ export class GroupDmUpdateService {
 			await dispatchMessageCreateBroadcast({gatewayService: this.gatewayService, channel: updatedChannel, message});
 		}
 		await this.channelUtilsService.dispatchChannelUpdate({channel: updatedChannel, requestCache});
+		if (updates.nicks !== undefined) {
+			// ChatFlux: post "<actor> changed <target>'s nickname to <nick>" for every nickname that actually changed.
+			const previousNicks = channel.nicknames;
+			const nextNicks = updates.nicks ?? new Map<string, string>();
+			const changedUserIds = new Set<string>([...previousNicks.keys(), ...nextNicks.keys()]);
+			for (const targetUserId of changedUserIds) {
+				const nextNick = nextNicks.get(targetUserId) ?? '';
+				if ((previousNicks.get(targetUserId) ?? '') === nextNick) continue;
+				const messageId = createMessageID(await this.snowflakeService.generateForChannel(channelId));
+				const message = await this.messagePersistenceService.createSystemMessage({
+					messageId,
+					channelId,
+					userId,
+					type: MessageTypes.CHATFLUX_NICKNAME_CHANGE,
+					content: nextNick,
+					mentionUserIds: [BigInt(targetUserId) as UserID],
+				});
+				await dispatchMessageCreateBroadcast({gatewayService: this.gatewayService, channel: updatedChannel, message});
+			}
+		}
 		return updatedChannel;
 	}
 }

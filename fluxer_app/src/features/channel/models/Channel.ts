@@ -344,7 +344,8 @@ export class Channel {
 				content_warning_text:
 					updates.content_warning_text !== undefined ? updates.content_warning_text : this.contentWarningText,
 				rate_limit_per_user: updates.rate_limit_per_user ?? this.rateLimitPerUser,
-				nicks: updates.nicks ?? this.nicks,
+				// ChatFlux: a full CHANNEL_UPDATE payload omits `nicks` once the last group DM nickname is removed.
+				nicks: updates.nicks ?? (this.type === ChannelTypes.GROUP_DM && updates.type !== undefined ? {} : this.nicks),
 				...pickThreadFields(updates, this.threadFields),
 			},
 			{instanceId: this.instanceId},
@@ -376,6 +377,11 @@ export class Channel {
 		if (this.contentWarningLevel !== other.contentWarningLevel) return false;
 		if (this.contentWarningText !== other.contentWarningText) return false;
 		if (this.rateLimitPerUser !== other.rateLimitPerUser) return false;
+		const thisNicks = Object.keys(this.nicks);
+		if (thisNicks.length !== Object.keys(other.nicks).length) return false;
+		for (const key of thisNicks) {
+			if (this.nicks[key] !== other.nicks[key]) return false;
+		}
 		if (!threadFieldsEqual(this.threadFields, other.threadFields)) return false;
 		if (this.recipientIds.length !== other.recipientIds.length) return false;
 		for (let i = 0; i < this.recipientIds.length; i++) {

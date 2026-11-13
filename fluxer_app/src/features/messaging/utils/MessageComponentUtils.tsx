@@ -4,6 +4,7 @@ import {CallMessage} from '@app/features/channel/components/CallMessage';
 import {ChannelFollowAddMessage} from '@app/features/channel/components/ChannelFollowAddMessage';
 import {ChannelIconChangeMessage} from '@app/features/channel/components/ChannelIconChangeMessage';
 import {ChannelNameChangeMessage} from '@app/features/channel/components/ChannelNameChangeMessage';
+import {ChatFluxNicknameChangeMessage} from '@app/features/channel/components/ChatFluxNicknameChangeMessage';
 import {GuildJoinMessage} from '@app/features/channel/components/GuildJoinMessage';
 import {PinSystemMessage} from '@app/features/channel/components/PinSystemMessage';
 import {RecipientAddMessage} from '@app/features/channel/components/RecipientAddMessage';
@@ -70,6 +71,13 @@ export function getMessageComponent(
 				<ChannelNameChangeMessage
 					message={message}
 					data-flx="messaging.message-component-utils.get-message-component.channel-name-change-message"
+				/>
+			);
+		case MessageTypes.CHATFLUX_NICKNAME_CHANGE:
+			return (
+				<ChatFluxNicknameChangeMessage
+					message={message}
+					data-flx="messaging.message-component-utils.get-message-component.chatflux-nickname-change-message"
 				/>
 			);
 		case MessageTypes.CHANNEL_ICON_CHANGE:

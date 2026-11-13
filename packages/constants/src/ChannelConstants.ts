@@ -67,6 +67,8 @@ export const MessageTypes = {
 	THREAD_CREATED: 18,
 	REPLY: 19,
 	THREAD_STARTER_MESSAGE: 21,
+	/** ChatFlux: someone changed a group DM nickname. content = new nickname (empty = reset), mentions[0] = target user. */
+	CHATFLUX_NICKNAME_CHANGE: 98,
 	CLIENT_SYSTEM: 99,
 } as const;
 
@@ -85,6 +87,7 @@ const MESSAGE_TYPE_DELETABLE = {
 	[MessageTypes.CALL]: false,
 	[MessageTypes.CHANNEL_NAME_CHANGE]: false,
 	[MessageTypes.CHANNEL_ICON_CHANGE]: false,
+	[MessageTypes.CHATFLUX_NICKNAME_CHANGE]: false,
 	[MessageTypes.CLIENT_SYSTEM]: false,
 } as const satisfies Record<MessageTypeValue, boolean>;
 

@@ -35,6 +35,11 @@ export const MessageTypeSchema = createInt32EnumType(
 			'THREAD_STARTER_MESSAGE',
 			'The first message of a thread, pointing at its source',
 		],
+		[
+			MessageTypes.CHATFLUX_NICKNAME_CHANGE,
+			'CHATFLUX_NICKNAME_CHANGE',
+			'A system message indicating a group DM nickname changed',
+		],
 	],
 	'The type of message',
 	'MessageType',

@@ -19,20 +19,9 @@ import {FLUXERBOT_ID} from '@fluxer/constants/src/AppConstants';
 import {MessageStates, MessageTypes} from '@fluxer/constants/src/ChannelConstants';
 import * as SnowflakeUtils from '@fluxer/snowflake/src/SnowflakeUtils';
 import type {I18n} from '@lingui/core';
-import {msg} from '@lingui/core/macro';
 
 const USER_MENTION_REGEX = /<@!?(\d+)>/;
 const logger = new Logger('CommandUtils');
-const localCurrentUserNicknames = new Map<string, string | null>();
-const UNKNOWN_USER_DESCRIPTOR = msg({
-	message: 'Unknown user',
-	comment: 'Fallback name in local command system messages when the current user is unavailable.',
-});
-const NICKNAME_CHANGED_DESCRIPTOR = msg({
-	message: 'You changed your nickname in this community from **{previousNickname}** to **{newNickname}**.',
-	comment:
-		'Local system message after the user changes their community nickname with a slash command. The bold markdown markers should remain around the two names.',
-});
 
 export type ParsedCommand =
 	| {
@@ -235,40 +224,10 @@ export function createSystemMessage(channelId: string, content: string): Message
 	});
 }
 
-function getCurrentUserNicknameLabels(guildId: string, i18n: I18n): {previous: string; fallback: string} {
-	const currentUserId = Authentication.currentUserId;
-	const currentMember = GuildMembers.getMember(guildId, currentUserId);
-	const currentUser = Users.getCurrentUser();
-	let fallback: string;
-	if (currentUser) {
-		fallback = NicknameUtils.getDisplayName(currentUser);
-	} else if (currentMember) {
-		fallback = NicknameUtils.getDisplayName(currentMember.user);
-	} else {
-		fallback = i18n._(UNKNOWN_USER_DESCRIPTOR);
-	}
-	const memberNickname = currentMember?.nick?.trim();
-	if (!currentMember && localCurrentUserNicknames.has(guildId)) {
-		const localNickname = localCurrentUserNicknames.get(guildId)?.trim();
-		return {
-			previous: localNickname || fallback,
-			fallback,
-		};
-	}
-	return {
-		previous: memberNickname || fallback,
-		fallback,
-	};
-}
-
 function updateCurrentUserNickname(guildId: string, nickname: string | null): void {
 	const currentUserId = Authentication.currentUserId;
 	const currentMember = GuildMembers.getMember(guildId, currentUserId);
-	if (!currentMember) {
-		localCurrentUserNicknames.set(guildId, nickname);
-		return;
-	}
-	localCurrentUserNicknames.delete(guildId);
+	if (!currentMember) return;
 	GuildMembers.handleMemberAdd(guildId, {
 		...currentMember.toJSON(),
 		nick: nickname,
@@ -279,28 +238,18 @@ export async function executeCommand(
 	command: ParsedCommand,
 	channelId: string,
 	guildId: string | undefined,
-	i18n: I18n,
+	_i18n: I18n,
 ): Promise<void> {
 	switch (command.type) {
 		case 'nick': {
 			if (!guildId) {
 				throw new Error('Cannot change nickname outside of a guild');
 			}
-			const labels = getCurrentUserNicknameLabels(guildId, i18n);
-			const prevNickname = labels.previous;
-			const newNickname = command.nickname || labels.fallback;
+			// ChatFlux: just change the nickname, don't post anything to the chat.
 			await GuildMemberCommands.updateProfile(guildId, {
 				nick: command.nickname || null,
 			});
-			const systemMessage = createSystemMessage(
-				channelId,
-				i18n._(NICKNAME_CHANGED_DESCRIPTOR, {
-					previousNickname: prevNickname,
-					newNickname,
-				}),
-			);
 			updateCurrentUserNickname(guildId, command.nickname || null);
-			MessageCommands.createOptimistic(channelId, systemMessage.toJSON());
 			break;
 		}
 		case 'kick': {
