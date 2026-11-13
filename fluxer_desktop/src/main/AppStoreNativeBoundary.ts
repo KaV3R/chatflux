@@ -18,6 +18,7 @@ import type {
 	AppStorePruneReport,
 	AppStorePruneRequest,
 } from '@fluxer/app-store';
+import log from 'electron-log';
 
 export const APP_STORE_ADDON_PACKAGE = '@fluxer/app-store';
 
@@ -73,7 +74,10 @@ function describeAddonLoadFailure(error: unknown): string {
 	}
 	const message = errorMessage(error);
 	const reason = /^reason=(.+)$/mu.exec(message)?.[1]?.trim();
-	const summary = (reason ?? message.split('\n')[0] ?? '').trim();
+	const base = (reason ?? message.split('\n')[0] ?? '').trim();
+	// ChatFlux: the loader's reason alone ("require(nativePath) threw") hides why Windows refused the binary.
+	const cause = error instanceof Error && error.cause != null ? errorMessage(error.cause).split('\n')[0]?.trim() : '';
+	const summary = cause && !base.includes(cause) ? `${base}: ${cause}` : base;
 	if (summary.length === 0) {
 		return 'the app store addon failed to load';
 	}
@@ -88,9 +92,11 @@ export function loadAppStoreBinding(): AppStoreBindingConstructor | null {
 		const native = requireModule(APP_STORE_ADDON_PACKAGE) as AppStoreNativeModule;
 		bindingCache = native.AppStore ?? null;
 		bindingLoadFailure = bindingCache == null ? describeAddonLoadFailure(native.loadError) : null;
+		if (bindingCache == null) log.error('[AppStore] The app store addon did not load:', native.loadError);
 	} catch (error) {
 		bindingCache = null;
 		bindingLoadFailure = describeAddonLoadFailure(error);
+		log.error('[AppStore] The app store addon did not load:', error);
 	}
 	return bindingCache;
 }

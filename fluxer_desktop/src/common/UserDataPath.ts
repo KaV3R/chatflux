@@ -14,11 +14,70 @@ interface UserDataPaths {
 
 type ChannelStorageDirectoryMap = Record<BuildChannel, string>;
 
+// ChatFlux: own data folder (%APPDATA%\chatflux) instead of upstream's %APPDATA%\fluxer.
 const channelStorageDirectoryMap: ChannelStorageDirectoryMap = {
+	stable: 'chatflux',
+	canary: 'chatfluxcanary',
+	development: 'chatfluxdevelopment',
+};
+
+const legacyChannelStorageDirectoryMap: ChannelStorageDirectoryMap = {
 	stable: 'fluxer',
 	canary: 'fluxercanary',
 	development: 'fluxerdevelopment',
 };
+
+// Not carried over: Chromium caches, lock files, per-install native probe caches and the app store
+// health marker (a fresh folder must not report an earlier store as "regressed").
+const LEGACY_MIGRATION_SKIP = new Set(
+	[
+		'Cache',
+		'Code Cache',
+		'GPUCache',
+		'GrShaderCache',
+		'ShaderCache',
+		'DawnGraphiteCache',
+		'DawnWebGPUCache',
+		'GPUPersistentCache',
+		'Crashpad',
+		'modules',
+		'logs',
+		'lockfile',
+		'SingletonLock',
+		'SingletonCookie',
+		'SingletonSocket',
+		'native-module-probes-v1.json',
+		'native-module-preflight-v2.json',
+		'account-store-state-v1.json',
+	].map((name) => name.toLowerCase()),
+);
+
+function migrateLegacyUserData(legacyBase: string, base: string): void {
+	try {
+		if (fs.existsSync(base) || !fs.existsSync(legacyBase)) return;
+	} catch {
+		return;
+	}
+	const pending = `${base}.migrating-${process.pid}`;
+	try {
+		fs.rmSync(pending, {recursive: true, force: true});
+		fs.cpSync(legacyBase, pending, {
+			recursive: true,
+			errorOnExist: false,
+			filter: (source) => {
+				const relative = path.relative(legacyBase, source);
+				if (relative === '') return true;
+				const top = relative.split(path.sep)[0]!.toLowerCase();
+				return !LEGACY_MIGRATION_SKIP.has(top);
+			},
+		});
+		fs.renameSync(pending, base);
+	} catch {
+		try {
+			fs.rmSync(pending, {recursive: true, force: true});
+		} catch {}
+	}
+}
 
 class UserDataPathConflictError extends Error {
 	public constructor(configured: string, requested: string) {
@@ -96,6 +155,7 @@ export function configureUserDataPath(): UserDataPaths {
 		return configuredPaths;
 	}
 	portableMode = portable;
+	migrateLegacyUserData(path.join(path.dirname(base), legacyChannelStorageDirectoryMap[channel]), base);
 	if (portable) {
 		fs.mkdirSync(base, {recursive: true});
 	}
