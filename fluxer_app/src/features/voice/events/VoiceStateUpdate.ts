@@ -117,6 +117,25 @@ function shouldPlayLeaveChime(data: VoiceStateUpdatePayload): boolean {
 	return true;
 }
 
+/**
+ * ChatFlux: someone else in my current call started (true) or stopped (false) sharing their screen.
+ * Own screen shares already play these sounds from the screen share engine.
+ */
+function getRemoteScreenShareChange(data: VoiceStateUpdatePayload): boolean | null {
+	if (!MediaEngine.connected) return null;
+	if (!MediaEngine.channelId) return null;
+	if (!data.connection_id) return null;
+	if (data.connection_id === MediaEngine.connectionId) return null;
+	if (MediaEngine.isVoiceConnectionIgnored(data.connection_id)) return null;
+	if (data.channel_id !== MediaEngine.channelId) return null;
+	if (data.self_stream === undefined) return null;
+	const previousState = MediaEngine.getVoiceStateByConnectionId(data.connection_id);
+	if (previousState?.channel_id !== MediaEngine.channelId) return null;
+	const wasStreaming = previousState.self_stream === true;
+	if (wasStreaming === data.self_stream) return null;
+	return data.self_stream;
+}
+
 export function handleVoiceStateUpdate(data: VoiceStateUpdatePayload, _context: GatewayHandlerContext): void {
 	const guildId = data.guild_id ?? null;
 	const voiceState = data as VoiceState;
@@ -128,6 +147,7 @@ export function handleVoiceStateUpdate(data: VoiceStateUpdatePayload, _context: 
 	const playJoinChime =
 		!teleportingInPlace && shouldPlayJoinChime(data) && !shouldSuppressDuplicateJoinChime(data, now);
 	const playLeaveChime = !teleportingInPlace && !playJoinChime && shouldPlayLeaveChime(data);
+	const remoteScreenShareChange = teleportingInPlace ? null : getRemoteScreenShareChange(data);
 	const previousState = data.connection_id ? MediaEngine.getVoiceStateByConnectionId(data.connection_id) : null;
 	if (previousState && previousState.channel_id !== data.channel_id) {
 		const otherConnectionRemains = Object.values(
@@ -138,6 +158,9 @@ export function handleVoiceStateUpdate(data: VoiceStateUpdatePayload, _context: 
 		}
 	}
 	MediaEngine.handleGatewayVoiceStateUpdate(guildId, voiceState);
+	if (remoteScreenShareChange !== null) {
+		SoundCommands.playSound(remoteScreenShareChange ? SoundType.ScreenShareStart : SoundType.ScreenShareStop);
+	}
 	if (playJoinChime) {
 		if (!data.channel_id) return;
 		rememberJoinChime(data, now);
