@@ -241,6 +241,7 @@ export const SystemMessageUtils = {
 			case MessageTypes.CHANNEL_ICON_CHANGE:
 				return i18n._(CHANGED_THE_CHANNEL_ICON_DESCRIPTOR, {username});
 			case MessageTypes.CHATFLUX_NICKNAME_CHANGE: {
+				const username = NicknameUtils.getNickname(author, null);
 				const targetId = message.mentions && message.mentions.length > 0 ? message.mentions[0].id : null;
 				const newNick = (message.content ?? '').trim();
 				if (targetId === message.author.id) {
@@ -252,7 +253,8 @@ export const SystemMessageUtils = {
 						: tr(`${username} visszaállította a saját becenevét`, `${username} reset their nickname`);
 				}
 				const target = targetId ? Users.getUser(targetId) : null;
-				const targetName = target ? NicknameUtils.getDisplayName(target) : tr('valaki', 'someone');
+				// Same name as the rendered message (friend nickname aware), so copy/preview text matches what is shown.
+				const targetName = target ? NicknameUtils.getNickname(target, null) : tr('valaki', 'someone');
 				return newNick
 					? tr(
 							`${username} átváltotta ${targetName} becenevét erre: ${newNick}`,
