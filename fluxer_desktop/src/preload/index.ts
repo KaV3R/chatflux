@@ -435,6 +435,7 @@ const api: ElectronAPI = {
 	chatfluxSteamRunningApp: (): Promise<{appId: number; name: string | null} | null> =>
 		ipcRenderer.invoke('chatflux-games:steam'),
 	chatfluxProcessIcon: (pid: number): Promise<string | null> => ipcRenderer.invoke('chatflux-games:icon', pid),
+	chatfluxOverlayUpdate: (state: unknown): Promise<boolean> => ipcRenderer.invoke('chatflux-overlay:update', state),
 	getDesktopWindowBehaviorSettings: (): Promise<DesktopWindowBehaviorSettings> =>
 		ipcRenderer.invoke('desktop-window-behavior-get'),
 	setDesktopWindowBehaviorSettings: (

@@ -17,6 +17,7 @@ import type {
 } from '@electron/common/Types';
 import {DesktopBrowserHandoff} from '@electron/main/BrowserHandoff';
 import {registerChatFluxGameIpc} from '@electron/main/ChatFluxGames';
+import {registerChatFluxOverlayIpc} from '@electron/main/ChatFluxOverlay';
 import {hasEnabledBlinkFeature, MIDDLE_CLICK_AUTOSCROLL_BLINK_FEATURE} from '@electron/main/ChromiumRuntime';
 import {setHandoffReturnLinkSink} from '@electron/main/DeepLinks';
 import {getDesktopAppStorage} from '@electron/main/DesktopAppStorage';
@@ -183,6 +184,7 @@ function applyUnreadBadge(badge: number): void {
 
 export function registerIpcHandlers(): void {
 	registerChatFluxGameIpc();
+	registerChatFluxOverlayIpc();
 	registerVoiceDebugEventSinkPopoutIpcHandlers();
 	registerVoiceBackgroundMediaCacheHandlers();
 	ipcMain.handle(DESKTOP_MODULE_CHANNELS.ensure, (event, moduleName: unknown) => {

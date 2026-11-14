@@ -8,6 +8,8 @@ import {
 	THEME_DESCRIPTOR,
 } from '@app/features/i18n/utils/CommonMessageDescriptors';
 import MobileLayout from '@app/features/ui/state/MobileLayout';
+import {OverlayTabContent} from '@app/features/chatflux_overlay/OverlayTab';
+import OverlaySettings from '@app/features/chatflux_overlay/OverlaySettings';
 import {ActiveNowTabContent} from '@app/features/user/components/modals/tabs/appearance_tab/ActiveNowTab';
 import {
 	HdrTabContent,
@@ -96,6 +98,12 @@ const AppearanceSections = observer(() => {
 			>
 				<ActiveNowTabContent data-flx="user.appearance-tab.active-now-tab-content" />
 			</SettingsSection>
+
+			{OverlaySettings.supported ? (
+				<SettingsSection id="overlay" title="Overlay" data-flx="user.appearance-tab.overlay">
+					<OverlayTabContent data-flx="user.appearance-tab.overlay-tab-content" />
+				</SettingsSection>
+			) : null}
 
 			<SettingsSection
 				id="streamer-mode"

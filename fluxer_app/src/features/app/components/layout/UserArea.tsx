@@ -11,6 +11,7 @@ import {reportSkeletonVoicePresence} from '@app/features/app/components/skeleton
 import {getStatusTypeLabel} from '@app/features/app/constants/AppConstants';
 import {useContextMenuHoverState} from '@app/features/app/hooks/useContextMenuHoverState';
 import ActivityDetector from '@app/features/chatflux_activity/ActivityDetector';
+import {startOverlayBridge} from '@app/features/chatflux_overlay/OverlayBridge';
 import ChatFluxPrefs from '@app/features/chatflux_shop/ChatFluxPrefs';
 import {StyledName} from '@app/features/chatflux_shop/components/NameStyle';
 import * as VoiceStateCommands from '@app/features/devtools/commands/VoiceStateCommands';
@@ -109,6 +110,8 @@ const UserAreaInner = observer(
 		const {isOpen, openProps} = usePopout('user-area');
 		// ChatFlux: game detection runs in the Windows app for as long as someone is logged in.
 		useEffect(() => ActivityDetector.start(), []);
+		// ChatFlux: in-game voice overlay (desktop app).
+		useEffect(() => startOverlayBridge(), []);
 		const status = Presence.getStatus(user.id);
 		const customStatus = Presence.getCustomStatus(user.id);
 		const {inputDevices, outputDevices} = useMediaDevices();

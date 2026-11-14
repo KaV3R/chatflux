@@ -257,6 +257,7 @@ export interface ElectronAPI {
 	chatfluxGameWindows?(): Promise<Array<{pid: number; name: string; title: string}>>;
 	chatfluxSteamRunningApp?(): Promise<{appId: number; name: string | null} | null>;
 	chatfluxProcessIcon?(pid: number): Promise<string | null>;
+	chatfluxOverlayUpdate?(state: unknown): Promise<boolean>;
 	onDisplayMediaPortalEmpty?(callback: (requestId: string) => void): () => void;
 	selectDisplayMediaSource(requestId: string, sourceId: string | null, withAudio: boolean): void;
 	setDisplayMediaPortalPreference?(preference: DisplayMediaPortalSurfacePreference): Promise<void>;
