@@ -15,6 +15,7 @@ import {
 	type core,
 	type input,
 	type output,
+	ZodDiscriminatedUnion,
 	ZodNullable,
 	ZodObject,
 	ZodOptional,
@@ -55,8 +56,25 @@ function extractVariablesFromIssue(issue: core.$ZodIssue): Record<string, unknow
 	return {name: fieldName};
 }
 
+/**
+ * ChatFlux: pick the discriminated-union option that matches the body, so per-field schema metadata
+ * (preserveEmptyValues / preserveNullFields) is honoured for union request bodies too (e.g. PATCH channel).
+ */
+function resolveDiscriminatedOption(schema: core.$ZodType | undefined, obj: unknown): core.$ZodType | undefined {
+	if (!(schema instanceof ZodDiscriminatedUnion) || obj === null || typeof obj !== 'object') return schema;
+	const discriminator = schema._zod.def.discriminator;
+	const value = (obj as Record<string, unknown>)[discriminator];
+	for (const option of schema.options) {
+		if (!(option instanceof ZodObject)) continue;
+		const field = option.shape[discriminator] as ZodType | undefined;
+		if (field?.safeParse(value).success) return option;
+	}
+	return schema;
+}
+
 function convertEmptyValuesToNull(obj: unknown, schema?: core.$ZodType, isRoot = true): unknown {
 	while (schema instanceof ZodOptional || schema instanceof ZodNullable) schema = schema.unwrap();
+	schema = resolveDiscriminatedOption(schema, obj);
 	const metadata = schema ? schemaMetadata.get(schema) : undefined;
 	if (metadata?.preserveEmptyValues) return obj;
 	if (typeof obj === 'string' && obj === '') return null;

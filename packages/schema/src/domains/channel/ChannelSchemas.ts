@@ -8,6 +8,7 @@ import {ChannelOverwriteTypeSchema, ChannelTypeSchema} from '@fluxer/schema/src/
 import {ContentWarningLevelSchema} from '@fluxer/schema/src/primitives/GuildValidators';
 import {PermissionStringType} from '@fluxer/schema/src/primitives/PermissionValidators';
 import {createStringType, Int32Type, SnowflakeStringType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+import {schemaMetadata} from '@fluxer/schema/src/SchemaMetadata';
 import {z} from 'zod';
 
 export const ChannelOverwriteResponse = z.object({
@@ -121,7 +122,10 @@ export const ChannelNicknameOverrides = z
 		z.string().describe('User ID'),
 		z.union([createStringType(0, 32), z.null()]).describe('Nickname or null to clear'),
 	)
-	.describe('User nickname overrides (user ID to nickname mapping)');
+	.describe('User nickname overrides (user ID to nickname mapping)')
+	// ChatFlux: `{"<id>": null}` clears ONE nickname; without this the request preprocessor collapses an
+	// all-null map to `null`, which the group DM update treats as "clear every nickname".
+	.register(schemaMetadata, {preserveEmptyValues: true});
 
 export type ChannelNicknameOverrides = z.infer<typeof ChannelNicknameOverrides>;
 
