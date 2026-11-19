@@ -2,6 +2,7 @@
 
 // ChatFlux: settings of the in-game voice overlay (desktop app only). Stored per device.
 
+import {getProtectedLocalStorage} from '@app/features/platform/state/ProtectedWebStorage';
 import {getElectronAPI} from '@app/features/ui/utils/NativeUtils';
 import {makeAutoObservable} from 'mobx';
 
@@ -17,7 +18,7 @@ interface StoredSettings {
 
 function read(): StoredSettings {
 	try {
-		const raw = window.localStorage.getItem(STORAGE_KEY);
+		const raw = getProtectedLocalStorage()?.getItem(STORAGE_KEY) ?? null;
 		return raw ? (JSON.parse(raw) as StoredSettings) : {};
 	} catch {
 		return {};
@@ -59,7 +60,7 @@ class OverlaySettings {
 
 	private persist(): void {
 		try {
-			window.localStorage.setItem(
+			getProtectedLocalStorage()?.setItem(
 				STORAGE_KEY,
 				JSON.stringify({enabled: this.enabled, showSelf: this.showSelf, position: this.position}),
 			);

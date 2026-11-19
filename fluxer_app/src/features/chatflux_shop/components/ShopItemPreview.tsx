@@ -2,18 +2,13 @@
 
 import {
 	AvatarDecorationImage,
+	cosmeticUrl,
 	NameplateBackground,
 	ProfileCardCosmetics,
 } from '@app/features/chatflux_shop/components/Cosmetics';
 import {composeNameStyle, NameStyleText} from '@app/features/chatflux_shop/components/NameStyle';
 import styles from '@app/features/chatflux_shop/components/ShopItemPreview.module.css';
-import {
-	type ShopItem,
-	shopAssetUrl,
-	type WornCosmetic,
-	type WornCosmetics,
-	type WornNameStyle,
-} from '@app/features/chatflux_shop/ShopApi';
+import type {ShopItem, WornCosmetic, WornCosmetics, WornNameStyle} from '@app/features/chatflux_shop/ShopApi';
 import ShopStore from '@app/features/chatflux_shop/ShopStore';
 import Users from '@app/features/user/state/Users';
 import * as AvatarUtils from '@app/features/user/utils/AvatarUtils';
@@ -47,23 +42,21 @@ function bundleWorn(item: ShopItem): WornCosmetics {
 	return worn;
 }
 
-const DecoratedAvatar: React.FC<{decoration?: WornCosmetic; px: number; avatarUrl: string | null}> = ({
-	decoration,
-	px,
-	avatarUrl,
-}) => {
-	const decorationUrl = shopAssetUrl(decoration?.asset);
-	return (
-		<div className={styles.avatarWrap} style={{width: px, height: px}}>
-			{avatarUrl ? (
-				<img className={styles.avatar} src={avatarUrl} alt="" draggable={false} />
-			) : (
-				<div className={styles.avatar} />
-			)}
-			{decorationUrl && <AvatarDecorationImage url={decorationUrl} />}
-		</div>
-	);
-};
+const DecoratedAvatar: React.FC<{decoration?: WornCosmetic; px: number; avatarUrl: string | null}> = observer(
+	({decoration, px, avatarUrl}) => {
+		const decorationUrl = cosmeticUrl(decoration?.asset);
+		return (
+			<div className={styles.avatarWrap} style={{width: px, height: px}}>
+				{avatarUrl ? (
+					<img className={styles.avatar} src={avatarUrl} alt="" draggable={false} />
+				) : (
+					<div className={styles.avatar} />
+				)}
+				{decorationUrl && <AvatarDecorationImage url={decorationUrl} />}
+			</div>
+		);
+	},
+);
 
 const NameplateRows: React.FC<{nameplate?: WornCosmetic; size: PreviewSize}> = ({nameplate, size}) => {
 	const me = useMe();
@@ -127,9 +120,9 @@ function itemNameStyle(item: ShopItem): WornNameStyle {
 	return composeNameStyle(null, item.render, previewColors(item));
 }
 
-const MiniProfileCard: React.FC<{worn: WornCosmetics; size: PreviewSize}> = ({worn, size}) => {
+const MiniProfileCard: React.FC<{worn: WornCosmetics; size: PreviewSize}> = observer(({worn, size}) => {
 	const me = useMe();
-	const decorationUrl = shopAssetUrl(worn.decoration?.asset);
+	const decorationUrl = cosmeticUrl(worn.decoration?.asset);
 	const nameStyle = worn.namefont || worn.nameeffect ? composeNameStyle(worn.namefont, worn.nameeffect) : null;
 	return (
 		<div
@@ -159,7 +152,7 @@ const MiniProfileCard: React.FC<{worn: WornCosmetics; size: PreviewSize}> = ({wo
 			<ProfileCardCosmetics worn={worn} />
 		</div>
 	);
-};
+});
 
 export const ShopItemPreview: React.FC<{item: ShopItem; size?: PreviewSize}> = observer(({item, size = 'small'}) => {
 	const me = useMe();

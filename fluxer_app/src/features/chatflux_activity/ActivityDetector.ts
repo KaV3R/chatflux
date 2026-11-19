@@ -8,6 +8,7 @@ import {ActivityApi, type KnownGame, type ReportedGame} from '@app/features/chat
 import ActivityStore from '@app/features/chatflux_activity/ActivityStore';
 import {shopBaseUrl} from '@app/features/chatflux_shop/ShopApi';
 import SessionManager from '@app/features/platform/state/AuthSession';
+import {getProtectedLocalStorage} from '@app/features/platform/state/ProtectedWebStorage';
 import {getElectronAPI} from '@app/features/ui/utils/NativeUtils';
 import {makeAutoObservable, runInAction} from 'mobx';
 
@@ -48,7 +49,7 @@ function desktopApi(): DesktopGameApi | null {
 
 function readRegistered(): Record<string, RegisteredGame> {
 	try {
-		const raw = window.localStorage.getItem(STORAGE_KEY);
+		const raw = getProtectedLocalStorage()?.getItem(STORAGE_KEY) ?? null;
 		return raw ? (JSON.parse(raw) as Record<string, RegisteredGame>) : {};
 	} catch {
 		return {};
@@ -176,7 +177,7 @@ class ActivityDetector {
 
 	private persist(): void {
 		try {
-			window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.registered));
+			getProtectedLocalStorage()?.setItem(STORAGE_KEY, JSON.stringify(this.registered));
 		} catch {}
 	}
 

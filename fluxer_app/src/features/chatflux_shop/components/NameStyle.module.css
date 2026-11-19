@@ -101,3 +101,11 @@
 		animation: none;
 	}
 }
+
+/* Profile animations switched off (ChatFluxPrefs) or reduced motion chosen in the app. */
+:global(html.chatflux-still-cosmetics) .prism,
+:global(html.chatflux-still-cosmetics) .shimmer,
+:global(html.reduced-motion) .prism,
+:global(html.reduced-motion) .shimmer {
+	animation: none;
+}
