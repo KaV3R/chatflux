@@ -41,7 +41,87 @@ function withAlpha(hex: string, alpha: number): string {
 	return `rgba(${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
 }
 
-function buildThemeCss(name: string, description: string, tags: string, p: ChatFluxThemePalette, extra = ''): string {
+interface ThemeCssOptions {
+	/** Light themes also switch the browser's own widgets (scrollbars, form controls) to light. */
+	scheme?: 'dark' | 'light';
+	/** The theme draws animated layers: keep them behind the app (see layeredBackgroundCss). */
+	layered?: boolean;
+}
+
+// Floating UI (modals, menus, popouts, tooltips, toasts) keeps solid colours even when the big
+// panels are see-through, so nothing behind them bleeds into their text.
+const FLOATING_LAYERS = [
+	'[role="dialog"]',
+	'[role="alertdialog"]',
+	'[role="menu"]',
+	'[role="listbox"]',
+	'[role="tooltip"]',
+	'[data-flx^="ui.popover"]',
+	'[data-flx^="ui.action-menu"]',
+	'[data-flx^="app.modal"]',
+	'[class*="Modal-module__"]',
+	'[class*="Popout"]',
+	'[class*="popout"]',
+	'[class*="Tooltip"]',
+	'[class*="Toast"]',
+	'[class*="ContextMenu"]',
+	'[class*="BottomSheet"]',
+].join(',\n');
+
+// Animated themes paint their effects with z-index -1 on html/body pseudo elements, i.e. behind
+// everything in the app. The large layout panels get slightly see-through backgrounds so the
+// effect shows through them, while buttons, inputs, text and floating layers stay on top of it.
+function layeredBackgroundCss(p: ChatFluxThemePalette, alpha: number): string {
+	return `
+html:root {
+	background-color: ${p.frame} !important;
+	--background-primary: ${withAlpha(p.frame, alpha)};
+	--bg-primary: ${withAlpha(p.frame, alpha)};
+	--background-secondary: ${withAlpha(p.sidebar, alpha)};
+	--bg-secondary: ${withAlpha(p.sidebar, alpha)};
+	--background-secondary-lighter: ${withAlpha(p.surface, alpha)};
+	--background-channel-header: ${withAlpha(p.header, alpha)};
+	--background-header-primary: ${withAlpha(p.header, alpha)};
+	--background-header-secondary: ${withAlpha(p.header, alpha)};
+}
+html:root body {
+	background-color: transparent !important;
+}
+${FLOATING_LAYERS} {
+	--background-primary: ${p.frame};
+	--bg-primary: ${p.frame};
+	--background-secondary: ${p.sidebar};
+	--bg-secondary: ${p.sidebar};
+	--background-secondary-lighter: ${p.surface};
+	--background-channel-header: ${p.header};
+	--background-header-primary: ${p.header};
+	--background-header-secondary: ${p.header};
+}
+`;
+}
+
+function lightSchemeCss(p: ChatFluxThemePalette): string {
+	return `
+html:root {
+	color-scheme: light;
+	--form-surface-background: ${p.frame};
+	--message-preview-card-background: #ffffff;
+	--message-preview-card-border: rgba(0, 0, 0, 0.07);
+	--message-preview-card-divider: rgba(0, 0, 0, 0.05);
+	--scrollbar-track-bg: transparent;
+}
+`;
+}
+
+function buildThemeCss(
+	name: string,
+	description: string,
+	tags: string,
+	p: ChatFluxThemePalette,
+	extra = '',
+	options: ThemeCssOptions = {},
+): string {
+	const light = options.scheme === 'light';
 	return `/**
  * @name ${name}
  * @description ${description}
@@ -110,7 +190,7 @@ html:root {
 ::selection {
 	background: ${withAlpha(p.brand, 0.35)};
 }
-${extra}`;
+${light ? lightSchemeCss(p) : ''}${options.layered ? layeredBackgroundCss(p, light ? 0.72 : 0.7) : ''}${extra}`;
 }
 
 const HALLOWEEN_PALETTE: ChatFluxThemePalette = {
@@ -239,8 +319,11 @@ const INFERNO_PALETTE: ChatFluxThemePalette = {
 	tint: '#ff6a1a',
 };
 
-// Shared building blocks for the "wild" themes. Overlays never catch clicks.
-const OVERLAY_BASE = `position: fixed; inset: 0; pointer-events: none; z-index: 2147483000;`;
+// Shared building blocks for the "wild" themes. Effects never catch clicks and sit behind the
+// app (z-index -1), so they never cover text or buttons. Only the thin light bars on the very top
+// edge of the window stay above everything.
+const OVERLAY_BASE = `position: fixed; inset: 0; pointer-events: none; z-index: -1;`;
+const EDGE_BAR = `position: fixed; inset: 0; pointer-events: none; z-index: 2147483000; bottom: auto;`;
 const REDUCED_MOTION = `
 @media (prefers-reduced-motion: reduce) {
 	html::before, html::after, body::before, body::after { animation: none !important; }
@@ -250,7 +333,7 @@ const NEON_EXTRA = `
 @keyframes cfNeonBar { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 @keyframes cfNeonPulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.85; } }
 html::before {
-	content: ''; ${OVERLAY_BASE} bottom: auto; height: 3px;
+	content: ''; ${EDGE_BAR} height: 3px;
 	background: linear-gradient(90deg, #ff2bd6, #22e6ff, #fff200, #ff2bd6);
 	background-size: 200% 100%;
 	box-shadow: 0 0 12px #ff2bd6, 0 0 24px #22e6ff;
@@ -295,7 +378,7 @@ const INFERNO_EXTRA = `
 @keyframes cfLavaBar { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 @keyframes cfEmbers { 0%, 100% { opacity: 0.55; transform: scaleY(1); } 50% { opacity: 0.9; transform: scaleY(1.15); } }
 html::before {
-	content: ''; ${OVERLAY_BASE} bottom: auto; height: 3px;
+	content: ''; ${EDGE_BAR} height: 3px;
 	background: linear-gradient(90deg, #ff1a00, #ffb020, #ff4d00, #ffe14d, #ff1a00);
 	background-size: 200% 100%;
 	box-shadow: 0 0 14px #ff4d00, 0 0 28px #ff1a00;
@@ -439,7 +522,7 @@ const SYNTHWAVE_EXTRA = `
 @keyframes cfSynthBar { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 @keyframes cfSynthGrid { from { background-position: 0 0; } to { background-position: 0 50px; } }
 html::before {
-	content: ''; ${OVERLAY_BASE} bottom: auto; height: 3px;
+	content: ''; ${EDGE_BAR} height: 3px;
 	background: linear-gradient(90deg, #f72585, #ff9e4f, #ffd166, #c77dff, #f72585);
 	background-size: 200% 100%;
 	box-shadow: 0 0 12px #f72585, 0 0 26px #ff9e4f;
@@ -662,7 +745,7 @@ html::after {
 	background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 3px);
 }
 body::after {
-	content: ''; ${OVERLAY_BASE} bottom: auto; height: 2px;
+	content: ''; ${EDGE_BAR} height: 2px;
 	animation: cfGlitchTop 0.9s steps(1) infinite;
 }
 h1, h2, h3, a { animation: cfGlitchText 3s steps(1) infinite; }
@@ -705,7 +788,7 @@ html::before {
 	will-change: transform;
 }
 html::after {
-	content: ''; ${OVERLAY_BASE} bottom: auto; height: 3px;
+	content: ''; ${EDGE_BAR} height: 3px;
 	background: linear-gradient(90deg, #ff0080, #ff7800, #ffe600, #8cff00, #00c8ff, #aa00ff, #ff0080);
 	background-size: 200% 100%;
 	box-shadow: 0 0 12px #ff0080, 0 0 24px #00c8ff;
@@ -753,7 +836,7 @@ const TOXIC_EXTRA = `
 @keyframes cfHazard { from { background-position: 0 0; } to { background-position: 28.28px 0; } }
 @keyframes cfToxicPulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
 html::before {
-	content: ''; ${OVERLAY_BASE} bottom: auto; height: 6px;
+	content: ''; ${EDGE_BAR} height: 6px;
 	background: repeating-linear-gradient(45deg, #facc15 0 10px, #111111 10px 20px);
 	background-size: 28.28px 28.28px;
 	box-shadow: 0 0 14px rgba(250, 204, 21, 0.6);
@@ -777,6 +860,94 @@ ${driftLayer(
 a, h1, h2, h3 { text-shadow: 0 0 8px rgba(190, 242, 100, 0.6); }
 ::-webkit-scrollbar-thumb { background: repeating-linear-gradient(45deg, #facc15 0 6px, #111111 6px 12px) !important; }
 ${REDUCED_MOTION}`;
+
+// ---- Light themes ----
+
+const MEADOW_PALETTE: ChatFluxThemePalette = {
+	frame: '#f8fcf9',
+	sidebar: '#e4f1e8',
+	surface: '#f0f7f2',
+	surfaceAlt: '#e8f2eb',
+	elevated: '#d9e9de',
+	input: '#fbfefc',
+	header: '#e2eee6',
+	headerHover: '#cfe2d5',
+	guildItem: '#d6e7db',
+	brand: '#15803d',
+	brandSecondary: '#166534',
+	brandLight: '#86efac',
+	link: '#0f766e',
+	text: '#0f2419',
+	textSecondary: '#1d3a2b',
+	textMuted: '#4a6a59',
+	textFaint: '#78917f',
+	tint: '#166534',
+};
+
+const PEACH_PALETTE: ChatFluxThemePalette = {
+	frame: '#fffaf5',
+	sidebar: '#f5e8dc',
+	surface: '#fbf3eb',
+	surfaceAlt: '#f6ebe0',
+	elevated: '#eddccd',
+	input: '#fffdfb',
+	header: '#f3e3d5',
+	headerHover: '#e7d0bd',
+	guildItem: '#ebdacb',
+	brand: '#d9531e',
+	brandSecondary: '#b8400f',
+	brandLight: '#fdba8c',
+	link: '#b8400f',
+	text: '#2b1a12',
+	textSecondary: '#4a3226',
+	textMuted: '#7b5e4f',
+	textFaint: '#a08676',
+	tint: '#9a3412',
+};
+
+const SAKURA_BREEZE_PALETTE: ChatFluxThemePalette = {
+	frame: '#fff7fa',
+	sidebar: '#fbe3ed',
+	surface: '#fdf0f5',
+	surfaceAlt: '#fae7ef',
+	elevated: '#f4d4e2',
+	input: '#fffbfd',
+	header: '#f8e0ea',
+	headerHover: '#efc9da',
+	guildItem: '#f2d1df',
+	brand: '#db2777',
+	brandSecondary: '#be185d',
+	brandLight: '#f9a8d4',
+	link: '#be185d',
+	text: '#2d0f1d',
+	textSecondary: '#4c1d33',
+	textMuted: '#85546a',
+	textFaint: '#ab8395',
+	tint: '#9d174d',
+};
+
+// Cherry blossom petals: small soft ellipses, a little wider than tall.
+function petalLayer(rgb: string, dots: Array<Dot>): string {
+	return dots
+		.map(
+			([x, y, r, a]) =>
+				`radial-gradient(${Math.round(r * 17) / 10}px ${r}px at ${x}px ${y}px, rgba(${rgb}, ${a}) 0 65%, transparent 100%)`,
+		)
+		.join(',\n\t\t');
+}
+
+const SAKURA_BREEZE_EXTRA = `
+${driftLayer('html::before', petalLayer('244, 114, 182', scatter(41, 10, 260, [3, 5], [0.35, 0.6])), 260, 13, 'down')}
+${driftLayer('body::before', petalLayer('251, 182, 206', scatter(59, 7, 380, [4, 6.5], [0.45, 0.75])), 380, 18, 'down')}
+html::after {
+	content: ''; ${OVERLAY_BASE}
+	background:
+		radial-gradient(ellipse 55% 40% at 0% 0%, rgba(249, 168, 212, 0.35), transparent 70%),
+		radial-gradient(ellipse 50% 40% at 100% 100%, rgba(251, 207, 232, 0.4), transparent 70%);
+}
+${REDUCED_MOTION}`;
+
+const LIGHT_BADGE = {hu: 'VILÁGOS', en: 'LIGHT'};
 
 const EXTREME_BADGE = {hu: 'EXTRÉM', en: 'EXTREME'};
 
@@ -834,6 +1005,66 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 		),
 	},
 	{
+		id: 'chatflux-theme-spring-meadow',
+		fileName: 'chatflux-spring-meadow.css',
+		name: {hu: 'Tavaszi rét', en: 'Spring Meadow'},
+		description: {
+			hu: 'Világos, friss téma: hófehér felület halvány mentazölddel és erdőzöld kiemelésekkel.',
+			en: 'Light and fresh: snow-white surfaces, soft mint and forest-green accents.',
+		},
+		badge: LIGHT_BADGE,
+		emoji: '🌿',
+		palette: MEADOW_PALETTE,
+		css: buildThemeCss(
+			'Spring Meadow',
+			'Light theme with mint and forest green.',
+			'chatflux, green, light',
+			MEADOW_PALETTE,
+			'',
+			{scheme: 'light'},
+		),
+	},
+	{
+		id: 'chatflux-theme-peach-latte',
+		fileName: 'chatflux-peach-latte.css',
+		name: {hu: 'Barack latte', en: 'Peach Latte'},
+		description: {
+			hu: 'Meleg, krémes világos téma tejeskávé-tónusokkal és barackszínű kiemelésekkel.',
+			en: 'Warm, creamy light theme with latte tones and peach accents.',
+		},
+		badge: LIGHT_BADGE,
+		emoji: '🍑',
+		palette: PEACH_PALETTE,
+		css: buildThemeCss(
+			'Peach Latte',
+			'Warm cream light theme with peach accents.',
+			'chatflux, orange, light',
+			PEACH_PALETTE,
+			'',
+			{scheme: 'light'},
+		),
+	},
+	{
+		id: 'chatflux-theme-sakura-breeze',
+		fileName: 'chatflux-sakura-breeze.css',
+		name: {hu: 'Cseresznyevirág-szellő', en: 'Sakura Breeze'},
+		description: {
+			hu: 'Világos rózsaszín tavasz: a háttérben két rétegben, lassan hullanak a cseresznyevirág-szirmok.',
+			en: 'Light pink spring: cherry blossom petals slowly falling in two layers in the background.',
+		},
+		badge: LIGHT_BADGE,
+		emoji: '💮',
+		palette: SAKURA_BREEZE_PALETTE,
+		css: buildThemeCss(
+			'Sakura Breeze',
+			'Light pink theme with falling cherry blossom petals.',
+			'chatflux, pink, light, animated',
+			SAKURA_BREEZE_PALETTE,
+			SAKURA_BREEZE_EXTRA,
+			{scheme: 'light', layered: true},
+		),
+	},
+	{
 		id: 'chatflux-theme-neon-city',
 		fileName: 'chatflux-neon-city.css',
 		name: {hu: 'Neonváros', en: 'Neon City'},
@@ -850,6 +1081,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, neon, cyberpunk, animated',
 			NEON_PALETTE,
 			NEON_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -869,6 +1101,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, green, terminal, animated',
 			MATRIX_PALETTE,
 			MATRIX_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -888,6 +1121,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, red, fire, animated',
 			INFERNO_PALETTE,
 			INFERNO_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -907,6 +1141,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, space, animated',
 			HYPERSPACE_PALETTE,
 			HYPERSPACE_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -926,6 +1161,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, retro, neon, animated',
 			SYNTHWAVE_PALETTE,
 			SYNTHWAVE_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -945,6 +1181,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, green, aurora, animated',
 			AURORA_PALETTE,
 			AURORA_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -964,6 +1201,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, winter, snow, animated',
 			BLIZZARD_PALETTE,
 			BLIZZARD_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -983,6 +1221,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, ocean, blue, animated',
 			DEEPSEA_PALETTE,
 			DEEPSEA_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -1002,6 +1241,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, glitch, animated',
 			GLITCH_PALETTE,
 			GLITCH_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -1021,6 +1261,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, party, rainbow, animated',
 			DISCO_PALETTE,
 			DISCO_EXTRA,
+			{layered: true},
 		),
 	},
 	{
@@ -1040,6 +1281,7 @@ export const CHATFLUX_THEMES: ReadonlyArray<ChatFluxThemeDefinition> = [
 			'chatflux, green, toxic, animated',
 			TOXIC_PALETTE,
 			TOXIC_EXTRA,
+			{layered: true},
 		),
 	},
 ];
